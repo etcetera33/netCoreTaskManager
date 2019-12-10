@@ -14,10 +14,10 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CommentService(IUnitOfWork unitOfWork)
+        public CommentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _mapper = AutoMapperConfiguration.Configure().CreateMapper();
+            _mapper = mapper;
         }
 
         public async Task Create(CreateCommentDto commentDto)

@@ -14,21 +14,14 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public WorkItemService(IUnitOfWork unitOfWork)
+        public WorkItemService(IUnitOfWork unitOfWork, IMapper imapper)
         {
             _unitOfWork = unitOfWork;
-            _mapper = AutoMapperConfiguration.Configure().CreateMapper();
+            _mapper = imapper;
         }
         public Task Create(CreateWorkItemDto workItemDto)
         {
             throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<WorkItemDto>> GetAllAsync()
-        {
-            var workItemList = await Task.Run(() => _unitOfWork.WorkItemRepository.GetAll());
-            var workItemDto = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItemList);
-            return workItemDto;
         }
 
         public Task<WorkItemDto> GetById(int workItemId)
@@ -51,9 +44,9 @@ namespace Services
             throw new NotImplementedException();
         }
 
-        public IEnumerable<WorkItemDto> GetAll()
+        public async Task<IEnumerable<WorkItemDto>> GetAll()
         {
-            var workItemList = _unitOfWork.WorkItemRepository.GetAll();
+            var workItemList = await _unitOfWork.WorkItemRepository.GetAll();
             var workItemDto = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItemList);
             return workItemDto;
         }

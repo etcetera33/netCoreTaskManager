@@ -8,5 +8,6 @@ namespace Data
         UserRepository UserRepository { get; }
         WorkItemRepository WorkItemRepository { get; }
         CommentRepository CommentRepository { get; }
+        ProjectRolesRepository ProjectRolesRepository { get; }
     }
 }

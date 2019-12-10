@@ -19,9 +19,16 @@
     <Compile Remove="Migrations\20191205134428_Initial.Designer.cs" />
     <Compile Remove="Migrations\20191206094143_Initial.cs" />
     <Compile Remove="Migrations\20191206094143_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191209093146_Initial.cs" />
+    <Compile Remove="Migrations\20191209093146_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191210091449_Initial.cs" />
+    <Compile Remove="Migrations\20191210091449_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191210102402_Initial.cs" />
+    <Compile Remove="Migrations\20191210102402_Initial.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
@@ -37,6 +44,10 @@
 
   <ItemGroup>
     <Folder Include="Seeds\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>

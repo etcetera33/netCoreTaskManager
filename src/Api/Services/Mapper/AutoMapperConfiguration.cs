@@ -3,15 +3,16 @@ using Data.Models;
 using Models.DTOs;
 using Models.DTOs.Comment;
 using Models.DTOs.Project;
+using Models.DTOs.ProjectRole;
 using Models.DTOs.WorkItem;
 
 namespace Services.Mapper
 {
-    class AutoMapperConfiguration
+    public class AutoMapperConfiguration
     {
         public static MapperConfiguration Configure()
         {
-            /// TODO : consider changing to ConfigureProject, ConfigureUser etc
+            /// TODO : DI mapper
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<CreateUserDto, User>()
                     .ForMember(dst => dst.UserId, opt => opt.Ignore())
@@ -62,6 +63,12 @@ namespace Services.Mapper
                     .ForMember(dst => dst.CommentId, src => src.MapFrom(e => e.Id))
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
                     .ForMember(dst => dst.WorkItem, opt => opt.Ignore())
+                    .ReverseMap();
+                cfg.CreateMap<CreateProjectRoleDto, ProjectRole>()
+                    .ForMember(dst => dst.ProjectRoleId, opt => opt.Ignore())
+                    .ReverseMap();
+                cfg.CreateMap<ProjectRoleDto, ProjectRole>()
+                    .ForMember(dst => dst.ProjectRoleId, src => src.MapFrom(p => p.Id))
                     .ReverseMap();
             });
             return config;

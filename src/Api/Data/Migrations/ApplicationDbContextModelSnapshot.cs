@@ -83,6 +83,37 @@ namespace Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Data.Models.ProjectRole", b =>
+                {
+                    b.Property<int>("ProjectRoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AppliedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProjectRoleId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId", "ProjectId")
+                        .IsUnique();
+
+                    b.ToTable("ProjectRoles");
+                });
+
             modelBuilder.Entity("Data.Models.Role", b =>
                 {
                     b.Property<int>("RoleId")
@@ -256,8 +287,8 @@ namespace Data.Migrations
                             ProjectId = 1,
                             StatusId = 1,
                             Title = "Deploy project",
-                            WorkItemType = 0,
-                            WorkItemTypeId = 0
+                            WorkItemType = 1,
+                            WorkItemTypeId = 1
                         });
                 });
 
@@ -272,6 +303,27 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.WorkItem", "WorkItem")
                         .WithMany("Comments")
                         .HasForeignKey("WorkItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.ProjectRole", b =>
+                {
+                    b.HasOne("Data.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

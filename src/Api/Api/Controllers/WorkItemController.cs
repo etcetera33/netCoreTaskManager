@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Models.DTOs.WorkItem;
 using Services.Interfaces;
 using System.Threading.Tasks;
 
@@ -18,9 +19,23 @@ namespace Api.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return new OkObjectResult(_workItemService.GetAll());
+            return new OkObjectResult(await _workItemService.GetAll());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(CreateWorkItemDto workItemDto)
+        {
+            await _workItemService.Create(workItemDto);
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int workItemId, CreateWorkItemDto workItemDto)
+        {
+            await _workItemService.Update(workItemId, workItemDto);
+            return Ok();
         }
     }
 }

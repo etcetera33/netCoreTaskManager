@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System.Threading.Tasks;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using Api.Auth;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System;
+using Api.Auth;
 
 namespace Api.Controllers
 {
@@ -38,9 +38,9 @@ namespace Api.Controllers
 
         [Route("Authorize")]
         [HttpPost()]
-        public IActionResult Authorize(UserDto userDto)
+        public async Task<IActionResult> Authorize(UserDto userDto)
         {
-            var user = _userService.GetUserByLoginPassword(userDto);
+            var user = await _userService.GetUserByLoginAsync(userDto);
             if (user == null)
             {
                 return new NotFoundResult();

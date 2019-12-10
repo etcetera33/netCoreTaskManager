@@ -7,7 +7,7 @@ namespace Data.Interfaces
 {
     public interface IBaseRepository <TEntity>
     {
-        IEnumerable<TEntity> GetAll();
+        Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> GetById(int id);
         Task Create(TEntity model);
         Task Update(int id, TEntity model);

@@ -1,8 +1,5 @@
 ﻿using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Data
 {
@@ -16,6 +13,7 @@ namespace Data
         public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<WorkItem> WorkItems { get; set; }
+        public DbSet<ProjectRole> ProjectRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +27,9 @@ namespace Data
                     e.HasOne(x => x.Author).WithMany(x => x.CreatedWorkItems).HasForeignKey(x => x.AuthorId).OnDelete(DeleteBehavior.Restrict);
                 }
             );
+
+            modelBuilder.Entity<ProjectRole>()
+                .HasIndex(p => new { p.UserId, p.ProjectId }).IsUnique();
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Login)
@@ -55,7 +56,7 @@ namespace Data
                 new User { UserId = 2, Login = "john.doe", FullName = "John Doe", Password = "111", Position = "Junior PM" }
             );
             modelBuilder.Entity<WorkItem>().HasData(
-                new WorkItem { WorkItemId = 1, ProjectId = 1, AssigneeId = 1, AuthorId = 2, Title = "Deploy project", Description = "Deploy the project", StatusId = 1 }
+                new WorkItem { WorkItemId = 1, ProjectId = 1, AssigneeId = 1, AuthorId = 2, Title = "Deploy project", Description = "Deploy the project", StatusId = 1, WorkItemTypeId = 1 }
             );
         }
     }

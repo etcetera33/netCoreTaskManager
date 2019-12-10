@@ -3,9 +3,9 @@ using Models.DTOs;
 using Data;
 using Data.Models;
 using Services.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Services.Mapper;
+using Services.Helpers;
 
 namespace Services
 {
@@ -13,32 +13,46 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UserService(IUnitOfWork unitOfWork, IMapper imapper)
+        private readonly IPasswordHasher _passwordhasher;
+
+        public UserService(IUnitOfWork unitOfWork, IMapper imapper, IPasswordHasher passwordHasher)
         {
             _unitOfWork = unitOfWork;
-            _mapper = AutoMapperConfiguration.Configure().CreateMapper();
-        }
-        public User LogIn(User user)
-        {
-            throw new System.NotImplementedException();
+            _mapper = imapper;
+            _passwordhasher = passwordHasher;
         }
         public async Task RegisterUserAsync(CreateUserDto userDto)
         {
+            userDto.Password = _passwordhasher.Hash(userDto.Password); 
             var user= _mapper.Map<CreateUserDto, User>(userDto);
 
             await _unitOfWork.UserRepository.Create(user);
         }
-        public IEnumerable<UserDto> GetAll()
+
+        public async Task<UserDto> GetUserByLoginAsync(UserDto userDto)
         {
-            var list = _unitOfWork.UserRepository.GetAll();
-            var newList = _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(list);
-            return newList;
+            var user = await _unitOfWork.UserRepository.FindUserByLoginAsync(userDto.Login);
+            
+            if (user == null || user.Password != _passwordhasher.Hash(userDto.Password))
+            {
+                return null;
+            }
+
+            return _mapper.Map<User, UserDto>(user);
         }
 
-        public UserDto GetUserByLoginPassword(UserDto userDto)
+        public async Task<UserDto> GetById(int userId)
         {
-            var user = _unitOfWork.UserRepository.FindUserByLoginPassword(userDto.Login, userDto.Password);
-            return _mapper.Map<User, UserDto>(user); 
+            var user = await _unitOfWork.UserRepository.GetById(userId);
+            var userDto = _mapper.Map<User, UserDto>(user);
+
+            return userDto;
+        }
+
+        public async Task Update(int userId, CreateUserDto userDto)
+        {
+            var user = _mapper.Map<CreateUserDto, User>(userDto);
+            await _unitOfWork.UserRepository.Update(userId, user);
         }
     }
 }

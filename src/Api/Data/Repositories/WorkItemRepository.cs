@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
@@ -11,14 +12,14 @@ namespace Data.Repositories
         {
 
         }
-        public IEnumerable<WorkItem> GetAll()
+        public async Task<IEnumerable<WorkItem>> GetAll()
         {
-            return _dbContext.WorkItems
+            return await _dbContext.WorkItems
                 .Include(x => x.Assignee)
                 .Include(x => x.Author)
                 .Include(x => x.Project)
                 .Include(x => x.Comments)
-                .ToList();
+                .ToListAsync();
         }
     }
 }

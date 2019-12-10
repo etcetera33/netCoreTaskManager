@@ -1,4 +1,5 @@
-﻿using Models.DTOs.Comment;
+﻿using Core.Enums;
+using Models.DTOs.Comment;
 using Models.DTOs.Project;
 using System.Collections.Generic;
 
@@ -10,6 +11,7 @@ namespace Models.DTOs.WorkItem
         public string Title { get; set; }
         public string Description { get; set; }
         public int WorkItemTypeId { get; set; }
+        public WorkItemTypes WorkItemType { get; set; }
         public int StatusId { get; set; }
         public int AssigneeId { get; set; }
         public int AuthorId { get; set; }

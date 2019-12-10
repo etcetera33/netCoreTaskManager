@@ -1,6 +1,4 @@
 ﻿using Models.DTOs;
-using Data.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Services.Interfaces
@@ -8,8 +6,8 @@ namespace Services.Interfaces
     public interface IUserService
     {
         Task RegisterUserAsync(CreateUserDto user);
-        User LogIn(User user);
-        IEnumerable<UserDto> GetAll();
-        UserDto GetUserByLoginPassword(UserDto user);
+        Task<UserDto> GetUserByLoginAsync(UserDto user);
+        Task<UserDto> GetById(int userId);
+        Task Update(int userId, CreateUserDto userDto);
     }
 }
