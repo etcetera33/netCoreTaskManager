@@ -15,10 +15,12 @@ namespace Data.Repositories
             _dbContext = dbContext;
         }
 
-        public virtual async Task Create(TEntity model)
+        public virtual async Task<TEntity> Create(TEntity model)
         {
             await _dbContext.Set<TEntity>().AddAsync(model);
             await _dbContext.SaveChangesAsync();
+
+            return model;
         }
 
         public virtual async Task Delete(int id)

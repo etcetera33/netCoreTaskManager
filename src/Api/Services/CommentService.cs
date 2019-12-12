@@ -20,10 +20,11 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task Create(CreateCommentDto commentDto)
+        public async Task<CommentDto> Create(CreateCommentDto commentDto)
         {
-            var comment = _mapper.Map<CreateCommentDto, Comment>(commentDto); 
-            await _unitOfWork.CommentRepository.Create(comment);
+            var comment = _mapper.Map<CreateCommentDto, Comment>(commentDto);
+            var createdEntity = await _unitOfWork.CommentRepository.Create(comment);
+            return _mapper.Map<Comment, CommentDto>(createdEntity);
         }
 
         public async Task<IEnumerable<CommentDto>> GetWorkItemsComments(int workItemId)

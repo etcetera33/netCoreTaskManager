@@ -15,5 +15,11 @@ namespace Data.Repositories
                 .Where(user => user.Login == login)
                 .FirstOrDefaultAsync();
         }
+        public User FindUserByLogin(string login)
+        {
+            return _dbContext.Users
+                .Where(user => user.Login == login)
+                .FirstOrDefault();
+        }
     }
 }

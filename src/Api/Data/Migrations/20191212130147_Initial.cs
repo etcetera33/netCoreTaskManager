@@ -22,19 +22,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    RoleId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.RoleId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Statuses",
                 columns: table => new
                 {
@@ -56,45 +43,13 @@ namespace Data.Migrations
                     FullName = table.Column<string>(nullable: true),
                     Position = table.Column<string>(nullable: true),
                     Login = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                    Password = table.Column<string>(nullable: true),
+                    RoleId = table.Column<int>(nullable: false),
+                    Role = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProjectRoles",
-                columns: table => new
-                {
-                    ProjectRoleId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false),
-                    ProjectId = table.Column<int>(nullable: false),
-                    AppliedAt = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectRoles", x => x.ProjectRoleId);
-                    table.ForeignKey(
-                        name: "FK_ProjectRoles_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProjectRoles_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "RoleId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProjectRoles_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,16 +134,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "RoleId", "RoleName" },
-                values: new object[,]
-                {
-                    { 1, "Spectator" },
-                    { 2, "Developer" },
-                    { 3, "Owner" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Statuses",
                 columns: new[] { "StatusId", "StatusName" },
                 values: new object[,]
@@ -202,11 +147,11 @@ namespace Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "UserId", "FullName", "Login", "Password", "Position" },
+                columns: new[] { "UserId", "FullName", "Login", "Password", "Position", "Role", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Dmytro Poliit", "dmyto.poliit", "111", "Junior Developer" },
-                    { 2, "John Doe", "john.doe", "111", "Junior PM" }
+                    { 1, "Dmytro123213 Poliit", "dmyto123123123123.poliit", "111", "Junior Developer", 1, 1 },
+                    { 2, "John123123 Doe", "john123123123.doe", "111", "Junior PM", 0, 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -223,22 +168,6 @@ namespace Data.Migrations
                 name: "IX_Comments_WorkItemId",
                 table: "Comments",
                 column: "WorkItemId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectRoles_ProjectId",
-                table: "ProjectRoles",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectRoles_RoleId",
-                table: "ProjectRoles",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectRoles_UserId_ProjectId",
-                table: "ProjectRoles",
-                columns: new[] { "UserId", "ProjectId" },
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_Slug",
@@ -281,13 +210,7 @@ namespace Data.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "ProjectRoles");
-
-            migrationBuilder.DropTable(
                 name: "WorkItems");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Users");

@@ -1,4 +1,6 @@
-﻿namespace Models.DTOs
+﻿using Core.Enums;
+
+namespace Models.DTOs
 {
     public class UserDto
     {
@@ -7,5 +9,7 @@
         public string Position { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public int RoleId { get; set; }
+        public Roles Role { get; set; }
     }
 }

@@ -31,7 +31,10 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            
+            services.AddControllers()
+                //.AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+                ;
 
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
@@ -49,7 +52,7 @@ namespace Api
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = AuthConfig.GetKey(),
+                    IssuerSigningKey = AuthConfig.GetKey(Configuration.GetSection("AuthConfig").GetSection("SecretKey").Value),
                     // укзывает, будет ли валидироваться издатель при валидации токена
                     ValidateIssuer = false,
                     // будет ли валидироваться потребитель токена
@@ -69,6 +72,10 @@ namespace Api
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
 
+            // cfgs
+            services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,7 +93,7 @@ namespace Api
             app.UseSerilogRequestLogging();
 
             app.UseRouting();
-
+            
             app.UseAuthorization();
 
             app.UseMiddleware<RequestResponseLogMiddleware>();

@@ -1,0 +1,11 @@
+2019-12-12 17:19:43.376 +02:00 [INF] Starting up
+2019-12-12 17:19:47.242 +02:00 [INF] HTTP GET /weatherforecast responded 404 in 36.569 ms
+2019-12-12 17:19:47.409 +02:00 [INF] Method: GET. URL: /weatherforecast. The time spent on the request: 18 ms.
+2019-12-12 17:20:19.313 +02:00 [INF] Method: POST. URL: /api/Auth/Authorize. The time spent on the request: 3122 ms.
+2019-12-12 17:20:19.318 +02:00 [INF] HTTP POST /api/Auth/Authorize responded 200 in 3139.9228 ms
+2019-12-12 17:20:30.396 +02:00 [INF] HTTP GET /api/Auth/GetMe3 responded 404 in 2.0411 ms
+2019-12-12 17:20:30.396 +02:00 [INF] Method: GET. URL: /api/Auth/GetMe3. The time spent on the request: 0 ms.
+2019-12-12 17:20:40.663 +02:00 [INF] Method: POST. URL: /api/Auth/Authorize. The time spent on the request: 97 ms.
+2019-12-12 17:20:40.665 +02:00 [INF] HTTP POST /api/Auth/Authorize responded 200 in 99.1808 ms
+2019-12-12 17:21:09.631 +02:00 [INF] Method: GET. URL: /api/user/. The time spent on the request: 72 ms.
+2019-12-12 17:21:09.632 +02:00 [INF] HTTP GET /api/user/ responded 200 in 88.669 ms

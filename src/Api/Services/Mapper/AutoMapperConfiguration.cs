@@ -12,7 +12,6 @@ namespace Services.Mapper
     {
         public static MapperConfiguration Configure()
         {
-            /// TODO : DI mapper
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<CreateUserDto, User>()
                     .ForMember(dst => dst.UserId, opt => opt.Ignore())
@@ -38,21 +37,21 @@ namespace Services.Mapper
                     .ReverseMap();
                 cfg.CreateMap<CreateWorkItemDto, WorkItem>()
                     .ForMember(dst => dst.WorkItemId, opt => opt.Ignore())
-                    /*.ForMember(dst => dst.Assignee, opt => opt.Ignore())
+                    .ForMember(dst => dst.Assignee, opt => opt.Ignore())
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
                     .ForMember(dst => dst.Comments, opt => opt.Ignore())
                     .ForMember(dst => dst.Project, opt => opt.Ignore())
                     .ForMember(dst => dst.Status, opt => opt.Ignore())
-                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())*/
+                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())
                     .ReverseMap();
                 cfg.CreateMap<WorkItemDto, WorkItem>()
                     .ForMember(dst => dst.WorkItemId, src => src.MapFrom(e => e.Id))
-                    /*.ForMember(dst => dst.Assignee, opt => opt.Ignore())
+                    .ForMember(dst => dst.Assignee, opt => opt.Ignore())
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
                     .ForMember(dst => dst.Comments, opt => opt.Ignore())
                     .ForMember(dst => dst.Project, opt => opt.Ignore())
                     .ForMember(dst => dst.Status, opt => opt.Ignore())
-                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())*/
+                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())
                     .ReverseMap();
                 cfg.CreateMap<CreateCommentDto, Comment>()
                     .ForMember(dst => dst.CommentId, opt => opt.Ignore())

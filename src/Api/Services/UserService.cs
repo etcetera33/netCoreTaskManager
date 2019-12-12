@@ -4,7 +4,6 @@ using Data;
 using Data.Models;
 using Services.Interfaces;
 using System.Threading.Tasks;
-using Services.Mapper;
 using Services.Helpers;
 
 namespace Services
@@ -21,18 +20,19 @@ namespace Services
             _mapper = imapper;
             _passwordhasher = passwordHasher;
         }
-        public async Task RegisterUserAsync(CreateUserDto userDto)
+        public async Task<UserDto> RegisterUserAsync(CreateUserDto userDto)
         {
             userDto.Password = _passwordhasher.Hash(userDto.Password); 
             var user= _mapper.Map<CreateUserDto, User>(userDto);
+            var createdEntity = await _unitOfWork.UserRepository.Create(user);
 
-            await _unitOfWork.UserRepository.Create(user);
+            return _mapper.Map<User, UserDto>(createdEntity);
         }
 
         public async Task<UserDto> GetUserByLoginAsync(UserDto userDto)
         {
             var user = await _unitOfWork.UserRepository.FindUserByLoginAsync(userDto.Login);
-            
+
             if (user == null || user.Password != _passwordhasher.Hash(userDto.Password))
             {
                 return null;

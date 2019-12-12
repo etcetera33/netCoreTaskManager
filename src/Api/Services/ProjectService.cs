@@ -20,10 +20,11 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task Create(CreateProjectDto projectDto)
+        public async Task<ProjectDto> Create(CreateProjectDto projectDto)
         {
             var projectEntity = _mapper.Map<CreateProjectDto, Project>(projectDto);
-            await _unitOfWork.ProjectRepository.Create(projectEntity);
+            var createdEntity = await _unitOfWork.ProjectRepository.Create(projectEntity);
+            return _mapper.Map<Project, ProjectDto>(createdEntity);
         }
 
         public async Task<IEnumerable<ProjectDto>> GetAll()
@@ -46,26 +47,6 @@ namespace Services
         {
             var project = _mapper.Map<CreateProjectDto, Project>(projectDto);
             await _unitOfWork.ProjectRepository.Update(projectId, project);
-        }
-
-        public async Task GiveRole(CreateProjectRoleDto projectRoleDto)
-        {
-            var project = _mapper.Map<CreateProjectRoleDto, ProjectRole>(projectRoleDto);
-            await _unitOfWork.ProjectRolesRepository.Create(project);
-        }
-
-        public async Task<IEnumerable<ProjectRoleDto>> GetProjectRoles(int projectId)
-        {
-            var roles = await _unitOfWork.ProjectRolesRepository.GetAllRolesByProjectId(projectId);
-            var rolesDto = _mapper.Map<IEnumerable<ProjectRole>, IEnumerable<ProjectRoleDto>>(roles);
-
-            return rolesDto;
-        }
-
-        public async Task ChangeRole(int projectRoleId, ProjectRoleDto roleDto)
-        {
-            var role = _mapper.Map<ProjectRoleDto, ProjectRole>(roleDto);
-            await _unitOfWork.ProjectRolesRepository.Update(projectRoleId, role);
         }
     }
 }

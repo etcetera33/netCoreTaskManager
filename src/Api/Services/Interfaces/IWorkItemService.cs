@@ -7,7 +7,7 @@ namespace Services.Interfaces
     public interface IWorkItemService
     {
         Task<IEnumerable<WorkItemDto>> GetAll();
-        Task Create(CreateWorkItemDto workItemDto);
+        Task<WorkItemDto> Create(CreateWorkItemDto workItemDto);
         Task<WorkItemDto> GetById(int workItemId);
         Task Update(int workItemId, CreateWorkItemDto workItemDto);
         Task Remove(int workItemId);

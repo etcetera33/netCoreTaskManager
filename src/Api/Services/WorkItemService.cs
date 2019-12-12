@@ -19,9 +19,12 @@ namespace Services
             _unitOfWork = unitOfWork;
             _mapper = imapper;
         }
-        public Task Create(CreateWorkItemDto workItemDto)
+        public async Task<WorkItemDto> Create(CreateWorkItemDto workItemDto)
         {
-            throw new NotImplementedException();
+            var workItemEntity = _mapper.Map<CreateWorkItemDto, WorkItem>(workItemDto); 
+            var workItem = await _unitOfWork.WorkItemRepository.Create(workItemEntity);
+
+            return _mapper.Map<WorkItem, WorkItemDto>(workItem);
         }
 
         public Task<WorkItemDto> GetById(int workItemId)

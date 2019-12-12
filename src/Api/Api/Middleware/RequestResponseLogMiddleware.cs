@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -8,28 +8,42 @@ namespace Api.Middleware
     public class RequestResponseLogMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger _logger;
 
-        public RequestResponseLogMiddleware(RequestDelegate next, ILoggerFactory logger)
+        public RequestResponseLogMiddleware(RequestDelegate next)
         {
             _next = next;
-            _logger = logger.CreateLogger<RequestResponseLogMiddleware>();
         }
 
         public Task InvokeAsync(HttpContext context)
         {
             var watch = new Stopwatch();
+            
             watch.Start();
             context.Response.OnStarting(() =>
             {
                 watch.Stop();
                 var responseTimeForCompleteRequest = watch.ElapsedMilliseconds;
-                _logger.LogInformation($"Time spent on this request: {responseTimeForCompleteRequest} ms");
+
+                var data = new
+                {
+                    Path = context.Request.Path,
+                    Method = context.Request.Method,
+                    Time = responseTimeForCompleteRequest
+                };
+
+                Log.Logger.Information(
+                        GetLoggerMessage(data)
+                    );
              
                 return Task.CompletedTask;
             });  
 
             return this._next(context);
+        }
+
+        private string GetLoggerMessage(dynamic data)
+        {
+            return $"Method: {data.Method}. URL: {data.Path}. The time spent on the request: {data.Time} ms.";
         }
     }
 }

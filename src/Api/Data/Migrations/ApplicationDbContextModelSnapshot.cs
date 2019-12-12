@@ -83,69 +83,6 @@ namespace Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Data.Models.ProjectRole", b =>
-                {
-                    b.Property<int>("ProjectRoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("AppliedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProjectRoleId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId", "ProjectId")
-                        .IsUnique();
-
-                    b.ToTable("ProjectRoles");
-                });
-
-            modelBuilder.Entity("Data.Models.Role", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("RoleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            RoleName = "Spectator"
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            RoleName = "Developer"
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            RoleName = "Owner"
-                        });
-                });
-
             modelBuilder.Entity("Data.Models.Status", b =>
                 {
                     b.Property<int>("StatusId")
@@ -207,6 +144,12 @@ namespace Data.Migrations
                     b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
 
                     b.HasIndex("Login")
@@ -219,18 +162,22 @@ namespace Data.Migrations
                         new
                         {
                             UserId = 1,
-                            FullName = "Dmytro Poliit",
-                            Login = "dmyto.poliit",
+                            FullName = "Dmytro123213 Poliit",
+                            Login = "dmyto123123123123.poliit",
                             Password = "111",
-                            Position = "Junior Developer"
+                            Position = "Junior Developer",
+                            Role = 1,
+                            RoleId = 1
                         },
                         new
                         {
                             UserId = 2,
-                            FullName = "John Doe",
-                            Login = "john.doe",
+                            FullName = "John123123 Doe",
+                            Login = "john123123123.doe",
                             Password = "111",
-                            Position = "Junior PM"
+                            Position = "Junior PM",
+                            Role = 0,
+                            RoleId = 0
                         });
                 });
 
@@ -303,27 +250,6 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.WorkItem", "WorkItem")
                         .WithMany("Comments")
                         .HasForeignKey("WorkItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Data.Models.ProjectRole", b =>
-                {
-                    b.HasOne("Data.Models.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

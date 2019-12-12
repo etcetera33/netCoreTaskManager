@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models.DTOs.Project;
-using Models.DTOs.ProjectRole;
 using Services.Interfaces;
 using System.Threading.Tasks;
 
@@ -16,61 +15,36 @@ namespace Api.Controllers
             _projectService = projectService;
         }
 
-        // GET: api/Project
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var projects = _projectService.GetAll();
-
-            return new OkObjectResult(projects);
+            var projects = await _projectService.GetAll();
+            return Ok(projects);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateProjectDto projectDto)
         {
-            await _projectService.Create(projectDto);
-            return Ok();
+            var createdProject = await _projectService.Create(projectDto);
+
+            return new JsonResult(createdProject, new { StatusCode = 201} );
         }
 
         [HttpGet("{id}", Name = "GetProject")]
         public async Task<IActionResult> Get(int projectId)
         {
             var project = await _projectService.GetById(projectId);
-            return new OkObjectResult(project);
+
+            return Ok(project);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, CreateProjectDto projectDto)
         {
             await _projectService.Update(id, projectDto);
-            return Ok();
+
+            return NoContent();
         }
 
-        [HttpGet()]
-        [Route("{projectId:int}/Roles")]
-        public async Task<IActionResult> GetRoles(int projectId)
-        {
-            var roles = await _projectService.GetProjectRoles(projectId);
-
-            return Ok(roles);
-        }
-
-        [HttpPost]
-        [Route("Roles/Create")]
-        public async Task<IActionResult> CreateRole(CreateProjectRoleDto roleDto)
-        {
-            await _projectService.GiveRole(roleDto);
-
-            return Ok();
-        }
-
-        [HttpPut]
-        [Route("Roles/{projectRoleId:int}")]
-        public async Task<IActionResult> UpdateRole(int projectRoleId, ProjectRoleDto roleDto)
-        {
-            await _projectService.ChangeRole(projectRoleId, roleDto);
-
-            return Ok();
-        }
     }
 }
