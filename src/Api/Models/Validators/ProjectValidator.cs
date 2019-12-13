@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Models.DTOs.Project;
+using Models.DTOs;
 
 namespace Models.Validators
 {

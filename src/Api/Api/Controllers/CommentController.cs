@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Models.DTOs.Comment;
+using Models.DTOs;
 using Services.Interfaces;
 
 namespace Api.Controllers
@@ -43,6 +43,9 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            if (! await _commentService.CommentExists(id))
+                return NotFound();
+
             await _commentService.Remove(id);
 
             return NoContent();

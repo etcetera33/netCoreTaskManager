@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models.DTOs.Comment
+namespace Models.DTOs
 {
     public class CommentDto
     {

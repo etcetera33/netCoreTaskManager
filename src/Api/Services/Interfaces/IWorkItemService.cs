@@ -1,4 +1,4 @@
-﻿using Models.DTOs.WorkItem;
+﻿using Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,6 +12,6 @@ namespace Services.Interfaces
         Task Update(int workItemId, WorkItemDto workItemDto);
         Task Remove(int workItemId);
         Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectId(int projectId);
-        Task<bool> WorkItemExists(int workItem);
+        Task<bool> WorkItemExists(int workItemId);
     }
 }

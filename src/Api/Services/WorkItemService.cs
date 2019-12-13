@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data;
 using Data.Models;
-using Models.DTOs.WorkItem;
+using Models.DTOs;
 using Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;

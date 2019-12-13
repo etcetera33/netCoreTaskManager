@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data;
 using Data.Models;
-using Models.DTOs.Comment;
+using Models.DTOs;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -41,6 +41,11 @@ namespace Services
         public async Task Remove(int commentId)
         {
             await _unitOfWork.CommentRepository.Delete(commentId);
+        }
+
+        public async Task<bool> CommentExists(int commentId)
+        {
+            return (await _unitOfWork.CommentRepository.GetById(commentId) != null);
         }
     }
 }

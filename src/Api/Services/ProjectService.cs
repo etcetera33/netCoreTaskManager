@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data;
 using Data.Models;
-using Models.DTOs.Project;
+using Models.DTOs;
 using Services.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -45,6 +45,11 @@ namespace Services
         {
             var project = _mapper.Map<ProjectDto, Project>(projectDto);
             await _unitOfWork.ProjectRepository.Update(projectId, project);
+        }
+
+        public async Task<bool> ProjectExists(int projectId)
+        {
+            return (await _unitOfWork.ProjectRepository.GetById(projectId) != null);
         }
     }
 }

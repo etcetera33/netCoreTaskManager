@@ -1,4 +1,4 @@
-﻿namespace Models.DTOs.Project
+﻿namespace Models.DTOs
 {
     public class ProjectDto
     {

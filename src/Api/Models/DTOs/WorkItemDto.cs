@@ -1,9 +1,7 @@
 ﻿using Core.Enums;
-using Models.DTOs.Comment;
-using Models.DTOs.Project;
 using System.Collections.Generic;
 
-namespace Models.DTOs.WorkItem
+namespace Models.DTOs
 {
     public class WorkItemDto
     {
