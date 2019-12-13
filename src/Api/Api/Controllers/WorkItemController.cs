@@ -12,12 +12,10 @@ namespace Api.Controllers
     public class WorkItemController : ControllerBase
     {
         private readonly IWorkItemService _workItemService;
-        private readonly ICommentService _commentService;
 
         public WorkItemController(IWorkItemService workItemService, ICommentService commentService)
         {
             _workItemService = workItemService;
-            _commentService = commentService;
         }
 
         [HttpGet]
@@ -29,7 +27,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(CreateWorkItemDto workItemDto)
+        public async Task<IActionResult> Post(WorkItemDto workItemDto)
         {
             var workItem = await _workItemService.Create(workItemDto);
 
@@ -41,30 +39,18 @@ namespace Api.Controllers
         {
             var project = await _workItemService.GetById(projectId);
 
+            if (project == null)
+                return NotFound();
+
             return Ok(project);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int workItemId, CreateWorkItemDto workItemDto)
+        public async Task<IActionResult> Put(int workItemId, WorkItemDto workItemDto)
         {
             await _workItemService.Update(workItemId, workItemDto);
 
             return NoContent();
-        }
-
-        [HttpGet("{id}/comments")]
-        public async Task<IActionResult> GetComments(int workItemId)
-        {
-            var comments = await _commentService.GetWorkItemsComments(workItemId);
-            
-            return Ok(comments);
-        }
-
-        [HttpPost("{id}/comments/create")]
-        public async Task<IActionResult> CreateComment(CreateCommentDto commentDto)
-        {
-            var comment = await _commentService.Create(commentDto);
-            return Ok(comment);
         }
     }
 }

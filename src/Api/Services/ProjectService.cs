@@ -2,9 +2,7 @@
 using Data;
 using Data.Models;
 using Models.DTOs.Project;
-using Models.DTOs.ProjectRole;
 using Services.Interfaces;
-using Services.Mapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,9 +18,9 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task<ProjectDto> Create(CreateProjectDto projectDto)
+        public async Task<ProjectDto> Create(ProjectDto projectDto)
         {
-            var projectEntity = _mapper.Map<CreateProjectDto, Project>(projectDto);
+            var projectEntity = _mapper.Map<ProjectDto, Project>(projectDto);
             var createdEntity = await _unitOfWork.ProjectRepository.Create(projectEntity);
             return _mapper.Map<Project, ProjectDto>(createdEntity);
         }
@@ -43,9 +41,9 @@ namespace Services
             return projectDto;
         }
 
-        public async Task Update(int projectId, CreateProjectDto projectDto)
+        public async Task Update(int projectId, ProjectDto projectDto)
         {
-            var project = _mapper.Map<CreateProjectDto, Project>(projectDto);
+            var project = _mapper.Map<ProjectDto, Project>(projectDto);
             await _unitOfWork.ProjectRepository.Update(projectId, project);
         }
     }

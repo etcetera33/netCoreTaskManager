@@ -12,14 +12,10 @@ namespace Data.Repositories
         {
 
         }
-        public async Task<IEnumerable<WorkItem>> GetAll()
+
+        public async Task<IEnumerable<WorkItem>> GetAllByProjectId(int projectId)
         {
-            return await _dbContext.WorkItems
-                .Include(x => x.Assignee)
-                .Include(x => x.Author)
-                .Include(x => x.Project)
-                .Include(x => x.Comments)
-                .ToListAsync();
+            return await _dbContext.WorkItems.Where(x => x.ProjectId == projectId).ToListAsync();
         }
     }
 }

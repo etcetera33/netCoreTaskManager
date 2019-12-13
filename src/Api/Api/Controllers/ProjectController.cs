@@ -23,7 +23,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProjectDto projectDto)
+        public async Task<IActionResult> Create(ProjectDto projectDto)
         {
             var createdProject = await _projectService.Create(projectDto);
 
@@ -39,7 +39,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, CreateProjectDto projectDto)
+        public async Task<IActionResult> Put(int id, ProjectDto projectDto)
         {
             await _projectService.Update(id, projectDto);
 

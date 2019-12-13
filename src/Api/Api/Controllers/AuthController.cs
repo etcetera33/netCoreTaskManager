@@ -9,6 +9,8 @@ using System;
 using Api.Auth;
 using System.Net;
 using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
+using FluentValidation.AspNetCore;
 
 namespace Api.Controllers
 {
@@ -26,7 +28,7 @@ namespace Api.Controllers
 
         [Route("Register")]
         [HttpPost()]
-        public async Task<IActionResult> Register(CreateUserDto user)
+        public async Task<IActionResult> Register(UserDto user)
         {
             var userDto = await _userService.RegisterUserAsync(user);
             return new JsonResult(userDto)
@@ -37,7 +39,7 @@ namespace Api.Controllers
 
         [Route("Authorize")]
         [HttpPost()]
-        public async Task<IActionResult> Authorize(UserDto userDto)
+        public async Task<IActionResult> Authorize([CustomizeValidator(Properties = "Login, Password")] UserDto userDto)
         {
             var user = await _userService.GetUserByLoginAsync(userDto);
             if (user == null)

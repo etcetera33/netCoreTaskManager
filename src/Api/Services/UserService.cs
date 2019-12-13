@@ -20,10 +20,10 @@ namespace Services
             _mapper = imapper;
             _passwordhasher = passwordHasher;
         }
-        public async Task<UserDto> RegisterUserAsync(CreateUserDto userDto)
+        public async Task<UserDto> RegisterUserAsync(UserDto userDto)
         {
             userDto.Password = _passwordhasher.Hash(userDto.Password); 
-            var user= _mapper.Map<CreateUserDto, User>(userDto);
+            var user= _mapper.Map<UserDto, User>(userDto);
             var createdEntity = await _unitOfWork.UserRepository.Create(user);
 
             return _mapper.Map<User, UserDto>(createdEntity);
@@ -49,9 +49,9 @@ namespace Services
             return userDto;
         }
 
-        public async Task Update(int userId, CreateUserDto userDto)
+        public async Task Update(int userId, UserDto userDto)
         {
-            var user = _mapper.Map<CreateUserDto, User>(userDto);
+            var user = _mapper.Map<UserDto, User>(userDto);
             await _unitOfWork.UserRepository.Update(userId, user);
         }
     }

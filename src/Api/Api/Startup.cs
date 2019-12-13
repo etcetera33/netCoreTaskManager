@@ -2,6 +2,7 @@ using Api.Auth;
 using Api.Middleware;
 using AutoMapper;
 using Data;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Models.Validators;
 using Newtonsoft.Json;
 using Serilog;
 using Services;
@@ -34,6 +36,7 @@ namespace Api
             
             services.AddControllers()
                 //.AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<UserValidator>())
                 ;
 
             services.AddDbContext<ApplicationDbContext>(

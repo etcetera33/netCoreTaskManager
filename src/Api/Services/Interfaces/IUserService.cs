@@ -5,9 +5,9 @@ namespace Services.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDto> RegisterUserAsync(CreateUserDto user);
+        Task<UserDto> RegisterUserAsync(UserDto user);
         Task<UserDto> GetUserByLoginAsync(UserDto user);
         Task<UserDto> GetById(int userId);
-        Task Update(int userId, CreateUserDto userDto);
+        Task Update(int userId, UserDto userDto);
     }
 }

@@ -3,7 +3,6 @@ using Data.Models;
 using Models.DTOs;
 using Models.DTOs.Comment;
 using Models.DTOs.Project;
-using Models.DTOs.ProjectRole;
 using Models.DTOs.WorkItem;
 
 namespace Services.Mapper
@@ -60,14 +59,9 @@ namespace Services.Mapper
                     .ReverseMap();
                 cfg.CreateMap<CommentDto, Comment>()
                     .ForMember(dst => dst.CommentId, src => src.MapFrom(e => e.Id))
+                    .ForMember(dst => dst.CommentBody, src => src.MapFrom(e => e.Body))
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
                     .ForMember(dst => dst.WorkItem, opt => opt.Ignore())
-                    .ReverseMap();
-                cfg.CreateMap<CreateProjectRoleDto, ProjectRole>()
-                    .ForMember(dst => dst.ProjectRoleId, opt => opt.Ignore())
-                    .ReverseMap();
-                cfg.CreateMap<ProjectRoleDto, ProjectRole>()
-                    .ForMember(dst => dst.ProjectRoleId, src => src.MapFrom(p => p.Id))
                     .ReverseMap();
             });
             return config;
