@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { CommonModule } from '@angular/common';
 
 const appRoutes: Routes = [
+  { path: '', component: HomeComponent},
   { path: 'projects', component: ProjectListComponent},
   { path: 'projects/:id', component: ProjectDetailComponent },
 ];

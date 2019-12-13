@@ -15,13 +15,7 @@ import { CommonModule } from '@angular/common';
   styles: []
 })
 export class MenuComponent implements OnInit {
-  menuItems: Array<Menu>;
-
   constructor() {}
 
   ngOnInit() {}
-
-  setMenuItems(menu): void {
-    this.menuItems = menu;
-  }
 }

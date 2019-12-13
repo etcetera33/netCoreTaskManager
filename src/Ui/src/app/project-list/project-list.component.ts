@@ -11,7 +11,6 @@ export class ProjectListComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.menu.setMenuItems({title: 'qwe', url: 'qwe'});
   }
 
 }
