@@ -1,5 +1,6 @@
 ﻿using Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,12 +15,6 @@ namespace Data.Repositories
             return await _dbContext.Users
                 .Where(user => user.Login == login)
                 .FirstOrDefaultAsync();
-        }
-        public User FindUserByLogin(string login)
-        {
-            return _dbContext.Users
-                .Where(user => user.Login == login)
-                .FirstOrDefault();
         }
     }
 }

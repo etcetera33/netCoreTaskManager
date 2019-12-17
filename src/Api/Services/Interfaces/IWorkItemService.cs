@@ -13,5 +13,6 @@ namespace Services.Interfaces
         Task Remove(int workItemId);
         Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectId(int projectId);
         Task<bool> WorkItemExists(int workItemId);
+        Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectNAssigneeId(int projectId, int userId);
     }
 }

@@ -8,12 +8,14 @@ namespace Models.Validators
         public WorkItemValidator()
         {
             RuleFor(x => x.ProjectId).NotEmpty();
-            RuleFor(x => x.WorkItemTypeId).NotEmpty();
             RuleFor(x => x.Title).NotEmpty();
             RuleFor(x => x.StatusId).NotEmpty();
             RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.AuthorId).NotEmpty();
             RuleFor(x => x.AssigneeId).NotEmpty();
+            RuleFor(x => x.Priority).NotEmpty().InclusiveBetween(0, 100);
+            RuleFor(x => x.Progress).NotEmpty().InclusiveBetween(0, 100);
+            RuleFor(x => x.WorkItemTypeId).NotEmpty().InclusiveBetween(1, 2);
         }
     }
 }

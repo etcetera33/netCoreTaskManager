@@ -64,5 +64,12 @@ namespace Services
         {
             return (await _unitOfWork.WorkItemRepository.GetById(workItemId) != null);
         }
+
+        public async Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectNAssigneeId(int projectId, int userId)
+        {
+            var workItems = await _unitOfWork.WorkItemRepository.GetAllByProjectNUserId(projectId, userId);
+
+            return _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItems);
+        }
     }
 }

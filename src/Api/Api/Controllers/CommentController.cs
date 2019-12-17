@@ -43,10 +43,11 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (! await _commentService.CommentExists(id))
+            if (!await _commentService.CommentExists(id))
                 return NotFound();
-
+            
             await _commentService.Remove(id);
+
 
             return NoContent();
         }

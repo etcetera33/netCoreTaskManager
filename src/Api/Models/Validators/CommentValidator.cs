@@ -11,5 +11,6 @@ namespace Models.Validators
             RuleFor(x => x.WorkItemId).NotEmpty();
             RuleFor(x => x.AuthorId).NotEmpty();
         }
+
     }
 }

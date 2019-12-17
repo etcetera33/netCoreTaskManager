@@ -51,5 +51,12 @@ namespace Services
         {
             return (await _unitOfWork.ProjectRepository.GetById(projectId) != null);
         }
+
+        public async Task<ProjectDto> GetBySlug(int projectId)
+        {
+            var project = await _unitOfWork.ProjectRepository.GetById(projectId);
+
+            return _mapper.Map<Project, ProjectDto>(project);
+        }
     }
 }

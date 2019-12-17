@@ -11,7 +11,6 @@ namespace Models.Validators
             RuleFor(x => x.Login).NotEmpty().Length(1, 40);
             RuleFor(x => x.Password).NotEmpty().Length(1, 40);
             RuleFor(x => x.Position).NotNull().Length(1, 40);
-            RuleFor(x => x.RoleId).NotNull().ExclusiveBetween(1, 3);
         }        
     }
 }

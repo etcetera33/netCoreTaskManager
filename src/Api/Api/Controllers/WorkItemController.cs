@@ -46,22 +46,30 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetWorkItem")]
-        public async Task<IActionResult> Get(int projectId)
+        public async Task<IActionResult> Get(int id)
         {
-            var project = await _workItemService.GetById(projectId);
+            var workItem = await _workItemService.GetById(id);
 
-            if (project == null)
+            if (workItem == null)
                 return NotFound();
 
-            return Ok(project);
+            return Ok(workItem);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int workItemId, WorkItemDto workItemDto)
+        public async Task<IActionResult> Put(int id, WorkItemDto workItemDto)
         {
-            await _workItemService.Update(workItemId, workItemDto);
+            await _workItemService.Update(id, workItemDto);
 
             return NoContent();
         }
+
+        /*[HttpGet("user/{projectId}")]
+        public async Task<IActionResult> GetByUser(int projectId)
+        {
+            //return await _workItemService.GetWorkItemsByProjectNAssigneeId(projectId,
+                // import auth here and paste UserId
+            //);
+        }*/
     }
 }

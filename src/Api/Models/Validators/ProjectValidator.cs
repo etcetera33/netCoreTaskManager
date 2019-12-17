@@ -7,8 +7,7 @@ namespace Models.Validators
     {
         public ProjectValidator()
         {
-            RuleFor(x => x.Name).Length(1, 30);
-            RuleFor(x => x.Slug).Length(1, 30);
+            RuleFor(x => x.Name).NotEmpty().Length(1, 30);
         }
     }
 }

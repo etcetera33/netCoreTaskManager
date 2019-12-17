@@ -15,7 +15,22 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<WorkItem>> GetAllByProjectId(int projectId)
         {
-            return await _dbContext.WorkItems.Where(x => x.ProjectId == projectId).ToListAsync();
+            return await _dbContext.WorkItems.Where(p => p.ProjectId == projectId).ToListAsync();
+        }
+
+        public async override Task<WorkItem> GetById(int id)
+        {
+            return await _dbContext.WorkItems
+                .Include(x => x.Assignee)
+                .FirstOrDefaultAsync(i => i.WorkItemId == id);
+        }
+
+        public async Task<IEnumerable<WorkItem>> GetAllByProjectNUserId(int projectId, int userId)
+        {
+            return await _dbContext.WorkItems
+                .Where(x => x.ProjectId == projectId)
+                .Where(x => x.AssigneeId == userId)
+                .ToListAsync();
         }
     }
 }

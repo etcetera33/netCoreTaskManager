@@ -1,0 +1,11 @@
+<div class="col-lg-7">
+    <div class="p-5"><div class="text-center">
+        <h1 class="h4 text-gray-900 mb-4">Add a project</h1>
+    </div>
+    <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" (submit)="onSubmit(form)" ngNativeValidate>
+        <div class="form-group">
+            <input placeholder="Name" name="Name" #Name="ngModel" [ngModel]="project?.Name" class="form-control form-control-user" required>
+        </div>
+        <input type="submit" class="btn btn-primary btn-user btn-block" value="Add project">
+    </form>
+</div>

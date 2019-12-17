@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, NgModule } from '@angular/core';
-import { Menu } from '../shared/menu.model';
 import { CommonModule } from '@angular/common';
 
 

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191212130147_Initial")]
+    [Migration("20191216160018_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,14 +59,7 @@ namespace Data.Migrations
                     b.Property<string>("ProjectName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Slug")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("ProjectId");
-
-                    b.HasIndex("Slug")
-                        .IsUnique()
-                        .HasFilter("[Slug] IS NOT NULL");
 
                     b.ToTable("Projects");
 
@@ -74,14 +67,12 @@ namespace Data.Migrations
                         new
                         {
                             ProjectId = 1,
-                            ProjectName = "Apple",
-                            Slug = "apple"
+                            ProjectName = "Apple"
                         },
                         new
                         {
                             ProjectId = 2,
-                            ProjectName = "Facebook",
-                            Slug = "facebook"
+                            ProjectName = "Facebook"
                         });
                 });
 
@@ -168,8 +159,8 @@ namespace Data.Migrations
                             Login = "dmyto123123123123.poliit",
                             Password = "111",
                             Position = "Junior Developer",
-                            Role = 1,
-                            RoleId = 1
+                            Role = 2,
+                            RoleId = 2
                         },
                         new
                         {
@@ -178,8 +169,8 @@ namespace Data.Migrations
                             Login = "john123123123.doe",
                             Password = "111",
                             Position = "Junior PM",
-                            Role = 0,
-                            RoleId = 0
+                            Role = 1,
+                            RoleId = 1
                         });
                 });
 
@@ -198,6 +189,12 @@ namespace Data.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
@@ -233,6 +230,8 @@ namespace Data.Migrations
                             AssigneeId = 1,
                             AuthorId = 2,
                             Description = "Deploy the project",
+                            Priority = 0,
+                            Progress = 0,
                             ProjectId = 1,
                             StatusId = 1,
                             Title = "Deploy project",

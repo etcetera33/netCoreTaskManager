@@ -2,7 +2,7 @@
 {
     public enum WorkItemTypes
     {
-        Bug,
-        Feature
+        Bug = 1,
+        Feature = 2
     }
 }

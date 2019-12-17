@@ -18,7 +18,14 @@ namespace Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Project>(project => project.HasIndex(x => x.Slug).IsUnique(true));
+            modelBuilder.Entity<WorkItem>(e =>
+            {
+                e.Property(e => e.WorkItemType).HasConversion(x => (int)x, x => (WorkItemTypes)x);
+            });
+            modelBuilder.Entity<User>(e =>
+            {
+                e.Property(e => e.Role).HasConversion(x => (int)x, x => (Roles)x);
+            });
 
             modelBuilder.Entity<WorkItem>(e =>
                 {
@@ -26,7 +33,6 @@ namespace Data
                     e.HasOne(x => x.Author).WithMany(x => x.CreatedWorkItems).HasForeignKey(x => x.AuthorId).OnDelete(DeleteBehavior.Restrict);
                 }
             );
-
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Login)
@@ -40,13 +46,13 @@ namespace Data
                 new Status { StatusId = 5, StatusName = "Done" }
             );
             modelBuilder.Entity<Project>().HasData(
-                new Project { ProjectId = 1, ProjectName = "Apple", Slug = "apple" },
-                new Project { ProjectId = 2, ProjectName = "Facebook", Slug = "facebook" }
+                new Project { ProjectId = 1, ProjectName = "Apple"},
+                new Project { ProjectId = 2, ProjectName = "Facebook"}
             );
 
             modelBuilder.Entity<User>().HasData(
-                new User { UserId = 1, Login = "dmyto123123123123.poliit", FullName = "Dmytro123213 Poliit", Password = "111", Position = "Junior Developer", RoleId = (int) Roles.Developer},
-                new User { UserId = 2, Login = "john123123123.doe", FullName = "John123123 Doe", Password = "111", Position = "Junior PM", RoleId = (int) Roles.Spectator }
+                new User { UserId = 1, Login = "dmyto123123123123.poliit", FullName = "Dmytro123213 Poliit", Password = "111", Position = "Junior Developer", RoleId = (int)Roles.Developer },
+                new User { UserId = 2, Login = "john123123123.doe", FullName = "John123123 Doe", Password = "111", Position = "Junior PM", RoleId = (int)Roles.Spectator }
             );
             modelBuilder.Entity<WorkItem>().HasData(
                 new WorkItem { WorkItemId = 1, ProjectId = 1, AssigneeId = 1, AuthorId = 2, Title = "Deploy project", Description = "Deploy the project", StatusId = 1, WorkItemTypeId = 1 }

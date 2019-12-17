@@ -13,8 +13,7 @@ namespace Data.Migrations
                 {
                     ProjectId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectName = table.Column<string>(nullable: true),
-                    Slug = table.Column<string>(nullable: true)
+                    ProjectName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -60,6 +59,8 @@ namespace Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
+                    Progress = table.Column<int>(nullable: false),
+                    Priority = table.Column<int>(nullable: false),
                     WorkItemTypeId = table.Column<int>(nullable: false),
                     WorkItemType = table.Column<int>(nullable: false),
                     StatusId = table.Column<int>(nullable: false),
@@ -126,11 +127,11 @@ namespace Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Projects",
-                columns: new[] { "ProjectId", "ProjectName", "Slug" },
+                columns: new[] { "ProjectId", "ProjectName" },
                 values: new object[,]
                 {
-                    { 1, "Apple", "apple" },
-                    { 2, "Facebook", "facebook" }
+                    { 1, "Apple" },
+                    { 2, "Facebook" }
                 });
 
             migrationBuilder.InsertData(
@@ -150,14 +151,14 @@ namespace Data.Migrations
                 columns: new[] { "UserId", "FullName", "Login", "Password", "Position", "Role", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Dmytro123213 Poliit", "dmyto123123123123.poliit", "111", "Junior Developer", 1, 1 },
-                    { 2, "John123123 Doe", "john123123123.doe", "111", "Junior PM", 0, 0 }
+                    { 1, "Dmytro123213 Poliit", "dmyto123123123123.poliit", "111", "Junior Developer", 2, 2 },
+                    { 2, "John123123 Doe", "john123123123.doe", "111", "Junior PM", 1, 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "WorkItems",
-                columns: new[] { "WorkItemId", "AssigneeId", "AuthorId", "Description", "ProjectId", "StatusId", "Title", "WorkItemType", "WorkItemTypeId" },
-                values: new object[] { 1, 1, 2, "Deploy the project", 1, 1, "Deploy project", 1, 1 });
+                columns: new[] { "WorkItemId", "AssigneeId", "AuthorId", "Description", "Priority", "Progress", "ProjectId", "StatusId", "Title", "WorkItemType", "WorkItemTypeId" },
+                values: new object[] { 1, 1, 2, "Deploy the project", 0, 0, 1, 1, "Deploy project", 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_AuthorId",
@@ -168,13 +169,6 @@ namespace Data.Migrations
                 name: "IX_Comments_WorkItemId",
                 table: "Comments",
                 column: "WorkItemId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_Slug",
-                table: "Projects",
-                column: "Slug",
-                unique: true,
-                filter: "[Slug] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Login",
