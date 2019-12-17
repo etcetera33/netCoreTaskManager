@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Enums;
 using Data;
 using Data.Models;
 using Models.DTOs;
@@ -70,6 +71,44 @@ namespace Services
             var workItems = await _unitOfWork.WorkItemRepository.GetAllByProjectNUserId(projectId, userId);
 
             return _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItems);
+        }
+
+        public async Task<IEnumerable<object>> GetWorkItemTypes()
+        {
+            var enumTypes = new List<object>();
+            await Task.Run(() =>
+            {
+                foreach (var item in WorkItemTypes.GetValues(typeof(WorkItemTypes)))
+                {
+
+                    enumTypes.Add(new
+                    {
+                        Id = (int)item,
+                        Name = item.ToString()
+                    });
+                }
+            });
+
+            return enumTypes;
+        }
+
+        public async Task<IEnumerable<object>> GetWorkItemStatuses()
+        {
+            var enumStatuses = new List<object>();
+            await Task.Run(() =>
+            {
+                foreach (var item in Statuses.GetValues(typeof(Statuses)))
+                {
+
+                    enumStatuses.Add(new
+                    {
+                        Id = (int)item,
+                        Name = item.ToString()
+                    });
+                }
+            });
+
+            return enumStatuses;
         }
     }
 }

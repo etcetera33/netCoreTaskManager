@@ -25,5 +25,11 @@ namespace Api.Controllers
 
             return Ok(user);
         }
+
+        [HttpGet("dictionary")]
+        public async Task<IActionResult> GetDictionary()
+        {
+            return Ok(await _userService.GetUserList());
+        }
     }
 }

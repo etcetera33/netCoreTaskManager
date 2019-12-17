@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import {WorkItem} from './work-item.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +7,13 @@ import { HttpClient } from '@angular/common/http';
 
 export class WorkItemService {
 
-  workItem: WorkItem;
-  workItemList: WorkItem[];
-  rootUrl = 'https://localhost:44348/api/workItem/';
+  private rootUrl = 'https://localhost:44348/api/workItem/';
+  private headers =  {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('jwt')
+    })
+  };
   constructor(private http: HttpClient) { }
 
   getWorkitemsByProjectId(projectId: number) {
@@ -19,5 +22,21 @@ export class WorkItemService {
 
   loadEntity(entityId: number) {
     return this.http.get(this.rootUrl + entityId);
+  }
+
+  loadWorkItemTypes() {
+    return this.http.get(this.rootUrl + 'types');
+  }
+
+  updateEntity(data, id: number) {
+    return this.http.put(this.rootUrl + id, data, this.headers);
+  }
+
+  loadWorkItemStatuses() {
+    return this.http.get(this.rootUrl + 'statuses');
+  }
+
+  createEntity(data) {
+    return this.http.post(this.rootUrl, data, this.headers);
   }
 }

@@ -26,9 +26,19 @@ namespace Data.Models
         [EnumDataType(typeof(WorkItemTypes))]
         public WorkItemTypes WorkItemType { get; set; }
 
-        [ForeignKey(nameof(Status))]
-        public int StatusId { get; set; }
-        public Status Status { get; set; }
+        public int StatusId
+        {
+            get
+            {
+                return (int)Status;
+            }
+            set
+            {
+                Status = (Statuses)value;
+            }
+        }
+        [EnumDataType(typeof(Statuses))]
+        public Statuses Status { get; set; }
 
         [ForeignKey(nameof(User))]
         public int AssigneeId { get; set; }

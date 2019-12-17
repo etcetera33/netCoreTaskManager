@@ -10,7 +10,8 @@ export class AuthService {
   rootUrl = 'https://localhost:44348/api/auth/';
   headers = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + localStorage.getItem('jwt')
     })
   };
   constructor(private client: HttpClient) { }

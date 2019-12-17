@@ -74,48 +74,6 @@ namespace Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Data.Models.Status", b =>
-                {
-                    b.Property<int>("StatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("StatusId");
-
-                    b.ToTable("Statuses");
-
-                    b.HasData(
-                        new
-                        {
-                            StatusId = 1,
-                            StatusName = "To do"
-                        },
-                        new
-                        {
-                            StatusId = 2,
-                            StatusName = "Doing"
-                        },
-                        new
-                        {
-                            StatusId = 3,
-                            StatusName = "To test"
-                        },
-                        new
-                        {
-                            StatusId = 4,
-                            StatusName = "Testing"
-                        },
-                        new
-                        {
-                            StatusId = 5,
-                            StatusName = "Done"
-                        });
-                });
-
             modelBuilder.Entity("Data.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -197,6 +155,9 @@ namespace Data.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
@@ -217,8 +178,6 @@ namespace Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("WorkItems");
 
                     b.HasData(
@@ -231,6 +190,7 @@ namespace Data.Migrations
                             Priority = 0,
                             Progress = 0,
                             ProjectId = 1,
+                            Status = 1,
                             StatusId = 1,
                             Title = "Deploy project",
                             WorkItemType = 1,
@@ -270,12 +230,6 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.Project", "Project")
                         .WithMany("WorkItems")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Models.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

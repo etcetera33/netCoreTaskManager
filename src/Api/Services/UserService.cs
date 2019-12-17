@@ -5,6 +5,7 @@ using Data.Models;
 using Services.Interfaces;
 using System.Threading.Tasks;
 using Services.Helpers;
+using System.Collections.Generic;
 
 namespace Services
 {
@@ -55,6 +56,11 @@ namespace Services
             await _unitOfWork.UserRepository.Update(userId, user);
         }
 
+        public async Task<IEnumerable<UserDictionaryDto>> GetUserList()
+        {
+            var userList = await _unitOfWork.UserRepository.GetAll();
 
+            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDictionaryDto>>(userList);
+        }
     }
 }

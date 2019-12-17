@@ -10,5 +10,6 @@ namespace Services.Interfaces
         Task<UserDto> GetUserByLoginAsync(UserDto user);
         Task<UserDto> GetById(int userId);
         Task Update(int userId, UserDto userDto);
+        Task<IEnumerable<UserDictionaryDto>> GetUserList();
     }
 }

@@ -19,6 +19,7 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            // TODO filter project by name
             var projects = await _projectService.GetAll();
             
             return Ok(projects);

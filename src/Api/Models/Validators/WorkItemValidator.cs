@@ -9,9 +9,8 @@ namespace Models.Validators
         {
             RuleFor(x => x.ProjectId).NotEmpty();
             RuleFor(x => x.Title).NotEmpty();
-            RuleFor(x => x.StatusId).NotEmpty();
+            RuleFor(x => x.StatusId).NotEmpty().InclusiveBetween(1, 4);
             RuleFor(x => x.Description).NotEmpty();
-            RuleFor(x => x.AuthorId).NotEmpty();
             RuleFor(x => x.AssigneeId).NotEmpty();
             RuleFor(x => x.Priority).NotEmpty().InclusiveBetween(0, 100);
             RuleFor(x => x.Progress).NotEmpty().InclusiveBetween(0, 100);

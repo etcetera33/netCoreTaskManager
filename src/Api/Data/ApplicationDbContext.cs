@@ -9,7 +9,6 @@ namespace Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
 
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Status> Statuses { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<WorkItem> WorkItems { get; set; }
@@ -38,13 +37,6 @@ namespace Data
                 .HasIndex(u => u.Login)
                 .IsUnique();
 
-            modelBuilder.Entity<Status>().HasData(
-                new Status { StatusId = 1, StatusName = "To do" },
-                new Status { StatusId = 2, StatusName = "Doing" },
-                new Status { StatusId = 3, StatusName = "To test" },
-                new Status { StatusId = 4, StatusName = "Testing" },
-                new Status { StatusId = 5, StatusName = "Done" }
-            );
             modelBuilder.Entity<Project>().HasData(
                 new Project { ProjectId = 1, ProjectName = "Apple"},
                 new Project { ProjectId = 2, ProjectName = "Facebook"}

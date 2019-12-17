@@ -1,18 +1,18 @@
-import { UserService } from './../../shared/user/user.service';
-import { User } from './../../shared/user/user';
 import { NgForm } from '@angular/forms';
-import { WorkItemService } from './../../shared/work-item/work-item.service';
+import { UserService } from './../../shared/user/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { WorkItemService } from './../../shared/work-item/work-item.service';
+import { User } from './../../shared/user/user';
 import { WorkItem } from './../../shared/work-item/work-item.model';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-work-item-detail',
-  templateUrl: './work-item-detail.component.html',
+  selector: 'app-create-work-item',
+  templateUrl: './create-work-item.component.html',
   styles: []
 })
-
-export class WorkItemDetailComponent implements OnInit {
+export class CreateWorkItemComponent implements OnInit {
+  projectId: number;
   workItem: WorkItem;
   assigneeList: User[];
   workItemTypes: any[];
@@ -24,7 +24,8 @@ export class WorkItemDetailComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
-      this.loadEntity(+params.get('id'));
+      console.log(+params.get('id'));
+      this.projectId = +params.get('id');
     });
     this.loadAssigneeList();
     this.loadWorkItemTypes();
@@ -34,9 +35,9 @@ export class WorkItemDetailComponent implements OnInit {
   onSubmit(form: NgForm) {
     const data = JSON.stringify(form.value);
     console.log(form.value);
-    this.workItemService.updateEntity(data, this.workItem.Id).subscribe(
+    this.workItemService.createEntity(data).subscribe(
       res => {
-        this.router.navigate(['/projects/' + this.workItem.ProjectId]);
+        this.router.navigate(['/projects/' + this.projectId]);
       },
       err => {
         console.log(err);

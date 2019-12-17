@@ -6,7 +6,10 @@ import { Injectable } from '@angular/core';
 })
 export class UserService {
 
-  rootUrl = 'https://localhost:44348/api/user/';
+  private rootUrl = 'https://localhost:44348/api/user/';
   constructor(private http: HttpClient) { }
 
+  getUserDictionary() {
+    return this.http.get(this.rootUrl + 'dictionary');
+  }
 }

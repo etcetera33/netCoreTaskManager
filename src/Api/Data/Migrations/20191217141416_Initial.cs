@@ -21,19 +21,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Statuses",
-                columns: table => new
-                {
-                    StatusId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StatusName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Statuses", x => x.StatusId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -64,6 +51,7 @@ namespace Data.Migrations
                     WorkItemTypeId = table.Column<int>(nullable: false),
                     WorkItemType = table.Column<int>(nullable: false),
                     StatusId = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
                     AssigneeId = table.Column<int>(nullable: false),
                     AuthorId = table.Column<int>(nullable: false),
                     ProjectId = table.Column<int>(nullable: false)
@@ -88,12 +76,6 @@ namespace Data.Migrations
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WorkItems_Statuses_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Statuses",
-                        principalColumn: "StatusId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -135,18 +117,6 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Statuses",
-                columns: new[] { "StatusId", "StatusName" },
-                values: new object[,]
-                {
-                    { 1, "To do" },
-                    { 2, "Doing" },
-                    { 3, "To test" },
-                    { 4, "Testing" },
-                    { 5, "Done" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "FullName", "Login", "Password", "Position", "Role", "RoleId" },
                 values: new object[,]
@@ -157,8 +127,8 @@ namespace Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "WorkItems",
-                columns: new[] { "WorkItemId", "AssigneeId", "AuthorId", "Description", "Priority", "Progress", "ProjectId", "StatusId", "Title", "WorkItemType", "WorkItemTypeId" },
-                values: new object[] { 1, 1, 2, "Deploy the project", 0, 0, 1, 1, "Deploy project", 1, 1 });
+                columns: new[] { "WorkItemId", "AssigneeId", "AuthorId", "Description", "Priority", "Progress", "ProjectId", "Status", "StatusId", "Title", "WorkItemType", "WorkItemTypeId" },
+                values: new object[] { 1, 1, 2, "Deploy the project", 0, 0, 1, 1, 1, "Deploy project", 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_AuthorId",
@@ -191,11 +161,6 @@ namespace Data.Migrations
                 name: "IX_WorkItems_ProjectId",
                 table: "WorkItems",
                 column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkItems_StatusId",
-                table: "WorkItems",
-                column: "StatusId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,9 +176,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projects");
-
-            migrationBuilder.DropTable(
-                name: "Statuses");
         }
     }
 }

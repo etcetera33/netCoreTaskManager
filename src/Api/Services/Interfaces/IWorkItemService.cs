@@ -14,5 +14,7 @@ namespace Services.Interfaces
         Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectId(int projectId);
         Task<bool> WorkItemExists(int workItemId);
         Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectNAssigneeId(int projectId, int userId);
+        Task<IEnumerable<object>> GetWorkItemTypes();
+        Task<IEnumerable<object>> GetWorkItemStatuses();
     }
 }

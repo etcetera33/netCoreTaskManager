@@ -11,7 +11,12 @@ namespace Models.DTOs
         public int Priority { get; set; }
         public int Progress { get; set; }
         public int WorkItemTypeId { get; set; }
-        public WorkItemTypes WorkItemType { get; set; }
+        public WorkItemTypes WorkItemType {
+            get
+            {
+                return ((WorkItemTypes)WorkItemTypeId);
+            }
+        }
         public int StatusId { get; set; }
         public int AssigneeId { get; set; }
         public int AuthorId { get; set; }

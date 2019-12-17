@@ -26,6 +26,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { CreateProjectComponent } from './project/create-project/create-project.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
+import { CreateWorkItemComponent } from './work-item/create-work-item/create-work-item.component';
+import { CommentsListComponent } from './comments/comments-list/comments-list.component';
+import { CreateCommentComponent } from './comments/create-comment/create-comment.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -36,6 +39,7 @@ const appRoutes: Routes = [
   { path: 'projects', component: ProjectListComponent, canActivate: [AuthGuard]},
   { path: 'projects/create', component: CreateProjectComponent, canActivate: [AuthGuard]},
   { path: 'projects/:id', component: ProjectDetailComponent, canActivate: [AuthGuard]},
+  { path: 'projects/:id/work-item/create', component: CreateWorkItemComponent, canActivate: [AuthGuard]},
   { path: 'projects/:id/settings', component: ProjectSettingsComponent, canActivate: [AuthGuard]},
   { path: 'work-items/:id', component: WorkItemDetailComponent, canActivate: [AuthGuard]},
   { path: 'login', component: LoginComponent },
@@ -67,7 +71,10 @@ const jwtConfig = {
     RegisterComponent,
     NotFoundComponent,
     CreateProjectComponent,
-    ProjectSettingsComponent
+    ProjectSettingsComponent,
+    CreateWorkItemComponent,
+    CommentsListComponent,
+    CreateCommentComponent
   ],
   imports: [
     CommonModule,
