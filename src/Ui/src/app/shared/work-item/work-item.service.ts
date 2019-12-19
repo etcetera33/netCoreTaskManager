@@ -11,7 +11,7 @@ export class WorkItemService {
   constructor(private http: HttpClient, private apiService: ApiService) { }
 
   getWorkitemsByProjectId(projectId: number) {
-    return this.http.get(this.rootUrl + 'project/' + projectId, this.apiService.headers);
+    return this.http.get(this.rootUrl + 'project/' + projectId + '/current-user', this.apiService.headers);
   }
 
   loadEntity(entityId: number) {

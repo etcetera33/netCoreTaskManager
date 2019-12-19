@@ -41,6 +41,7 @@ namespace Api.Controllers
         public async Task<IActionResult> Authorize([CustomizeValidator(Properties = "Login, Password")] UserDto userDto)
         {
             var user = await _userService.GetUserByLoginAsync(userDto);
+
             if (user == null)
             {
                 return new NotFoundResult();
@@ -54,9 +55,9 @@ namespace Api.Controllers
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(((AuthConfig)_config.Value).MinutesLifetime),
+                Expires = DateTime.UtcNow.AddMinutes(_config.Value.MinutesLifetime),
                 SigningCredentials = new SigningCredentials(
-                    AuthConfig.GetKey(((AuthConfig)_config.Value).SecretKey),
+                    AuthConfig.GetKey(_config.Value.SecretKey),
                     SecurityAlgorithms.HmacSha256Signature
                 )
             };

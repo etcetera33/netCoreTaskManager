@@ -28,7 +28,7 @@ namespace Api.Controllers
             return new JsonResult(createdProject) { StatusCode = 201} ;
         }
 
-        [HttpGet("{id}", Name = "GetProject")]
+        [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> Get(int id)
         {
@@ -51,25 +51,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        /*[HttpGet("paginate")]
-        [Authorize]
-        public async Task<IActionResult> Paginate([FromQuery] int page = 1, [FromQuery] string search = "")
-        {
-            object returnValue;
-
-            if (string.IsNullOrEmpty(search))
-            {
-                returnValue = await _projectService.GetPaginatedDataAsync(page);
-            }
-            else
-            {
-                returnValue = await _projectService.GetPaginatedDataAsync(page, search);
-            }
-            
-            return Ok(returnValue);
-        }*/
-        [HttpGet("paginate")]
-        [Authorize]
+        [HttpGet("")]
         public async Task<IActionResult> Paginate([FromQuery] QueryParamethers paramethers)
         {
             var returnValue = await _projectService.GetPaginatedDataAsync(paramethers);

@@ -14,7 +14,7 @@ namespace Api.Controllers
         private readonly IWorkItemService _workItemService;
         private readonly IProjectService _projectService;
 
-        public WorkItemController(IWorkItemService workItemService, IProjectService projectService, WorkItemValidator validator)
+        public WorkItemController(IWorkItemService workItemService, IProjectService projectService)
         {
             _workItemService = workItemService;
             _projectService = projectService;
