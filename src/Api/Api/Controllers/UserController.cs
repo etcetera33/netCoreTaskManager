@@ -21,7 +21,9 @@ namespace Api.Controllers
             var user = await _userService.GetById(int.Parse(User.Identity.Name));
 
             if (user == null)
+            {
                 return NotFound();
+            }
 
             return Ok(user);
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using Models.DTOs;
 using Services.Interfaces;
 using System.Collections.Generic;
@@ -34,7 +35,9 @@ namespace Api.Controllers
             var project = await _projectService.GetById(id);
 
             if (project == null)
+            {
                 return NotFound();
+            }
 
             return Ok(project);
         }
@@ -48,7 +51,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        [HttpGet("paginate")]
+        /*[HttpGet("paginate")]
         [Authorize]
         public async Task<IActionResult> Paginate([FromQuery] int page = 1, [FromQuery] string search = "")
         {
@@ -62,6 +65,14 @@ namespace Api.Controllers
             {
                 returnValue = await _projectService.GetPaginatedDataAsync(page, search);
             }
+            
+            return Ok(returnValue);
+        }*/
+        [HttpGet("paginate")]
+        [Authorize]
+        public async Task<IActionResult> Paginate([FromQuery] QueryParamethers paramethers)
+        {
+            var returnValue = await _projectService.GetPaginatedDataAsync(paramethers);
             
             return Ok(returnValue);
         }

@@ -9,7 +9,6 @@ using System;
 using Api.Auth;
 using System.Net;
 using Microsoft.Extensions.Options;
-using System.ComponentModel.DataAnnotations;
 using FluentValidation.AspNetCore;
 
 namespace Api.Controllers

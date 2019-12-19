@@ -24,8 +24,10 @@ namespace Api.Controllers
         public async Task<IActionResult> GetComments(int workItemId)
         {
             if (! await _workItemService.WorkItemExists(workItemId))
+            {
                 return NotFound();
-
+            }
+            
             var comments = await _commentService.GetWorkItemsComments(workItemId);
 
             return Ok(comments);

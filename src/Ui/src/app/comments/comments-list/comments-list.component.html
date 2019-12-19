@@ -1,13 +1,13 @@
-<form #form="ngForm" class="user ng-untouched ng-pristine ng-valid" (submit)="submit(form)" class="user" autocomplete="off" ngNativeValidate>
+<form #form="ngForm" class="user ng-untouched ng-pristine ng-valid col-md-10 mb-4" (submit)="submit(form)" class="user" autocomplete="off" ngNativeValidate>
   <input type="hidden" name="WorkItemId" [ngModel]="workItemId" value="{{workItemId}}"/>
   <div class="form-group">
-    <input name="Body" #Body="ngModel" [ngModel]="comment?.Body" type="text" class="form-control form-control-user" placeholder="Your message goes here ..." required>
+    <input name="Body" #Body="ngModel" [ngModel]="comment?.Body" type="text" class="form-control form-control-user col-md-5" placeholder="Your message goes here ..." required>
   </div>
-  <input type="submit" class="btn btn-primary btn-user btn-block" value="Send"/>
+  <input type="submit" class="btn btn-primary" value="Send"/>
 </form>
 
 <div class="row">
-  <div *ngFor="let comment of commentList" class="col-xl-12 col-md-12 mb-4">
+  <div *ngFor="let comment of commentList" class="col-xl-10 col-md-10 mb-4">
       <div class="card shadow h-100 py-2">
         <div class="card-body">
           <div class="row no-gutters align-items-center">

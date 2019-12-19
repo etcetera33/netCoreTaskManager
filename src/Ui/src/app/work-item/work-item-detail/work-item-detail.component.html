@@ -6,7 +6,7 @@
           <!-- Begin Page Content -->
     <div class="container-fluid" *ngIf="workItem!=null">
   
-    <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" (submit)="onSubmit(form)" ngNativeValidate>
+    <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid mb-4" (submit)="onSubmit(form)" ngNativeValidate>
         <input type="hidden" name="Id" #Id="ngModel" [ngModel]="workItem?.Id" value="{{workItem?.Id}}"/>
         <input type="hidden" name="ProjectId" #ProjectId="ngModel" [ngModel]="workItem?.ProjectId" value="{{workItem?.ProjectId}}"/>
         <input type="hidden" name="AuthorId" #AuthorId="ngModel" [ngModel]="workItem?.AuthorId" value="{{workItem?.AuthorId}}"/>
@@ -51,7 +51,7 @@
 
         <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" value="Update">
     </form>
-
+    <h3>Comments</h3>
    <app-comments-list [workItemId]="workItem.Id"></app-comments-list>
       
   </div>

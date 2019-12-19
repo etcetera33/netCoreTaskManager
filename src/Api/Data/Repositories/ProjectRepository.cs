@@ -10,7 +10,7 @@ namespace Data.Repositories
     {
         public ProjectRepository(ApplicationDbContext dbContext) : base(dbContext) {}
 
-        public async Task<IEnumerable<Project>> PaginateFiltered(int offset, int itemsCount, string searchPhrase)
+        public async Task<IEnumerable<Project>> PaginateFiltered(int offset, int itemsCount, string searchPhrase = "")
         {
             return await _dbContext.Projects
                 .Where(x => x.ProjectName.Contains(searchPhrase))

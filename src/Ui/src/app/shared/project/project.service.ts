@@ -16,7 +16,7 @@ export class ProjectService {
     if (page != null) {
       url += 'page=' + page + '&';
     }
-    if (searchPhrase != null) {
+    if (searchPhrase != null && searchPhrase.length > 0) {
       url += 'search=' + searchPhrase;
     }
     return this.http.get<any>(url, this.apiService.headers);
