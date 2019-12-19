@@ -47,5 +47,10 @@ namespace Services
         {
             return (await _unitOfWork.CommentRepository.GetById(commentId) != null);
         }
+
+        public async Task<int> GetCommentAuthorId(int commentId)
+        {
+            return (await _unitOfWork.CommentRepository.GetById(commentId)).AuthorId;
+        }
     }
 }

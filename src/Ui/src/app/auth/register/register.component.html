@@ -12,31 +12,42 @@
               </div>
               <form #registerForm="ngForm" (ngSubmit)="register(registerForm)" class="user" ngNativeValidate>
                 <div class="form-group">
+                  <label for="FullName">Full name:</label>
                   <input type="text" name="FullName" #FullName="ngModel" [ngModel]="user?.FullName" class="form-control form-control-user" placeholder="Full Name" required>
                 </div>
                 <div class="form-group">
+                  <label for="Login">Login:</label>
                   <input type="text" name="Login" #Login="ngModel" [ngModel]="user?.Login" class="form-control form-control-user" placeholder="Login" required>
                 </div>
                 <div class="form-group">
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
+                    <label for="Position">Position:</label>
                     <input type="text" name="Position" #Position="ngModel" [ngModel]="user?.Position" class="form-control form-control-user" placeholder="Position" required>
                   </div>
                   <div class="col-sm-6">
-                    <input type="number" name="RoleId" #RoleId="ngModel" [ngModel]="user?.RoleId" class="form-control form-control-user" placeholder="RoleId" required>
+                    <label for="Position">And you are:</label>
+                    <select [ngModel]="user?.RoleId" name="RoleId" #RoleId="ngModel" class="form-control-user col-md-8">
+                      <option *ngFor="let role of roles" [value]="user?.RoleId">
+                        {{role.Name}}
+                      </option>
+                  </select>
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
+                    <label for="Position">Password:</label>
                     <input type="password" name="Password" [(ngModel)]="Password" class="form-control form-control-user" placeholder="Password" stand required>
                   </div>
                   <div class="col-sm-6">
+                    <label for="Position">Repeat the password please:</label>
                     <input type="password" name="RepeartPassword" [(ngModel)]="RepeartPassword" class="form-control form-control-user" placeholder="Repeat Password" pattern="{{ Password }}" required>
                   </div>
                 </div>
                 <input type ="submit" class="btn btn-primary btn-user btn-block" value="Register Account">
                 <hr>
+                <a routerLink="/login" class="nav-link" rel="nofollow"  routerLinkActive="active">Already got an account?</a>
               </form>
               
             </div>

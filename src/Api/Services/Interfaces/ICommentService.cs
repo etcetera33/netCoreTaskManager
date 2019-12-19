@@ -10,5 +10,6 @@ namespace Services.Interfaces
         Task<CommentDto> Create(CommentDto commentDto);
         Task Remove(int commentId);
         Task<bool> CommentExists(int commentId);
+        Task<int> GetCommentAuthorId(int commentId);
     }
 }

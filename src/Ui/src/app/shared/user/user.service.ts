@@ -1,3 +1,5 @@
+import { ApiService } from './../api/api.service';
+import { User } from './user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -5,11 +7,18 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class UserService {
-
-  private rootUrl = 'https://localhost:44348/api/user/';
-  constructor(private http: HttpClient) { }
+  private rootUrl = this.apiService.rootUrl + 'user/';
+  constructor(private http: HttpClient, private apiService: ApiService) { }
 
   getUserDictionary() {
-    return this.http.get(this.rootUrl + 'dictionary');
+    return this.http.get(this.rootUrl + 'dictionary', this.apiService.headers);
+  }
+
+  getUserRoles() {
+    return this.http.get(this.rootUrl + 'roles', this.apiService.headers);
+  }
+
+  getCurrentUser() {
+    return this.http.get<User>(this.rootUrl, this.apiService.headers);
   }
 }

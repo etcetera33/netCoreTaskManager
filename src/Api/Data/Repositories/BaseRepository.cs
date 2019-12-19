@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -40,10 +39,24 @@ namespace Data.Repositories
         {
             return await _dbContext.Set<TEntity>().FindAsync(id);
         }
+
         public virtual async Task Update(int id, TEntity entity)
         {
             _dbContext.Set<TEntity>().Update(entity);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> Paginate(int itemsCount, int offset)
+        {
+            return await _dbContext.Set<TEntity>()
+                .Skip(offset)
+                .Take(itemsCount)
+                .ToListAsync();
+        }
+
+        public virtual async Task<int> GetCountAsync()
+        {
+            return await _dbContext.Set<TEntity>().CountAsync();
         }
     }
 }

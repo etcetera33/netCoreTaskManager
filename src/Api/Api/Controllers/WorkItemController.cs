@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Services.Interfaces;
+using Services.Validators;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -13,13 +14,14 @@ namespace Api.Controllers
         private readonly IWorkItemService _workItemService;
         private readonly IProjectService _projectService;
 
-        public WorkItemController(IWorkItemService workItemService, IProjectService projectService)
+        public WorkItemController(IWorkItemService workItemService, IProjectService projectService, WorkItemValidator validator)
         {
             _workItemService = workItemService;
             _projectService = projectService;
         }
 
         [HttpGet("project/{projectId}")]
+        [Authorize]
         public async Task<IActionResult> GetByProjectId(int projectId)
         {
             if (!await _projectService.ProjectExists(projectId))
@@ -48,7 +50,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Developer,Owner")]
         public async Task<IActionResult> Post(WorkItemDto workItemDto)
         {
             workItemDto.AuthorId = int.Parse(User.Identity.Name);
@@ -58,6 +60,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetWorkItem")]
+        [Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var workItem = await _workItemService.GetById(id);
@@ -71,6 +74,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Developer,Owner")]
         public async Task<IActionResult> Put(int id, WorkItemDto workItemDto)
         {
             await _workItemService.Update(id, workItemDto);
@@ -79,12 +83,14 @@ namespace Api.Controllers
         }
 
         [HttpGet("types")]
+        [Authorize]
         public async Task<IActionResult> GetTypes()
         {
             return Ok(await _workItemService.GetWorkItemTypes());
         }
 
         [HttpGet("statuses")]
+        [Authorize]
         public async Task<IActionResult> GetStatuses()
         {
             return Ok(await _workItemService.GetWorkItemStatuses());

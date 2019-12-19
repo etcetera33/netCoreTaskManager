@@ -8,6 +8,7 @@ namespace Models.DTOs
         public string Body { get; set; }
         public DateTime SentAt { get; set; }
         public int AuthorId { get; set; }
+        public UserDto Author { get; set; }
         public int WorkItemId { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Services.Interfaces;
 using System.Threading.Tasks;
 using Services.Helpers;
 using System.Collections.Generic;
+using Core.Enums;
 
 namespace Services
 {
@@ -61,6 +62,25 @@ namespace Services
             var userList = await _unitOfWork.UserRepository.GetAll();
 
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDictionaryDto>>(userList);
+        }
+
+        public async Task<IEnumerable<object>> GetRolesDictionary()
+        {
+            var enumRoles = new List<object>();
+            await Task.Run(() =>
+            {
+                foreach (var item in Roles.GetValues(typeof(Roles)))
+                {
+
+                    enumRoles.Add(new
+                    {
+                        Id = (int)item,
+                        Name = item.ToString()
+                    });
+                }
+            });
+
+            return enumRoles;
         }
     }
 }

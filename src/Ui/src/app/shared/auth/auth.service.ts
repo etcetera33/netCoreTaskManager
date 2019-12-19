@@ -1,3 +1,4 @@
+import { ApiService } from './../api/api.service';
 import { User } from './../user/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -7,17 +8,11 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
-  rootUrl = 'https://localhost:44348/api/auth/';
-  headers = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + localStorage.getItem('jwt')
-    })
-  };
-  constructor(private client: HttpClient) { }
+  private rootUrl = this.apiService.rootUrl + 'auth/';
+  constructor(private http: HttpClient, private apiService: ApiService) { }
 
   loginWithCredentials(credentials) {
-    return this.client.post(this.rootUrl + 'authorize', credentials, this.headers);
+    return this.http.post<any>(this.rootUrl + 'authorize', credentials, this.apiService.headers);
   }
 
   authorize(token: string) {
@@ -25,10 +20,19 @@ export class AuthService {
   }
 
   logOut() {
+    localStorage.removeItem('UserName');
     localStorage.removeItem('jwt');
   }
 
   register(credentials) {
-    return this.client.post(this.rootUrl + 'register', credentials, this.headers);
+    return this.http.post(this.rootUrl + 'register', credentials, this.apiService.headers);
+  }
+
+  putUserNameInStorage(fullName: string) {
+    localStorage.setItem('UserName', fullName);
+  }
+
+  getUserName() {
+    return localStorage.getItem('UserName');
   }
 }

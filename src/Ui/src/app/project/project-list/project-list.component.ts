@@ -9,12 +9,34 @@ import { ProjectService } from '../../shared/project/project.service';
 })
 export class ProjectListComponent implements OnInit {
   projectList: Project[];
+  pagesCount: number;
+  searchPhrase: string;
+  currentPage: number;
   constructor(protected projectService: ProjectService) { }
 
   ngOnInit() {
-    this.projectService.getProjectList().subscribe(
+    this.updateList();
+  }
+
+  paginate(page: number) {
+    this.currentPage = page;
+    this.updateList();
+  }
+
+  search() {
+    this.updateList();
+  }
+
+  updateList() {
+    console.log('currentPage: ' + this.currentPage);
+    console.log('searchPhrase ' + this.searchPhrase);
+    this.projectService.getProjectList(this.currentPage, this.searchPhrase)
+    .subscribe(
       res => {
-        this.projectList = res as Project[];
+        this.pagesCount = +res.pagesCount;
+        this.projectList = res.projectList as Project[];
+        console.log('pagesCount: ' + this.pagesCount);
+        console.log('projectList: ' + this.projectList);
       },
       err => {
         console.log(err);

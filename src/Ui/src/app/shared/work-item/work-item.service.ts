@@ -1,3 +1,4 @@
+import { ApiService } from './../api/api.service';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -6,37 +7,30 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 
 export class WorkItemService {
-
-  private rootUrl = 'https://localhost:44348/api/workItem/';
-  private headers =  {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + localStorage.getItem('jwt')
-    })
-  };
-  constructor(private http: HttpClient) { }
+  private rootUrl = this.apiService.rootUrl + 'workItem/';
+  constructor(private http: HttpClient, private apiService: ApiService) { }
 
   getWorkitemsByProjectId(projectId: number) {
-    return this.http.get(this.rootUrl + 'project/' + projectId);
+    return this.http.get(this.rootUrl + 'project/' + projectId, this.apiService.headers);
   }
 
   loadEntity(entityId: number) {
-    return this.http.get(this.rootUrl + entityId);
+    return this.http.get(this.rootUrl + entityId, this.apiService.headers);
   }
 
   loadWorkItemTypes() {
-    return this.http.get(this.rootUrl + 'types');
+    return this.http.get(this.rootUrl + 'types', this.apiService.headers);
   }
 
   updateEntity(data, id: number) {
-    return this.http.put(this.rootUrl + id, data, this.headers);
+    return this.http.put(this.rootUrl + id, data, this.apiService.headers);
   }
 
   loadWorkItemStatuses() {
-    return this.http.get(this.rootUrl + 'statuses');
+    return this.http.get(this.rootUrl + 'statuses', this.apiService.headers);
   }
 
   createEntity(data) {
-    return this.http.post(this.rootUrl, data, this.headers);
+    return this.http.post(this.rootUrl, data, this.apiService.headers);
   }
 }

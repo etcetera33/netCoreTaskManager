@@ -1,3 +1,4 @@
+import { ApiService } from './../api/api.service';
 import { Injectable } from '@angular/core';
 import {Project} from './project.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -7,28 +8,30 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ProjectService {
-  rootUrl = 'https://localhost:44348/api/project/';
-  headers = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-  constructor(private http: HttpClient) { }
+  private rootUrl = this.apiService.rootUrl + 'project/';
+  constructor(private http: HttpClient, private apiService: ApiService) { }
 
-  getProjectList() {
-    return this.http.get(this.rootUrl);
+  getProjectList(page?: number, searchPhrase?: string) {
+    let url = this.rootUrl + 'paginate/?';
+    if (page != null) {
+      url += 'page=' + page + '&';
+    }
+    if (searchPhrase != null) {
+      url += 'search=' + searchPhrase;
+    }
+    return this.http.get<any>(url, this.apiService.headers);
   }
 
   createProject(data) {
     return this.http
-    .post(this.rootUrl, data);
+    .post(this.rootUrl, data, this.apiService.headers);
   }
 
   getEntity(id: number) {
-    return this.http.get(this.rootUrl + id);
+    return this.http.get(this.rootUrl + id, this.apiService.headers);
   }
 
   updateProject(data, id: number) {
-    return this.http.put(this.rootUrl + id, data, this.headers);
+    return this.http.put(this.rootUrl + id, data, this.apiService.headers);
   }
 }

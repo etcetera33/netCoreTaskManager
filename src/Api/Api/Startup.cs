@@ -11,14 +11,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Models.Validators;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using Services;
 using Services.Helpers;
 using Services.Interfaces;
 using Services.Mapper;
+using Services.Validators;
 
 namespace Api
 {
@@ -113,7 +112,6 @@ namespace Api
             {
                 endpoints.MapControllers();
             });
-
         }
     }
 }

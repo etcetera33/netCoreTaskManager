@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Services.Interfaces;
@@ -19,6 +20,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("work-item/{workItemId}")]
+        [Authorize]
         public async Task<IActionResult> GetComments(int workItemId)
         {
             if (! await _workItemService.WorkItemExists(workItemId))
@@ -30,24 +32,30 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Post(CommentDto commentDto)
         {
-            if (! await _workItemService.WorkItemExists(commentDto.WorkItemId))
-                return NotFound();
-
+            commentDto.AuthorId = int.Parse(User.Identity.Name);
             var comment = await _commentService.Create(commentDto);
 
             return new JsonResult(comment) { StatusCode = 201};
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await _commentService.CommentExists(id))
+            {
                 return NotFound();
-            
-            await _commentService.Remove(id);
+            }
 
+            if (await _commentService.GetCommentAuthorId(id) != int.Parse(User.Identity.Name))
+            {
+                return Unauthorized();
+            }
+
+            await _commentService.Remove(id);
 
             return NoContent();
         }

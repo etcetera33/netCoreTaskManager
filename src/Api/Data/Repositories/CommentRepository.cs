@@ -15,7 +15,11 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<Comment>> GetCommentsByWorkItemIdAsync(int workItemId)
         {
-            return await _dbContext.Comments.Where(x => x.WorkItemId == workItemId).ToListAsync();
+            return await _dbContext.Comments
+                .Where(x => x.WorkItemId == workItemId)
+                .Include(x => x.Author)
+                .OrderByDescending(x => x.CommentId)
+                .ToListAsync();
         }
     }
 }

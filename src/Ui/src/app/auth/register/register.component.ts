@@ -1,3 +1,4 @@
+import { UserService } from './../../shared/user/user.service';
 import { AuthService } from './../../shared/auth/auth.service';
 import { User } from './../../shared/user/user';
 import { NgForm } from '@angular/forms';
@@ -14,9 +15,18 @@ export class RegisterComponent implements OnInit {
   user: User;
   Password: string;
   RepeartPassword: string;
-  constructor(private authService: AuthService, private router: Router) { }
+  roles: any[];
+  constructor(private authService: AuthService, private router: Router, private userService: UserService) { }
 
   ngOnInit() {
+    this.userService.getUserRoles().subscribe(
+      res => {
+        this.roles = res as any[];
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   register(form: NgForm) {

@@ -10,7 +10,6 @@ import { RouterModule, Routes, CanActivate } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
-import { SearchComponent } from './header/search/search.component';
 import { ProfileHeaderComponent } from './header/profile-header/profile-header.component';
 import { ProjectListComponent } from './project/project-list/project-list.component';
 import { ProjectDetailComponent } from './project/project-detail/project-detail.component';
@@ -28,7 +27,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
 import { CreateWorkItemComponent } from './work-item/create-work-item/create-work-item.component';
 import { CommentsListComponent } from './comments/comments-list/comments-list.component';
-import { CreateCommentComponent } from './comments/create-comment/create-comment.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -59,7 +57,6 @@ const jwtConfig = {
   declarations: [
     AppComponent,
     MenuComponent,
-    SearchComponent,
     ProfileHeaderComponent,
     ProjectListComponent,
     ProjectDetailComponent,
@@ -73,8 +70,7 @@ const jwtConfig = {
     CreateProjectComponent,
     ProjectSettingsComponent,
     CreateWorkItemComponent,
-    CommentsListComponent,
-    CreateCommentComponent
+    CommentsListComponent
   ],
   imports: [
     CommonModule,

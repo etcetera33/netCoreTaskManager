@@ -18,11 +18,9 @@ export class CreateProjectComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    console.log(form.value);
     this.projectService.createProject(form.value).subscribe(
       res => {
         this.router.navigate(['/projects']);
-        window.location.href = '';
       },
       err => {
         console.log(err);

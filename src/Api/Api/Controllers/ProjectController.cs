@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Services.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -16,16 +18,8 @@ namespace Api.Controllers
             _projectService = projectService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            // TODO filter project by name
-            var projects = await _projectService.GetAll();
-            
-            return Ok(projects);
-        }
-
         [HttpPost]
+        [Authorize(Roles = "Developer,Owner")]
         public async Task<IActionResult> Create(ProjectDto projectDto)
         {
             var createdProject = await _projectService.Create(projectDto);
@@ -34,6 +28,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}", Name = "GetProject")]
+        [Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var project = await _projectService.GetById(id);
@@ -45,11 +40,30 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Developer,Owner")]
         public async Task<IActionResult> Put(int id, ProjectDto projectDto)
         {
             await _projectService.Update(id, projectDto);
 
             return NoContent();
+        }
+
+        [HttpGet("paginate")]
+        [Authorize]
+        public async Task<IActionResult> Paginate([FromQuery] int page = 1, [FromQuery] string search = "")
+        {
+            object returnValue;
+
+            if (string.IsNullOrEmpty(search))
+            {
+                returnValue = await _projectService.GetPaginatedDataAsync(page);
+            }
+            else
+            {
+                returnValue = await _projectService.GetPaginatedDataAsync(page, search);
+            }
+            
+            return Ok(returnValue);
         }
     }
 }
