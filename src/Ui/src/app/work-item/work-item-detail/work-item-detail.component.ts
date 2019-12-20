@@ -24,6 +24,7 @@ export class WorkItemDetailComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
+      this.workItemService.setProjectId(+params.get('projectId'))
       this.loadEntity(+params.get('id'));
     });
     this.loadAssigneeList();

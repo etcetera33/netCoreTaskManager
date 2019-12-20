@@ -1,36 +1,57 @@
 import { ApiService } from './../api/api.service';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class WorkItemService {
-  private rootUrl = this.apiService.rootUrl + 'workItem/';
+  private projectId: number;
   constructor(private http: HttpClient, private apiService: ApiService) { }
 
-  getWorkitemsByProjectId(projectId: number) {
-    return this.http.get(this.rootUrl + 'project/' + projectId + '/current-user', this.apiService.headers);
+  getWorkitemsByProjectId(assigneeId: number, page?: number, searchPhrase?: string) {
+    const objectUrl: any = {};
+    if (page != null) {
+      objectUrl.page = page;
+    }
+    if (searchPhrase != null && searchPhrase.length > 0) {
+      objectUrl.search = searchPhrase;
+    }
+    if (assigneeId != null) {
+      objectUrl.assigneeId = assigneeId;
+    }
+    const params = new HttpParams({
+      fromObject: objectUrl
+    });
+    return this.http.get<any>(this.getRootUrl(), {params});
   }
 
   loadEntity(entityId: number) {
-    return this.http.get(this.rootUrl + entityId, this.apiService.headers);
+    return this.http.get(this.getRootUrl() + entityId);
   }
 
   loadWorkItemTypes() {
-    return this.http.get(this.rootUrl + 'types', this.apiService.headers);
+    return this.http.get(this.getRootUrl() + 'types');
   }
 
   updateEntity(data, id: number) {
-    return this.http.put(this.rootUrl + id, data, this.apiService.headers);
+    return this.http.put(this.getRootUrl() + id, data);
   }
 
   loadWorkItemStatuses() {
-    return this.http.get(this.rootUrl + 'statuses', this.apiService.headers);
+    return this.http.get(this.getRootUrl() + 'statuses');
   }
 
   createEntity(data) {
-    return this.http.post(this.rootUrl, data, this.apiService.headers);
+    return this.http.post(this.getRootUrl(), data);
+  }
+
+  private getRootUrl() {
+    return this.apiService.rootUrl + 'projects/' + this.projectId + '/workitems/';
+  }
+
+  setProjectId(projectId: number) {
+    this.projectId = projectId;
   }
 }

@@ -1,26 +1,47 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using Models.DTOs;
+using Models.QueryParameters;
 using Services.Interfaces;
-using Services.Validators;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/projects/{projectId}/[controller]")]
     [ApiController]
-    public class WorkItemController : ControllerBase
+    public class WorkItemsController : ControllerBase
     {
         private readonly IWorkItemService _workItemService;
         private readonly IProjectService _projectService;
 
-        public WorkItemController(IWorkItemService workItemService, IProjectService projectService)
+        public WorkItemsController(IWorkItemService workItemService, IProjectService projectService)
         {
             _workItemService = workItemService;
             _projectService = projectService;
         }
 
-        [HttpGet("project/{projectId}")]
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Get(int projectId, [FromQuery] WorkItemQueryParameters parameters)
+        {
+            if (parameters.AssigneeId == 0) {
+                parameters.AssigneeId = int.Parse(User.Identity.Name);
+            }
+            
+            var workItem = await _workItemService.Paginate(projectId, parameters);
+
+            if (workItem == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(workItem);
+        }
+
+        /*[HttpGet("project/{projectId}")]
         [Authorize]
         public async Task<IActionResult> GetByProjectId(int projectId)
         {
@@ -32,9 +53,9 @@ namespace Api.Controllers
             var workItems = await _workItemService.GetWorkItemsByProjectId(projectId);
 
             return Ok(workItems);
-        }
+        }*/
 
-        [HttpGet("project/{projectId}/current-user")]
+        /*[HttpGet("project/{projectId}/current-user")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUsersWorkItemsByProjectId(int projectId)
         {
@@ -47,10 +68,10 @@ namespace Api.Controllers
             var workItems = await _workItemService.GetWorkItemsByProjectNAssigneeId(projectId, userId);
 
             return Ok(workItems);
-        }
+        }*/
 
         [HttpPost]
-        [Authorize(Roles = "Developer,Owner")]
+        [Authorize]
         public async Task<IActionResult> Post(WorkItemDto workItemDto)
         {
             workItemDto.AuthorId = int.Parse(User.Identity.Name);
@@ -84,16 +105,16 @@ namespace Api.Controllers
 
         [HttpGet("types")]
         [Authorize]
-        public async Task<IActionResult> GetTypes()
+        public IActionResult GetTypes()
         {
-            return Ok(await _workItemService.GetWorkItemTypes());
+            return Ok(_workItemService.GetWorkItemTypes());
         }
 
         [HttpGet("statuses")]
         [Authorize]
-        public async Task<IActionResult> GetStatuses()
+        public IActionResult GetStatuses()
         {
-            return Ok(await _workItemService.GetWorkItemStatuses());
+            return Ok(_workItemService.GetWorkItemStatuses());
         }
     }
 }

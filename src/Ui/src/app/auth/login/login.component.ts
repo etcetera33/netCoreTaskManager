@@ -11,7 +11,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  invalidLogin: boolean;
   Login: string;
   Password: string;
   constructor(private authService: AuthService, private router: Router, private userService: UserService) { }
@@ -24,19 +23,13 @@ export class LoginComponent implements OnInit {
     this.authService.loginWithCredentials(credentials).toPromise().then(
       response => {
       const token = response.token;
+      console.log('AUTHORIZING');
       this.authService.authorize(token);
-      this.invalidLogin = false;
-      console.log('LOGINING');
+      this.putUserNameInStorage();
+      this.router.navigate(['/']);
     },
     err => {
-      this.invalidLogin = true;
-    })
-    .then(() => {
-      console.log('PUTING NAME IN THE STORAGE');
-      this.putUserNameInStorage();
-    })
-    .then(() => {
-      this.router.navigate(['/']);
+      console.log(err);
     });
   }
 

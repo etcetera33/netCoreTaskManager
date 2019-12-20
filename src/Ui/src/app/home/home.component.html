@@ -14,30 +14,42 @@
 
     <!-- Content Row -->
     <div class="row">
-
-            <div class="col-md-10 ">
-        
-                <!-- Illustrations -->
-            <div class="col-md-8 col-md-offset-2 card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Project # 1</h6>
+        <div *ngFor="let workItem of workItems" class="col-xl-8 col-md-8 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{ workItem.Title }}</div>
+                    <div class="row no-gutters align-items-center">
+                      <div class="col-auto">
+                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">Priority, %</div>
+                      </div>
+                      <div class="col">
+                        <div class="progress progress-sm mr-2">
+                          <div class="progress-bar bg-info" role="progressbar" [ngStyle]="{'width': workItem.Priority + '%'}" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row no-gutters align-items-center mb-3">
+                      <div class="col-auto">
+                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">Finished, %</div>
+                      </div>
+                      <div class="col">
+                        <div class="progress progress-sm mr-2">
+                          <div class="progress-bar bg-info" role="progressbar" [ngStyle]="{'width': workItem.Progress + '%'}" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="text-xs font-weight-bold text-primary text-uppercase mb-1" href="/projects/{{workItem.ProjectId}}/work-items/{{workItem.Id}}">Look closer</a>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-clipboard-list fa-2x text-gray-300">{{workItem.ItemType}}</i>
+                  </div>
                 </div>
-                <div class="card-body">
-                    <a routerLink="/projects/1" class="nav-link" target="_blank" rel="nofollow"  routerLinkActive="active">Browse Project &rarr;</a>
-                </div>
+              </div>
             </div>
-        
-            <div class="col-md-8 col-md-offset-2 card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Project # 1</h6>
-                    </div>
-                    <div class="card-body">
-                        <a routerLink="/projects/1" class="nav-link" target="_blank" rel="nofollow"  routerLinkActive="active">Browse Project &rarr;</a>
-                    </div>
-                    </div>
-            </div>
-            </div>
-
+          </div>
+          <div *ngIf="workItems?.length == 0">No work items for you!</div>
     </div>
     <!-- /.container-fluid -->
 

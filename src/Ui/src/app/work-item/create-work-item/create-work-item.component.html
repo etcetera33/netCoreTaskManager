@@ -13,7 +13,7 @@
             <label for="Title">Title</label>
             <input placeholder="Title" name="Title" #Title="ngModel" [ngModel]="workItem?.Title" class="form-control form-control-user" required>
         </div>
-        <div class="form-group">
+        <div class="form-group col-md-5">
             <label for="Description">Description</label>
             <input placeholder="Description" name="Description" #Description="ngModel" [ngModel]="workItem?.Description" class="form-control form-control-user" required>
         </div>
@@ -25,33 +25,33 @@
             <label for="Priority">Priority (1-100 %)</label>
             <input type="number" placeholder="Priority" name="Priority" #Priority="ngModel" [ngModel]="workItem?.Priority" class="form-control form-control-user" required>
         </div>
-
-        <label for="StatusId">Status</label>
-        <select matNativeControl [ngModel]="workItem?.StatusId" name="StatusId" #StatusId="ngModel" class="form-control col-md-5 mb-4">
-            <option *ngFor="let status of workItemStatuses" [value]="status.Id">
-              {{status.Name}}
-            </option>
-        </select>
-
-        <label for="WorkItemTypeId">ItemType</label>
-        <select matNativeControl [ngModel]="workItem?.WorkItemTypeId" name="WorkItemTypeId" #WorkItemTypeId="ngModel" class="form-control col-md-5 mb-4">
-            <option *ngFor="let workItemType of workItemTypes" [value]="workItemType.Id">
-              {{workItemType.Name}}
-            </option>
-        </select>
-
-        <label for="AssigneeId">Assignee</label>
-        <select matNativeControl [ngModel]="workItem?.AssigneeId" name="AssigneeId" #AssigneeId="ngModel" class="form-control col-md-5 mb-4">
-            <option *ngFor="let assignee of assigneeList" [value]="assignee.Id">
-              {{assignee.FullName}}
-            </option>
-        </select>
-
-        <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" value="Update">
+        <div class="form-group col-md-5">
+            <label for="StatusId">Status</label>
+            <select matNativeControl [ngModel]="workItem?.StatusId" name="StatusId" #StatusId="ngModel" class="form-control col-md-5 mb-4">
+                <option *ngFor="let status of workItemStatuses" [value]="status.Id">
+                {{status.Name}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="WorkItemTypeId">ItemType</label>
+            <select matNativeControl [ngModel]="workItem?.WorkItemTypeId" name="WorkItemTypeId" #WorkItemTypeId="ngModel" class="form-control col-md-5 mb-4">
+                <option *ngFor="let workItemType of workItemTypes" [value]="workItemType.Id">
+                {{workItemType.Name}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="AssigneeId">Assignee</label>
+            <select matNativeControl [ngModel]="workItem?.AssigneeId" name="AssigneeId" #AssigneeId="ngModel" class="form-control col-md-5 mb-4">
+                <option *ngFor="let assignee of assigneeList" [value]="assignee.Id">
+                {{assignee.FullName}}
+                </option>
+            </select>
+        </div>
+        <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" value="Create">
     </form>
 
-   
-      
   </div>
   <!-- /.container-fluid -->
   

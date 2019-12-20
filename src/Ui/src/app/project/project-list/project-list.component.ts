@@ -28,15 +28,11 @@ export class ProjectListComponent implements OnInit {
   }
 
   updateList() {
-    console.log('currentPage: ' + this.currentPage);
-    console.log('searchPhrase ' + this.searchPhrase);
     this.projectService.getProjectList(this.currentPage, this.searchPhrase)
     .subscribe(
       res => {
         this.pagesCount = +res.pagesCount;
         this.projectList = res.projectList as Project[];
-        console.log('pagesCount: ' + this.pagesCount);
-        console.log('projectList: ' + this.projectList);
       },
       err => {
         console.log(err);

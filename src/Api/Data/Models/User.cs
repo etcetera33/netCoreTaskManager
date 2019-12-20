@@ -29,5 +29,6 @@ namespace Data.Models
         public ICollection<Comment> Comments { get; set; }
         public ICollection<WorkItem> AssignedTo { get; set; }
         public ICollection<WorkItem> CreatedWorkItems { get; set; }
+        public ICollection<Project> Projects { get; set; }
     }
 }

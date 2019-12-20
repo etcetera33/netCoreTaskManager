@@ -8,19 +8,6 @@ namespace Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Projects",
-                columns: table => new
-                {
-                    ProjectId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProjectName = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projects", x => x.ProjectId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -36,6 +23,25 @@ namespace Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    ProjectId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectName = table.Column<string>(nullable: true),
+                    OwnerId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.ProjectId);
+                    table.ForeignKey(
+                        name: "FK_Projects_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -107,29 +113,6 @@ namespace Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Projects",
-                columns: new[] { "ProjectId", "ProjectName" },
-                values: new object[,]
-                {
-                    { 1, "Apple" },
-                    { 2, "Facebook" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "UserId", "FullName", "Login", "Password", "Position", "Role", "RoleId" },
-                values: new object[,]
-                {
-                    { 1, "Dmytro123213 Poliit", "dmyto123123123123.poliit", "111", "Junior Developer", 2, 2 },
-                    { 2, "John123123 Doe", "john123123123.doe", "111", "Junior PM", 1, 1 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "WorkItems",
-                columns: new[] { "WorkItemId", "AssigneeId", "AuthorId", "Description", "Priority", "Progress", "ProjectId", "Status", "StatusId", "Title", "WorkItemType", "WorkItemTypeId" },
-                values: new object[] { 1, 1, 2, "Deploy the project", 0, 0, 1, 1, 1, "Deploy project", 1, 1 });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_AuthorId",
                 table: "Comments",
@@ -139,6 +122,11 @@ namespace Data.Migrations
                 name: "IX_Comments_WorkItemId",
                 table: "Comments",
                 column: "WorkItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_OwnerId",
+                table: "Projects",
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Login",
@@ -172,10 +160,10 @@ namespace Data.Migrations
                 name: "WorkItems");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "Users");
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Data.Repositories
                 .Where(x => x.ProjectName.Contains(searchPhrase))
                 .Skip(offset)
                 .Take(itemsCount)
+                .Include(x => x.Owner)
                 .ToListAsync();
         }
 

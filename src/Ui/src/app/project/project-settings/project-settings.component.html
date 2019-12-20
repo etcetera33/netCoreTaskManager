@@ -1,67 +1,18 @@
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-    <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-    
-          <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-            <div class="sidebar-brand-icon rotate-n-15">
-              <i class="fas fa-laugh-wink"></i>
-            </div>
-            <div class="sidebar-brand-text mx-3">DA Tasks </div>
-          </a>
-    
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-        <!-- Nav Item - Charts -->
-        <li class="nav-item">
-            <a routerLink="/projects/{{project?.Id}}/" class="nav-link" routerLinkActive="active">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Work items</span>
-            </a>
-        </li>
-    
-        <li class="nav-item">
-            <a routerLink="/projects/{{project?.Id}}/settings" class="nav-link" routerLinkActive="active">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>Settings</span>
-            </a>
-        </li>
-        </ul>
-          <!-- End of Sidebar -->
+ 
       
-          <!-- Content Wrapper -->
-          <div id="content-wrapper" class="d-flex flex-column">
+<div class="col-lg-7">
+    <div class="p-5"><div class="text-center">
+        <h1 class="h4 text-gray-900 mb-4">Project Info</h1>
+    </div>
+    <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" ngNativeValidate>
+        <div class="form-group">
+            <input name="Name" #Name="ngModel" [ngModel]="project?.Name" class="form-control form-control-user" disabled>
+        </div>
+        <div class="form-group">
+          <input name="Description" #Description="ngModel" [ngModel]="project?.Description" class="form-control form-control-user" disabled>
+        </div>
+    </form>
+</div>
+
+</div>
       
-            <!-- Main Content -->
-            <div id="content">
-      
-              <app-profile-header></app-profile-header>
-      
-              <!-- Begin Page Content -->
-              <div class="container-fluid">
-      
-                <!-- Page Heading -->
-                <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                  <h1 class="h3 mb-0 text-gray-800">Work Items</h1>
-                  <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create a work item</a>
-                </div>
-      
-                <div class="col-lg-7">
-                    <div class="p-5"><div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4">Edit a project</h1>
-                    </div>
-                    <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" (submit)="update(form)" ngNativeValidate>
-                        <input type="hidden" name="Id" #Id="ngModel" [ngModel]="project?.Id" value="{{project?.Id}}"/>
-                        <div class="form-group">
-                            <input placeholder="Name" name="Name" #Name="ngModel" [ngModel]="project?.Name" class="form-control form-control-user" required>
-                        </div>
-                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Update">
-                    </form>
-                </div>
-                
-              </div>
-              <!-- /.container-fluid -->
-      
-            </div>
-          <!-- End of Content Wrapper -->
-          </div>

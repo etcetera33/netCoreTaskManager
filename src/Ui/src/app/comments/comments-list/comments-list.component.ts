@@ -1,3 +1,5 @@
+import { UserService } from './../../shared/user/user.service';
+import { User } from './../../shared/user/user';
 import { NgForm } from '@angular/forms';
 import { Commentary } from './../../shared/comment/commentary';
 import { CommentService } from './../../shared/comment/comment.service';
@@ -14,10 +16,12 @@ export class CommentsListComponent implements OnInit {
 
   commentList: Commentary[];
   comment: Commentary;
-  constructor(private commentService: CommentService) { }
+  userId: number;
+  constructor(private commentService: CommentService, private userService: UserService) { }
 
   ngOnInit() {
     this.refreshList();
+    this.getUserId();
   }
 
   submit(form: NgForm) {
@@ -43,6 +47,16 @@ export class CommentsListComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  getUserId() {
+    this.userService.getCurrentUser().subscribe(
+      res => {
+        this.userId = res.Id;
+      },
+      err => {
+        console.log(err);
+      });
   }
 
   remove(id: number) {

@@ -22,6 +22,7 @@ namespace Services
             _mapper = imapper;
             _passwordhasher = passwordHasher;
         }
+
         public async Task<UserDto> RegisterUserAsync(UserDto userDto)
         {
             userDto.Password = _passwordhasher.Hash(userDto.Password); 
@@ -64,21 +65,19 @@ namespace Services
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDictionaryDto>>(userList);
         }
 
-        public async Task<IEnumerable<object>> GetRolesDictionary()
+        public IEnumerable<object> GetRolesDictionary()
         {
             var enumRoles = new List<object>();
-            await Task.Run(() =>
-            {
-                foreach (var item in Roles.GetValues(typeof(Roles)))
-                {
 
-                    enumRoles.Add(new
-                    {
-                        Id = (int)item,
-                        Name = item.ToString()
-                    });
-                }
-            });
+            foreach (var item in Roles.GetValues(typeof(Roles)))
+            {
+
+                enumRoles.Add(new
+                {
+                    Id = (int)item,
+                    Name = item.ToString()
+                });
+            }
 
             return enumRoles;
         }

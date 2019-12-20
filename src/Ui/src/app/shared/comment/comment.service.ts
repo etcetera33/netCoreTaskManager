@@ -7,18 +7,18 @@ import { Injectable } from '@angular/core';
 })
 export class CommentService {
 
-  private rootUrl = this.apiService.rootUrl + 'comment/';
+  private rootUrl = this.apiService.rootUrl + 'comments/';
   constructor(private http: HttpClient, private apiService: ApiService) { }
 
   loadCommentsByProjectId(workItemId: number) {
-    return this.http.get(this.rootUrl + 'work-item/' + workItemId, this.apiService.headers);
+    return this.http.get(this.rootUrl + 'work-item/' + workItemId);
   }
 
   addComment(data) {
-    return this.http.post(this.rootUrl, data, this.apiService.headers);
+    return this.http.post(this.rootUrl, data);
   }
 
   removeComment(id: number) {
-    return this.http.delete(this.rootUrl + id, this.apiService.headers);
+    return this.http.delete(this.rootUrl + id);
   }
 }

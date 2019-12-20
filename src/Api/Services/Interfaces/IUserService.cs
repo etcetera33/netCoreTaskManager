@@ -11,6 +11,6 @@ namespace Services.Interfaces
         Task<UserDto> GetById(int userId);
         Task Update(int userId, UserDto userDto);
         Task<IEnumerable<UserDictionaryDto>> GetUserList();
-        Task<IEnumerable<object>> GetRolesDictionary();
+        IEnumerable<object> GetRolesDictionary();
     }
 }

@@ -29,10 +29,8 @@
                   <div class="col-sm-6">
                     <label for="Position">And you are:</label>
                     <select [ngModel]="user?.RoleId" name="RoleId" #RoleId="ngModel" class="form-control-user col-md-8">
-                      <option *ngFor="let role of roles" [value]="user?.RoleId">
-                        {{role.Name}}
-                      </option>
-                  </select>
+                      <option *ngFor="let role of roles" [ngValue]="role.Id">{{role.Name}}</option>
+                    </select>
                   </div>
                 </div>
                 <div class="form-group row">

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data;
 using Data.Models;
-using Models;
+using Models.QueryParameters;
 using Models.DTOs;
 using Services.Interfaces;
 using System;
@@ -54,18 +54,18 @@ namespace Services
             return (await _unitOfWork.ProjectRepository.GetById(projectId) != null);
         }
 
-        public async Task<object> GetPaginatedDataAsync(QueryParamethers paramethers)
+        public async Task<object> GetPaginatedDataAsync(BaseQueryParameters parameters)
         {
             var projectList = await _unitOfWork.ProjectRepository.PaginateFiltered(
-                offset: (paramethers.Page - 1) * paramethers.ItemsPerPage,
-                itemsCount: paramethers.ItemsPerPage,
-                searchPhrase: paramethers.Search
+                offset: (parameters.Page - 1) * parameters.ItemsPerPage,
+                itemsCount: parameters.ItemsPerPage,
+                searchPhrase: parameters.Search
                 );
 
             var projectDtoList = _mapper.Map<IEnumerable<Project>, IEnumerable<ProjectDto>>(projectList);
-            var rowsCount = await _unitOfWork.ProjectRepository.GetFilteredDataCountAsync(paramethers.Search);
+            var rowsCount = await _unitOfWork.ProjectRepository.GetFilteredDataCountAsync(parameters.Search);
 
-            var pagesCount = (int)Math.Ceiling((decimal)rowsCount / paramethers.ItemsPerPage);
+            var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
 
             return new
             {

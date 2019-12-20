@@ -31,6 +31,7 @@ export class RegisterComponent implements OnInit {
 
   register(form: NgForm) {
     const data = JSON.stringify(form.value);
+    console.log(form.value);
     this.authService.register(data).subscribe(
       res => {
         this.router.navigate(['/login']);
@@ -39,6 +40,5 @@ export class RegisterComponent implements OnInit {
         console.log(err);
       }
     );
-    console.log(data);
   }
 }

@@ -1,28 +1,36 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models;
+using Models.QueryParameters;
 using Models.DTOs;
 using Services.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectController : ControllerBase
+    public class ProjectsController : ControllerBase
     {
         private readonly IProjectService _projectService;
 
-        public ProjectController(IProjectService projectService)
+        public ProjectsController(IProjectService projectService)
         {
             _projectService = projectService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Paginate([FromQuery] BaseQueryParameters parameters)
+        {
+            var returnValue = await _projectService.GetPaginatedDataAsync(parameters);
+
+            return Ok(returnValue);
         }
 
         [HttpPost]
         [Authorize(Roles = "Developer,Owner")]
         public async Task<IActionResult> Create(ProjectDto projectDto)
         {
+            projectDto.OwnerId = int.Parse(User.Identity.Name);
             var createdProject = await _projectService.Create(projectDto);
 
             return new JsonResult(createdProject) { StatusCode = 201} ;
@@ -49,14 +57,6 @@ namespace Api.Controllers
             await _projectService.Update(id, projectDto);
 
             return NoContent();
-        }
-
-        [HttpGet("")]
-        public async Task<IActionResult> Paginate([FromQuery] QueryParamethers paramethers)
-        {
-            var returnValue = await _projectService.GetPaginatedDataAsync(paramethers);
-            
-            return Ok(returnValue);
         }
     }
 }

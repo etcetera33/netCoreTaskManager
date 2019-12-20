@@ -8,12 +8,12 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommentController : ControllerBase
+    public class CommentsController : ControllerBase
     {
         private readonly ICommentService _commentService;
         private readonly IWorkItemService _workItemService;
 
-        public CommentController(ICommentService commentService, IWorkItemService workItemService)
+        public CommentsController(ICommentService commentService, IWorkItemService workItemService)
         {
             _commentService = commentService;
             _workItemService = workItemService;
@@ -34,7 +34,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Developer,Owner")]
         public async Task<IActionResult> Post(CommentDto commentDto)
         {
             commentDto.AuthorId = int.Parse(User.Identity.Name);
@@ -44,7 +44,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Owner")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await _commentService.CommentExists(id))

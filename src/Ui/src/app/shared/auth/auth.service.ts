@@ -12,7 +12,7 @@ export class AuthService {
   constructor(private http: HttpClient, private apiService: ApiService) { }
 
   loginWithCredentials(credentials) {
-    return this.http.post<any>(this.rootUrl + 'authorize', credentials, this.apiService.headers);
+    return this.http.post<any>(this.rootUrl + 'authorize', credentials);
   }
 
   authorize(token: string) {
@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   register(credentials) {
-    return this.http.post(this.rootUrl + 'register', credentials, this.apiService.headers);
+    return this.http.post(this.rootUrl + 'register', credentials);
   }
 
   putUserNameInStorage(fullName: string) {

@@ -13,11 +13,6 @@ namespace Data.Repositories
 
         }
 
-        public async Task<IEnumerable<WorkItem>> GetAllByProjectId(int projectId)
-        {
-            return await _dbContext.WorkItems.Where(p => p.ProjectId == projectId).ToListAsync();
-        }
-
         public async override Task<WorkItem> GetById(int id)
         {
             return await _dbContext.WorkItems
@@ -25,11 +20,32 @@ namespace Data.Repositories
                 .FirstOrDefaultAsync(i => i.WorkItemId == id);
         }
 
-        public async Task<IEnumerable<WorkItem>> GetAllByProjectNUserId(int projectId, int userId)
+        public async Task<IEnumerable<WorkItem>> PaginateFiltered(int projectId, int offset, int itemsCount, int assigneeId, string searchPhrase = "")
         {
             return await _dbContext.WorkItems
                 .Where(x => x.ProjectId == projectId)
-                .Where(x => x.AssigneeId == userId)
+                .Where(x => x.Title.Contains(searchPhrase))
+                .Where(x => x.AssigneeId == assigneeId)
+                .Skip(offset)
+                .Take(itemsCount)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetFilteredDataCountAsync(int projectId, int assigneeId, string searchPhrase)
+        {
+            return await _dbContext.WorkItems
+                .Where(x => x.ProjectId == projectId)
+                .Where(x => x.Title.Contains(searchPhrase))
+                .Where(x => x.AssigneeId == assigneeId)
+                .CountAsync();
+        }
+
+        public async Task<IEnumerable<WorkItem>> GetTopFivePriorityItems(int assigneeId)
+        {
+            return await _dbContext.WorkItems
+                .Where(x => x.AssigneeId == assigneeId)
+                .OrderByDescending(x => x.Priority)
+                .Take(5)
                 .ToListAsync();
         }
     }

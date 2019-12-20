@@ -2,8 +2,10 @@
 using Core.Enums;
 using Data;
 using Data.Models;
+using Models.QueryParameters;
 using Models.DTOs;
 using Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,6 +20,32 @@ namespace Services
         {
             _unitOfWork = unitOfWork;
             _mapper = imapper;
+        }
+
+        public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
+        {
+            var wokrItemList = await _unitOfWork.WorkItemRepository.PaginateFiltered(
+                projectId: projectId,
+                offset: (parameters.Page - 1) * parameters.ItemsPerPage,
+                itemsCount: parameters.ItemsPerPage,
+                assigneeId: parameters.AssigneeId,
+                searchPhrase: parameters.Search
+                );
+
+            var wokrItemDtoList = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(wokrItemList);
+
+            var rowsCount = await _unitOfWork.WorkItemRepository.GetFilteredDataCountAsync(
+                projectId: projectId,
+                assigneeId: parameters.AssigneeId,
+                searchPhrase: parameters.Search);
+
+            var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
+
+            return new
+            {
+                wokrItemList = wokrItemDtoList,
+                pagesCount
+            };
         }
 
         public async Task<WorkItemDto> Create(WorkItemDto workItemDto)
@@ -35,16 +63,16 @@ namespace Services
             return _mapper.Map<WorkItem, WorkItemDto>(workItem);
         }
 
-        public async Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectId(int projectId)
-        {
-            var workItems = await _unitOfWork.WorkItemRepository.GetAllByProjectId(projectId);
-
-            return _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItems);
-        }
-
         public async Task Remove(int workItemId)
         {
             await _unitOfWork.WorkItemRepository.Delete(workItemId);
+        }
+
+        public async Task<IEnumerable<WorkItemDto>> GetTopFivePriorityItems(int assigneeId)
+        {
+            var workItems = await _unitOfWork.WorkItemRepository.GetTopFivePriorityItems(assigneeId);
+
+            return _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItems);
         }
 
         public async Task Update(int workItemId, WorkItemDto workItemDto)
@@ -53,60 +81,41 @@ namespace Services
             await _unitOfWork.WorkItemRepository.Update(workItemId, workItem);
         }
 
-        public async Task<IEnumerable<WorkItemDto>> GetAll()
-        {
-            var workItemList = await _unitOfWork.WorkItemRepository.GetAll();
-            var workItemDto = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItemList);
-
-            return workItemDto;
-        }
-
         public async Task<bool> WorkItemExists(int workItemId)
         {
             return (await _unitOfWork.WorkItemRepository.GetById(workItemId) != null);
         }
 
-        public async Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectNAssigneeId(int projectId, int userId)
-        {
-            var workItems = await _unitOfWork.WorkItemRepository.GetAllByProjectNUserId(projectId, userId);
-
-            return _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItems);
-        }
-
-        public async Task<IEnumerable<object>> GetWorkItemTypes()
+        public IEnumerable<object> GetWorkItemTypes()
         {
             var enumTypes = new List<object>();
-            await Task.Run(() =>
+            
+            foreach (var item in WorkItemTypes.GetValues(typeof(WorkItemTypes)))
             {
-                foreach (var item in WorkItemTypes.GetValues(typeof(WorkItemTypes)))
-                {
 
-                    enumTypes.Add(new
-                    {
-                        Id = (int)item,
-                        Name = item.ToString()
-                    });
-                }
-            });
+                enumTypes.Add(new
+                {
+                    Id = (int)item,
+                    Name = item.ToString()
+                });
+            }
 
             return enumTypes;
         }
 
-        public async Task<IEnumerable<object>> GetWorkItemStatuses()
+        public IEnumerable<object> GetWorkItemStatuses()
         {
             var enumStatuses = new List<object>();
-            await Task.Run(() =>
-            {
-                foreach (var item in Statuses.GetValues(typeof(Statuses)))
-                {
 
-                    enumStatuses.Add(new
-                    {
-                        Id = (int)item,
-                        Name = item.ToString()
-                    });
-                }
-            });
+            foreach (var item in Statuses.GetValues(typeof(Statuses)))
+            {
+
+                enumStatuses.Add(new
+                {
+                    Id = (int)item,
+                    Name = item.ToString()
+                });
+            }
 
             return enumStatuses;
         }

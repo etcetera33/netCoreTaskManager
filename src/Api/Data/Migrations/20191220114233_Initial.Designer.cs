@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191217141416_Initial")]
+    [Migration("20191220114233_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,24 +56,17 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ProjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProjectId");
 
-                    b.ToTable("Projects");
+                    b.HasIndex("OwnerId");
 
-                    b.HasData(
-                        new
-                        {
-                            ProjectId = 1,
-                            ProjectName = "Apple"
-                        },
-                        new
-                        {
-                            ProjectId = 2,
-                            ProjectName = "Facebook"
-                        });
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Data.Models.User", b =>
@@ -108,28 +101,6 @@ namespace Data.Migrations
                         .HasFilter("[Login] IS NOT NULL");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            FullName = "Dmytro123213 Poliit",
-                            Login = "dmyto123123123123.poliit",
-                            Password = "111",
-                            Position = "Junior Developer",
-                            Role = 2,
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            FullName = "John123123 Doe",
-                            Login = "john123123123.doe",
-                            Password = "111",
-                            Position = "Junior PM",
-                            Role = 1,
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("Data.Models.WorkItem", b =>
@@ -181,23 +152,6 @@ namespace Data.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("WorkItems");
-
-                    b.HasData(
-                        new
-                        {
-                            WorkItemId = 1,
-                            AssigneeId = 1,
-                            AuthorId = 2,
-                            Description = "Deploy the project",
-                            Priority = 0,
-                            Progress = 0,
-                            ProjectId = 1,
-                            Status = 1,
-                            StatusId = 1,
-                            Title = "Deploy project",
-                            WorkItemType = 1,
-                            WorkItemTypeId = 1
-                        });
                 });
 
             modelBuilder.Entity("Data.Models.Comment", b =>
@@ -212,6 +166,15 @@ namespace Data.Migrations
                         .WithMany("Comments")
                         .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Project", b =>
+                {
+                    b.HasOne("Data.Models.User", "Owner")
+                        .WithMany("Projects")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 

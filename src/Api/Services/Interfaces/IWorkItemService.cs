@@ -1,4 +1,5 @@
-﻿using Models.DTOs;
+﻿using Models.QueryParameters;
+using Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,15 +7,14 @@ namespace Services.Interfaces
 {
     public interface IWorkItemService
     {
-        Task<IEnumerable<WorkItemDto>> GetAll();
+        Task<object> Paginate(int projectId, WorkItemQueryParameters parameters);
         Task<WorkItemDto> Create(WorkItemDto workItemDto);
         Task<WorkItemDto> GetById(int workItemId);
         Task Update(int workItemId, WorkItemDto workItemDto);
         Task Remove(int workItemId);
-        Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectId(int projectId);
         Task<bool> WorkItemExists(int workItemId);
-        Task<IEnumerable<WorkItemDto>> GetWorkItemsByProjectNAssigneeId(int projectId, int userId);
-        Task<IEnumerable<object>> GetWorkItemTypes();
-        Task<IEnumerable<object>> GetWorkItemStatuses();
+        IEnumerable<object> GetWorkItemTypes();
+        IEnumerable<object> GetWorkItemStatuses();
+        Task<IEnumerable<WorkItemDto>> GetTopFivePriorityItems(int assigneeId);
     }
 }

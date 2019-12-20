@@ -1,5 +1,21 @@
+<div class="form-group">
+  <div class="col-sm-6">
+    <input placeholder="Search" name="Search" [(ngModel)]="searchPhrase" value="{{searchPhrase}}" class="form-control form-control-user">
+  </div>
+</div>
+<div class="form-group">
+  <div class="col-sm-6">
+    <label for="Position">Assignee:</label>
+    <select [(ngModel)]="assigneeId" name="Assignee" #Assignee="ngModel" class="form-control form-control-user">
+      <option *ngFor="let user of users" [ngValue]="user.Id" >{{user.FullName}}</option>
+    </select>
+  </div>
+</div>
+<div class="form-group">
+  <button class="btn btn-sm btn-primary" (click)="search()" >Find</button>
+</div>
 <div class="row">
-<div *ngFor="let workItem of workItems" class="col-xl-6 col-md-6 mb-4">
+  <div *ngFor="let workItem of workItems" class="col-xl-8 col-md-8 mb-4">
     <div class="card border-left-success shadow h-100 py-2">
       <div class="card-body">
         <div class="row no-gutters align-items-center">
@@ -25,7 +41,7 @@
                 </div>
               </div>
             </div>
-            <a class="text-xs font-weight-bold text-primary text-uppercase mb-1" href="work-items/{{workItem.Id}}">Look closer</a>
+            <a class="text-xs font-weight-bold text-primary text-uppercase mb-1" href="/projects/{{projectId}}/work-items/{{workItem.Id}}">Look closer</a>
           </div>
           <div class="col-auto">
             <i class="fas fa-clipboard-list fa-2x text-gray-300">{{workItem.ItemType}}</i>
@@ -34,4 +50,13 @@
       </div>
     </div>
   </div>
+  <div class="row" *ngIf="pagesCount > 1">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item" *ngFor="let item of [].constructor(pagesCount); let i = index" [attr.data-index]="pagesCount">
+              <div class="page-link" (click)="paginate(i+1)">{{i + 1}}</div>
+            </li>
+        </ul>
+      </nav>
   </div>
+</div>

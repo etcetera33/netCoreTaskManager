@@ -1,7 +1,8 @@
+import { AuthInterceptor } from './shared/auth-interceptor';
 import { AuthGuard } from './shared/auth/auth-guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -39,7 +40,7 @@ const appRoutes: Routes = [
   { path: 'projects/:id', component: ProjectDetailComponent, canActivate: [AuthGuard]},
   { path: 'projects/:id/work-item/create', component: CreateWorkItemComponent, canActivate: [AuthGuard]},
   { path: 'projects/:id/settings', component: ProjectSettingsComponent, canActivate: [AuthGuard]},
-  { path: 'work-items/:id', component: WorkItemDetailComponent, canActivate: [AuthGuard]},
+  { path: 'projects/:projectId/work-items/:id', component: WorkItemDetailComponent, canActivate: [AuthGuard]},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: '**', component: NotFoundComponent}
@@ -89,7 +90,8 @@ const jwtConfig = {
   providers: [
     ProjectService,
     WorkItemService,
-    AuthGuard
+    AuthGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })
