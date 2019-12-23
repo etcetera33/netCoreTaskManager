@@ -4,26 +4,35 @@ using System.Text;
 
 namespace Services.Helpers
 {
-    public class PasswordHasher : IPasswordHasher
+    public class PasswordHasher
     {
-        private const string SALT = "msBern_as2C9TekjfwEE";
-        private const int ITERATION_COUNT = 10000;
-        private const int BYTES_REQUESTED = 32;
-
-        public string Hash(string password)
+        public string Salt { get; set; }
+        public int IterationCount { get; set; }
+        public int BytesRequested { get; set; }
+        public static string Hash(string password, string salt, int iterationCount, int bytesRequested)
         {
             var valueBytes = KeyDerivation.Pbkdf2(
                                 password: password,
-                                salt: Encoding.UTF8.GetBytes(SALT),
+                                salt: Encoding.UTF8.GetBytes(salt),
                                 prf: KeyDerivationPrf.HMACSHA512,
-                                iterationCount: ITERATION_COUNT,
-                                //numBytesRequested: 256 / 8,
-                                numBytesRequested: BYTES_REQUESTED
+                                iterationCount: iterationCount,
+                                numBytesRequested: bytesRequested
                                 );
 
             return Convert.ToBase64String(valueBytes);
         }
 
-        public bool Validate(string value, string salt, string hash) => Hash(value) == hash;
+        public static bool PasswordHashValid(string unHashedPassword, string hashedPassword, string salt, int iterationCount, int bytesRequested)
+        {
+            var valueBytes = KeyDerivation.Pbkdf2(
+                password: unHashedPassword,
+                salt: Encoding.UTF8.GetBytes(salt),
+                prf: KeyDerivationPrf.HMACSHA512,
+                iterationCount: iterationCount,
+                numBytesRequested: bytesRequested
+            );
+
+            return Convert.ToBase64String(valueBytes) == hashedPassword;
+        }
     }
 }

@@ -19,12 +19,12 @@ namespace Data
 
             modelBuilder.Entity<WorkItem>(e =>
             {
-                e.Property(e => e.WorkItemType).HasConversion(x => (int)x, x => (WorkItemTypes)x);
+                e.Property(wi => wi.WorkItemType).HasConversion(x => (int)x, x => (WorkItemTypes)x);
             });
 
             modelBuilder.Entity<User>(e =>
             {
-                e.Property(e => e.Role).HasConversion(x => (int)x, x => (Roles)x);
+                e.Property(u => u.Role).HasConversion(x => (int)x, x => (Roles)x);
             });
 
             modelBuilder.Entity<WorkItem>(e =>

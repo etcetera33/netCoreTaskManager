@@ -19,7 +19,7 @@ export class WorkItemDetailComponent implements OnInit {
   workItemStatuses: any[];
   constructor(
     private workItemService: WorkItemService, private activatedRoute: ActivatedRoute,
-    private userService: UserService, private router: Router
+    protected userService: UserService, private router: Router
     ) { }
 
   ngOnInit() {

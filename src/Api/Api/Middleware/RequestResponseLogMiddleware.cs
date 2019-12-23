@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Threading.Tasks;
 
 namespace Api.Middleware
@@ -17,33 +18,24 @@ namespace Api.Middleware
         public Task InvokeAsync(HttpContext context)
         {
             var watch = new Stopwatch();
-            
+            dynamic data = new {};
+
             watch.Start();
             context.Response.OnStarting(() =>
             {
                 watch.Stop();
                 var responseTimeForCompleteRequest = watch.ElapsedMilliseconds;
 
-                var data = new
-                {
-                    Path = context.Request.Path,
-                    Method = context.Request.Method,
-                    Time = responseTimeForCompleteRequest
-                };
-
                 Log.Logger.Information(
-                        GetLoggerMessage(data)
-                    );
-             
+                    $"URL: {context.Request.Path} - Method {context.Request.Method} in {responseTimeForCompleteRequest} ms. Code: {context.Response.StatusCode}"
+                );
+
                 return Task.CompletedTask;
-            });  
+            });
+
 
             return this._next(context);
         }
 
-        private string GetLoggerMessage(dynamic data)
-        {
-            return $"Method: {data.Method}. URL: {data.Path}. The time spent on the request: {data.Time} ms.";
-        }
     }
 }

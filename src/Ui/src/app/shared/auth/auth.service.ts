@@ -1,5 +1,4 @@
 import { ApiService } from './../api/api.service';
-import { User } from './../user/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -20,19 +19,10 @@ export class AuthService {
   }
 
   logOut() {
-    localStorage.removeItem('UserName');
     localStorage.removeItem('jwt');
   }
 
   register(credentials) {
     return this.http.post(this.rootUrl + 'register', credentials);
-  }
-
-  putUserNameInStorage(fullName: string) {
-    localStorage.setItem('UserName', fullName);
-  }
-
-  getUserName() {
-    return localStorage.getItem('UserName');
   }
 }

@@ -10,10 +10,10 @@ namespace Services.Mapper
         {
             var config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<UserDictionaryDto, User>()
-                    .ForMember(dst => dst.UserId, src => src.MapFrom<int>(e => e.Id))
+                    .ForMember(dst => dst.UserId, src => src.MapFrom(e => e.Id))
                     .ReverseMap();
                 cfg.CreateMap<UserDto, User>()
-                    .ForMember(dst => dst.UserId, src => src.MapFrom<int>(e => e.Id))
+                    .ForMember(dst => dst.UserId, src => src.MapFrom(e => e.Id))
                     .ForMember(dst => dst.Comments, opt => opt.Ignore())
                     .ForMember(dst => dst.AssignedTo, opt => opt.Ignore())
                     .ForMember(dst => dst.CreatedWorkItems, opt => opt.Ignore())

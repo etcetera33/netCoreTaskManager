@@ -12,7 +12,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<Project>> PaginateFiltered(int offset, int itemsCount, string searchPhrase = "")
         {
-            return await _dbContext.Projects
+            return await DbContext.Projects
                 .Where(x => x.ProjectName.Contains(searchPhrase))
                 .Skip(offset)
                 .Take(itemsCount)
@@ -22,7 +22,7 @@ namespace Data.Repositories
 
         public async Task<int> GetFilteredDataCountAsync(string searchPhrase)
         {
-            return await _dbContext.Projects
+            return await DbContext.Projects
                 .Where(x => x.ProjectName.Contains(searchPhrase))
                 .CountAsync();
         }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Services.Helpers;
 using System.Collections.Generic;
 using Core.Enums;
+using Microsoft.Extensions.Options;
 
 namespace Services
 {
@@ -14,18 +15,21 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IPasswordHasher _passwordhasher;
+        private readonly IOptions<PasswordHasher> _passwordHasher;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper imapper, IPasswordHasher passwordHasher)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IOptions<PasswordHasher> passwordHasher)
         {
             _unitOfWork = unitOfWork;
-            _mapper = imapper;
-            _passwordhasher = passwordHasher;
+            _mapper = mapper;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<UserDto> RegisterUserAsync(UserDto userDto)
         {
-            userDto.Password = _passwordhasher.Hash(userDto.Password); 
+            userDto.Password = PasswordHasher.Hash(userDto.Password,
+                _passwordHasher.Value.Salt,
+                _passwordHasher.Value.IterationCount,
+                _passwordHasher.Value.BytesRequested);
             var user= _mapper.Map<UserDto, User>(userDto);
             var createdEntity = await _unitOfWork.UserRepository.Create(user);
 
@@ -35,8 +39,9 @@ namespace Services
         public async Task<UserDto> GetUserByLoginAsync(UserDto userDto)
         {
             var user = await _unitOfWork.UserRepository.FindUserByLoginAsync(userDto.Login);
+            var isPasswordMatch = PasswordHasher.PasswordHashValid(userDto.Password, user.Password, _passwordHasher.Value.Salt, _passwordHasher.Value.IterationCount, _passwordHasher.Value.BytesRequested);
 
-            if (user == null || user.Password != _passwordhasher.Hash(userDto.Password))
+            if (user == null || !isPasswordMatch)
             {
                 return null;
             }
@@ -69,7 +74,7 @@ namespace Services
         {
             var enumRoles = new List<object>();
 
-            foreach (var item in Roles.GetValues(typeof(Roles)))
+            foreach (var item in System.Enum.GetValues(typeof(Roles)))
             {
 
                 enumRoles.Add(new

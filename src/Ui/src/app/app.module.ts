@@ -1,3 +1,5 @@
+import { PopupService } from './shared/popup/popup.service';
+import { UserService } from './shared/user/user.service';
 import { AuthInterceptor } from './shared/auth-interceptor';
 import { AuthGuard } from './shared/auth/auth-guard';
 import { BrowserModule } from '@angular/platform-browser';
@@ -28,6 +30,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ProjectSettingsComponent } from './project/project-settings/project-settings.component';
 import { CreateWorkItemComponent } from './work-item/create-work-item/create-work-item.component';
 import { CommentsListComponent } from './comments/comments-list/comments-list.component';
+import { PopupComponent } from './popup/popup/popup.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -71,14 +74,14 @@ const jwtConfig = {
     CreateProjectComponent,
     ProjectSettingsComponent,
     CreateWorkItemComponent,
-    CommentsListComponent
+    CommentsListComponent,
+    PopupComponent
   ],
   imports: [
     CommonModule,
     BrowserModule,
     RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
+      appRoutes
     ),
     JwtModule.forRoot(jwtConfig),
     AppRoutingModule,
@@ -91,8 +94,11 @@ const jwtConfig = {
     ProjectService,
     WorkItemService,
     AuthGuard,
+    UserService,
+    PopupService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [PopupComponent]
 })
 export class AppModule { }

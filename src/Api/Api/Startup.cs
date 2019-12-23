@@ -30,7 +30,6 @@ namespace Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
@@ -59,9 +58,7 @@ namespace Api
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = AuthConfig.GetKey(Configuration.GetSection("AuthConfig").GetSection("SecretKey").Value),
-                    // укзывает, будет ли валидироваться издатель при валидации токена
                     ValidateIssuer = false,
-                    // будет ли валидироваться потребитель токена
                     ValidateAudience = false
                 };
             });
@@ -72,15 +69,14 @@ namespace Api
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
-            services.AddTransient<IPasswordHasher, PasswordHasher>();
 
             // mapper
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
 
-            // cfgs
+            // configs
             services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
-
+            services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));
 
         }
 
@@ -96,14 +92,16 @@ namespace Api
                 options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
             );
 
-            app.UseAuthentication();
+            
 
             app.UseHttpsRedirection();
 
             app.UseSerilogRequestLogging();
 
             app.UseRouting();
-            
+
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseMiddleware<RequestResponseLogMiddleware>();

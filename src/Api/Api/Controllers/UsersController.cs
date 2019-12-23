@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -45,22 +43,6 @@ namespace Api.Controllers
         public async Task<IActionResult> GetDictionary()
         {
             return Ok(await _userService.GetUserList());
-        }
-
-        [HttpGet("role")]
-        public IActionResult GetRole()
-        {
-            var userIdentity = (ClaimsIdentity)User.Identity;
-            var claims = userIdentity.Claims;
-            var roleClaimType = userIdentity.RoleClaimType;
-
-            var role = claims.Where(c => c.Type == ClaimTypes.Role).FirstOrDefault();
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(role.Value);
         }
 
         [HttpGet("roles")]

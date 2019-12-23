@@ -1,3 +1,4 @@
+import { UserService } from './../../shared/user/user.service';
 import { Project } from './../../shared/project/project.model';
 import { Component, OnInit, Input } from '@angular/core';
 import { ProjectService } from '../../shared/project/project.service';
@@ -12,10 +13,11 @@ export class ProjectListComponent implements OnInit {
   pagesCount: number;
   searchPhrase: string;
   currentPage: number;
-  constructor(protected projectService: ProjectService) { }
+  constructor(protected projectService: ProjectService, protected userService: UserService) { }
 
   ngOnInit() {
     this.updateList();
+    console.log('UserService projectList: ' + this.userService.getCurrentUser());
   }
 
   paginate(page: number) {

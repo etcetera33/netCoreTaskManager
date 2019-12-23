@@ -5,11 +5,11 @@
     </div>
     <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" (submit)="onSubmit(form)" ngNativeValidate>
         <div class="form-group">
-            <input placeholder="Name" name="Name" #Name="ngModel" [ngModel]="project?.Name" class="form-control form-control-user" required>
+            <input placeholder="Name" name="Name" #Name="ngModel" [ngModel]="project?.Name" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
         </div>
         <div class="form-group">
-            <input placeholder="Description" name="Description" #Description="ngModel" [ngModel]="project?.Description" class="form-control form-control-user" required>
+            <input placeholder="Description" name="Description" #Description="ngModel" [ngModel]="project?.Description" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
         </div>
-        <input type="submit" class="btn btn-primary btn-user btn-block" value="Add project">
+        <input type="submit" class="btn btn-primary btn-user btn-block" [ngClass]="{disabled : userService.getCurrentRole() === 'Spectator'}" value="Add project">
     </form>
 </div>

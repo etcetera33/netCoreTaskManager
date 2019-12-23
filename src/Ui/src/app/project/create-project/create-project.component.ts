@@ -1,3 +1,4 @@
+import { UserService } from './../../shared/user/user.service';
 import { Router } from '@angular/router';
 import { ProjectService } from './../../shared/project/project.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,9 +13,10 @@ import { Project } from '../../shared/project/project.model';
 
 export class CreateProjectComponent implements OnInit {
   project: Project;
-  constructor(protected projectService: ProjectService, private router: Router) { }
+  constructor(protected projectService: ProjectService, private router: Router, protected userService: UserService) { }
 
   ngOnInit() {
+    console.log(this.userService.getCurrentUser());
   }
 
   onSubmit(form: NgForm) {

@@ -13,7 +13,10 @@ export class ProfileHeaderComponent implements OnInit {
   constructor(private authService: AuthService, private userService: UserService, private router: Router) { }
 
   ngOnInit() {
-    this.fullName = this.authService.getUserName();
+    const user = this.userService.getCurrentUser();
+    if (user !== undefined) {
+      this.fullName = user.FullName;
+    }
   }
 
   logout() {

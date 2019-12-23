@@ -1,8 +1,9 @@
 ﻿using Data.Repositories;
+using System;
 
 namespace Data
 {
-    public class UnitOfWork: IUnitOfWork
+    public class UnitOfWork: IUnitOfWork, IDisposable
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly ProjectRepository _projectRepository;
@@ -20,6 +21,27 @@ namespace Data
         public WorkItemRepository WorkItemRepository => _workItemRepository ?? new WorkItemRepository(_dbContext);
         public CommentRepository CommentRepository => _commentRepository ?? new CommentRepository(_dbContext);
 
-        /// TODO : Реализовать интерфейс IDisposable
+        #region Dispose
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this._disposed)
+            {
+                if (disposing)
+                {
+                    _dbContext.Dispose();
+                }
+                this._disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+        
     }
 }

@@ -70,7 +70,7 @@ namespace Services
             return new
             {
                 projectList = projectDtoList,
-                pagesCount = pagesCount
+                pagesCount
             };
         }
     }

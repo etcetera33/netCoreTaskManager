@@ -10,11 +10,11 @@ namespace Models.DTOs
         public string Login { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
-        public Roles Role
+        public string Role
         {
             get
             {
-                return ((Roles)RoleId);
+                return ((Roles)RoleId).ToString();
             }
         }
     }

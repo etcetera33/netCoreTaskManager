@@ -50,13 +50,7 @@ export class CommentsListComponent implements OnInit {
   }
 
   getUserId() {
-    this.userService.getCurrentUser().subscribe(
-      res => {
-        this.userId = res.Id;
-      },
-      err => {
-        console.log(err);
-      });
+    this.userId = this.userService.getCurrentUser().Id;
   }
 
   remove(id: number) {

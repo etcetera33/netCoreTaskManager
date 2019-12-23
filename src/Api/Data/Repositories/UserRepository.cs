@@ -11,7 +11,7 @@ namespace Data.Repositories
 
         public async Task<User> FindUserByLoginAsync(string login)
         {
-            return await _dbContext.Users
+            return await DbContext.Users
                 .Where(user => user.Login == login)
                 .FirstOrDefaultAsync();
         }

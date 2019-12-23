@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 })
 export class UserService {
   private rootUrl = this.apiService.rootUrl + 'users/';
+  private currentUser: User;
   constructor(private http: HttpClient, private apiService: ApiService) { }
 
   getUserDictionary() {
@@ -20,10 +21,29 @@ export class UserService {
   }
 
   getCurrentUser() {
-    return this.http.get<User>(this.rootUrl);
+    if (this.currentUser === undefined) {
+      this.loadUser();
+    }
+
+    return this.currentUser;
+  }
+
+  loadUser() {
+    this.http.get<User>(this.rootUrl).subscribe(
+      res => {
+        this.currentUser = res;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   getCurrentUserTasks() {
     return this.http.get<WorkItem[]>(this.rootUrl + 'current/work-items');
+  }
+
+  getCurrentRole() {
+    return this.getCurrentUser().Role;
   }
 }

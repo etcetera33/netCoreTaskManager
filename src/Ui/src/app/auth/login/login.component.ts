@@ -1,5 +1,6 @@
+import { PopupService } from './../../shared/popup/popup.service';
 import { UserService } from './../../shared/user/user.service';
-import { RouterModule, Routes, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from './../../shared/auth/auth.service';
 import { NgForm } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
 
   Login: string;
   Password: string;
-  constructor(private authService: AuthService, private router: Router, private userService: UserService) { }
+  constructor(private authService: AuthService, private router: Router, private userService: UserService, private popupService: PopupService) { }
 
   ngOnInit() {
   }
@@ -25,24 +26,15 @@ export class LoginComponent implements OnInit {
       const token = response.token;
       console.log('AUTHORIZING');
       this.authService.authorize(token);
-      this.putUserNameInStorage();
-      this.router.navigate(['/']);
+      this.userService.loadUser();
+      
+      //this.router.navigate(['/']);
     },
     err => {
+      this.popupService.openModal('error', 'the error occured');
       console.log(err);
     });
   }
 
-  putUserNameInStorage() {
-    this.userService.getCurrentUser().toPromise()
-    .then(
-      res => {
-        this.authService.putUserNameInStorage(res.FullName);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
 
 }

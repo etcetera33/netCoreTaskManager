@@ -16,15 +16,15 @@ namespace Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public WorkItemService(IUnitOfWork unitOfWork, IMapper imapper)
+        public WorkItemService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _mapper = imapper;
+            _mapper = mapper;
         }
 
         public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
         {
-            var wokrItemList = await _unitOfWork.WorkItemRepository.PaginateFiltered(
+            var workItemList = await _unitOfWork.WorkItemRepository.PaginateFiltered(
                 projectId: projectId,
                 offset: (parameters.Page - 1) * parameters.ItemsPerPage,
                 itemsCount: parameters.ItemsPerPage,
@@ -32,7 +32,7 @@ namespace Services
                 searchPhrase: parameters.Search
                 );
 
-            var wokrItemDtoList = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(wokrItemList);
+            var workItemDtoList = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItemList);
 
             var rowsCount = await _unitOfWork.WorkItemRepository.GetFilteredDataCountAsync(
                 projectId: projectId,
@@ -43,7 +43,7 @@ namespace Services
 
             return new
             {
-                wokrItemList = wokrItemDtoList,
+                wokrItemList = workItemDtoList,
                 pagesCount
             };
         }
@@ -90,7 +90,7 @@ namespace Services
         {
             var enumTypes = new List<object>();
             
-            foreach (var item in WorkItemTypes.GetValues(typeof(WorkItemTypes)))
+            foreach (var item in Enum.GetValues(typeof(WorkItemTypes)))
             {
 
                 enumTypes.Add(new
@@ -107,7 +107,7 @@ namespace Services
         {
             var enumStatuses = new List<object>();
 
-            foreach (var item in Statuses.GetValues(typeof(Statuses)))
+            foreach (var item in Enum.GetValues(typeof(Statuses)))
             {
 
                 enumStatuses.Add(new

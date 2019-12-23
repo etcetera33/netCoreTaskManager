@@ -9,46 +9,46 @@ namespace Data.Repositories
     public abstract class BaseRepository<TEntity>: IBaseRepository<TEntity>
         where TEntity: class
     {
-        protected readonly ApplicationDbContext _dbContext;
+        protected readonly ApplicationDbContext DbContext;
         public BaseRepository(ApplicationDbContext dbContext)
         {
-            _dbContext = dbContext;
+            DbContext = dbContext;
         }
 
         public virtual async Task<TEntity> Create(TEntity model)
         {
-            await _dbContext.Set<TEntity>().AddAsync(model);
-            await _dbContext.SaveChangesAsync();
+            await DbContext.Set<TEntity>().AddAsync(model);
+            await DbContext.SaveChangesAsync();
 
             return model;
         }
 
         public virtual async Task Delete(int id)
         {
-            var entity = await _dbContext.Set<TEntity>().FindAsync(id);
-            _dbContext.Set<TEntity>().Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            var entity = await DbContext.Set<TEntity>().FindAsync(id);
+            DbContext.Set<TEntity>().Remove(entity);
+            await DbContext.SaveChangesAsync();
         }
 
         public virtual async Task<IEnumerable<TEntity>> GetAll()
         {
-            return await _dbContext.Set<TEntity>().ToListAsync();
+            return await DbContext.Set<TEntity>().ToListAsync();
         }
 
         public virtual async Task<TEntity> GetById(int id)
         {
-            return await _dbContext.Set<TEntity>().FindAsync(id);
+            return await DbContext.Set<TEntity>().FindAsync(id);
         }
 
         public virtual async Task Update(int id, TEntity entity)
         {
-            _dbContext.Set<TEntity>().Update(entity);
-            await _dbContext.SaveChangesAsync();
+            DbContext.Set<TEntity>().Update(entity);
+            await DbContext.SaveChangesAsync();
         }
 
         public virtual async Task<IEnumerable<TEntity>> Paginate(int itemsCount, int offset)
         {
-            return await _dbContext.Set<TEntity>()
+            return await DbContext.Set<TEntity>()
                 .Skip(offset)
                 .Take(itemsCount)
                 .ToListAsync();
@@ -56,7 +56,7 @@ namespace Data.Repositories
 
         public virtual async Task<int> GetCountAsync()
         {
-            return await _dbContext.Set<TEntity>().CountAsync();
+            return await DbContext.Set<TEntity>().CountAsync();
         }
     }
 }

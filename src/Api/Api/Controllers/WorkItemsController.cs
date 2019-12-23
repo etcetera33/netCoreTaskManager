@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models;
 using Models.DTOs;
 using Models.QueryParameters;
 using Services.Interfaces;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -15,12 +12,10 @@ namespace Api.Controllers
     public class WorkItemsController : ControllerBase
     {
         private readonly IWorkItemService _workItemService;
-        private readonly IProjectService _projectService;
 
-        public WorkItemsController(IWorkItemService workItemService, IProjectService projectService)
+        public WorkItemsController(IWorkItemService workItemService)
         {
             _workItemService = workItemService;
-            _projectService = projectService;
         }
 
         [HttpGet]
@@ -40,35 +35,6 @@ namespace Api.Controllers
 
             return Ok(workItem);
         }
-
-        /*[HttpGet("project/{projectId}")]
-        [Authorize]
-        public async Task<IActionResult> GetByProjectId(int projectId)
-        {
-            if (!await _projectService.ProjectExists(projectId))
-            {
-                return NotFound();
-            }
-            
-            var workItems = await _workItemService.GetWorkItemsByProjectId(projectId);
-
-            return Ok(workItems);
-        }*/
-
-        /*[HttpGet("project/{projectId}/current-user")]
-        [Authorize]
-        public async Task<IActionResult> GetCurrentUsersWorkItemsByProjectId(int projectId)
-        {
-            if (!await _projectService.ProjectExists(projectId))
-            {
-                return NotFound();
-            }
-            
-            var userId = int.Parse(User.Identity.Name);
-            var workItems = await _workItemService.GetWorkItemsByProjectNAssigneeId(projectId, userId);
-
-            return Ok(workItems);
-        }*/
 
         [HttpPost]
         [Authorize]

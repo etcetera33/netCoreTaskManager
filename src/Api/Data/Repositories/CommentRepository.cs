@@ -15,7 +15,7 @@ namespace Data.Repositories
 
         public async Task<IEnumerable<Comment>> GetCommentsByWorkItemIdAsync(int workItemId)
         {
-            return await _dbContext.Comments
+            return await DbContext.Comments
                 .Where(x => x.WorkItemId == workItemId)
                 .Include(x => x.Author)
                 .OrderByDescending(x => x.CommentId)

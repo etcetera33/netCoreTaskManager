@@ -9,7 +9,7 @@ namespace Services.Validators
         {
             RuleFor(x => x.FullName).NotEmpty().Length(1, 40);
             RuleFor(x => x.Login).NotEmpty().Length(1, 40);
-            RuleFor(x => x.Password).NotEmpty().Length(1, 40);
+            RuleFor(x => x.Password).NotEmpty().Length(6, 40);
             RuleFor(x => x.Position).NotNull().Length(1, 40);
         }
     }
