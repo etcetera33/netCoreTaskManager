@@ -52,7 +52,7 @@
             </select>
         </div>
 
-        <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" [ngClass]="{disabled : role === 'Spectator'}" value="Update">
+        <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" [ngClass]="{disabled : role == 'Spectator'}" value="Update">
     </form>
     <h3>Comments</h3>
    <app-comments-list [workItemId]="workItem.Id"></app-comments-list>

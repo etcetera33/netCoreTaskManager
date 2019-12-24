@@ -11,9 +11,7 @@ import { Injectable } from '@angular/core';
 export class UserService {
   private rootUrl = this.apiService.rootUrl + 'users/';
   private currentUser: User;
-  constructor(private http: HttpClient, private apiService: ApiService, private popupService: PopupService) {
-    this.loadUser();
-  }
+  constructor(private http: HttpClient, private apiService: ApiService, private popupService: PopupService) {}
 
   getUserDictionary() {
     return this.http.get(this.rootUrl + 'dictionary');
@@ -23,13 +21,14 @@ export class UserService {
     return this.http.get(this.rootUrl + 'roles');
   }
 
-  getCurrentUser() {
+  async getCurrentUser() {
     if (this.currentUser === undefined) {
-      this.loadUser();
+      const t = await this.http.get<User>(this.rootUrl).toPromise();
+      this.currentUser = t ;
     }
-
     return this.currentUser;
   }
+
 
   loadUser() {
     this.http.get<User>(this.rootUrl).subscribe(
