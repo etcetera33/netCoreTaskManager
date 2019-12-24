@@ -1,3 +1,4 @@
+import { PopupService } from './../../shared/popup/popup.service';
 import { UserService } from './../../shared/user/user.service';
 import { Router } from '@angular/router';
 import { ProjectService } from './../../shared/project/project.service';
@@ -13,11 +14,12 @@ import { Project } from '../../shared/project/project.model';
 
 export class CreateProjectComponent implements OnInit {
   project: Project;
-  constructor(protected projectService: ProjectService, private router: Router, protected userService: UserService) { }
+  constructor(
+    protected projectService: ProjectService, private router: Router,
+    protected userService: UserService, private popupService: PopupService
+    ) { }
 
-  ngOnInit() {
-    console.log(this.userService.getCurrentUser());
-  }
+  ngOnInit() {}
 
   onSubmit(form: NgForm) {
     this.projectService.createProject(form.value).subscribe(
@@ -25,7 +27,7 @@ export class CreateProjectComponent implements OnInit {
         this.router.navigate(['/projects']);
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }

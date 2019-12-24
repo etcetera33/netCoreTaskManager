@@ -1,3 +1,4 @@
+import { PopupService } from './../../shared/popup/popup.service';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService } from './../../shared/project/project.service';
@@ -12,7 +13,9 @@ import { Project } from '../../shared/project/project.model';
 export class ProjectSettingsComponent implements OnInit {
 
   project: Project;
-  constructor(private projectService: ProjectService, private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private projectService: ProjectService, private route: ActivatedRoute,
+    private router: Router, private popupService: PopupService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -27,7 +30,7 @@ export class ProjectSettingsComponent implements OnInit {
         this.project = res as Project;
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -40,7 +43,7 @@ export class ProjectSettingsComponent implements OnInit {
         this.router.navigate(['/projects/' + this.project.Id]);
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }

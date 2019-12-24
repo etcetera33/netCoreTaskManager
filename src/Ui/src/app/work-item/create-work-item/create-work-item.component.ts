@@ -1,3 +1,4 @@
+import { PopupService } from './../../shared/popup/popup.service';
 import { NgForm } from '@angular/forms';
 import { UserService } from './../../shared/user/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,30 +18,30 @@ export class CreateWorkItemComponent implements OnInit {
   assigneeList: User[];
   workItemTypes: any[];
   workItemStatuses: any[];
+  role: string;
   constructor(
     private workItemService: WorkItemService, private activatedRoute: ActivatedRoute,
-    protected userService: UserService, private router: Router
+    protected userService: UserService, private router: Router, private popupService: PopupService
     ) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
-      console.log(+params.get('id'));
       this.projectId = +params.get('id');
     });
     this.loadAssigneeList();
     this.loadWorkItemTypes();
     this.loadWorkItemStatuses();
+    this.role = this.userService.getCurrentRole();
   }
 
   onSubmit(form: NgForm) {
     const data = JSON.stringify(form.value);
-    console.log(form.value);
     this.workItemService.createEntity(data).subscribe(
       res => {
         this.router.navigate(['/projects/' + this.projectId]);
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -51,7 +52,7 @@ export class CreateWorkItemComponent implements OnInit {
         this.workItem = res as WorkItem;
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -62,7 +63,7 @@ export class CreateWorkItemComponent implements OnInit {
         this.assigneeList = res as User[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -73,7 +74,7 @@ export class CreateWorkItemComponent implements OnInit {
         this.workItemTypes = res as any[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -84,7 +85,7 @@ export class CreateWorkItemComponent implements OnInit {
         this.workItemStatuses = res as any[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }

@@ -14,7 +14,8 @@ export class LoginComponent implements OnInit {
 
   Login: string;
   Password: string;
-  constructor(private authService: AuthService, private router: Router, private userService: UserService, private popupService: PopupService) { }
+  constructor(private authService: AuthService, private router: Router,
+              private userService: UserService, private popupService: PopupService) { }
 
   ngOnInit() {
   }
@@ -24,15 +25,12 @@ export class LoginComponent implements OnInit {
     this.authService.loginWithCredentials(credentials).toPromise().then(
       response => {
       const token = response.token;
-      console.log('AUTHORIZING');
       this.authService.authorize(token);
       this.userService.loadUser();
-      
-      //this.router.navigate(['/']);
+      this.router.navigate(['/']);
     },
     err => {
-      this.popupService.openModal('error', 'the error occured');
-      console.log(err);
+      this.popupService.openModal('error', err);
     });
   }
 

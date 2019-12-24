@@ -1,6 +1,7 @@
+import { PopupService } from './../../shared/popup/popup.service';
 import { UserService } from './../../shared/user/user.service';
 import { Project } from './../../shared/project/project.model';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ProjectService } from '../../shared/project/project.service';
 
 @Component({
@@ -13,11 +14,10 @@ export class ProjectListComponent implements OnInit {
   pagesCount: number;
   searchPhrase: string;
   currentPage: number;
-  constructor(protected projectService: ProjectService, protected userService: UserService) { }
+  constructor(protected projectService: ProjectService, protected userService: UserService, private popupService: PopupService) { }
 
   ngOnInit() {
     this.updateList();
-    console.log('UserService projectList: ' + this.userService.getCurrentUser());
   }
 
   paginate(page: number) {
@@ -37,7 +37,7 @@ export class ProjectListComponent implements OnInit {
         this.projectList = res.projectList as Project[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }

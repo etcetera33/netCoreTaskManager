@@ -20,9 +20,5 @@ export class PopupService {
     dialogConfig.minWidth = 400;
 
     const dialogRef = this.dialog.open(PopupComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-    });
   }
 }

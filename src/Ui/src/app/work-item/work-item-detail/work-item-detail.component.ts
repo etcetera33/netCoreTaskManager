@@ -1,3 +1,4 @@
+import { PopupService } from './../../shared/popup/popup.service';
 import { UserService } from './../../shared/user/user.service';
 import { User } from './../../shared/user/user';
 import { NgForm } from '@angular/forms';
@@ -19,7 +20,7 @@ export class WorkItemDetailComponent implements OnInit {
   workItemStatuses: any[];
   constructor(
     private workItemService: WorkItemService, private activatedRoute: ActivatedRoute,
-    protected userService: UserService, private router: Router
+    protected userService: UserService, private router: Router, private popupService: PopupService
     ) { }
 
   ngOnInit() {
@@ -34,13 +35,12 @@ export class WorkItemDetailComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     const data = JSON.stringify(form.value);
-    console.log(form.value);
     this.workItemService.updateEntity(data, this.workItem.Id).subscribe(
       res => {
         this.router.navigate(['/projects/' + this.workItem.ProjectId]);
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -51,7 +51,7 @@ export class WorkItemDetailComponent implements OnInit {
         this.workItem = res as WorkItem;
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -62,7 +62,7 @@ export class WorkItemDetailComponent implements OnInit {
         this.assigneeList = res as User[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -73,7 +73,7 @@ export class WorkItemDetailComponent implements OnInit {
         this.workItemTypes = res as any[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -84,7 +84,7 @@ export class WorkItemDetailComponent implements OnInit {
         this.workItemStatuses = res as any[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }

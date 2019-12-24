@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
 using System.Diagnostics;
-using System.Dynamic;
 using System.Threading.Tasks;
 
 namespace Api.Middleware
@@ -18,7 +17,6 @@ namespace Api.Middleware
         public Task InvokeAsync(HttpContext context)
         {
             var watch = new Stopwatch();
-            dynamic data = new {};
 
             watch.Start();
             context.Response.OnStarting(() =>

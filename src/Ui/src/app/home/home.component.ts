@@ -1,3 +1,4 @@
+import { PopupService } from './../shared/popup/popup.service';
 import { UserService } from './../shared/user/user.service';
 import { WorkItem } from './../shared/work-item/work-item.model';
 import { Component, OnInit } from '@angular/core';
@@ -10,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
 
   workItems: WorkItem[];
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private popupService: PopupService) { }
 
   ngOnInit() {
     this.userService.getCurrentUserTasks().subscribe(
@@ -18,7 +19,7 @@ export class HomeComponent implements OnInit {
         this.workItems = res as WorkItem[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }

@@ -12,7 +12,6 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { RouterModule, Routes, CanActivate } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MenuComponent } from './menu/menu.component';
 import { ProfileHeaderComponent } from './header/profile-header/profile-header.component';
 import { ProjectListComponent } from './project/project-list/project-list.component';
 import { ProjectDetailComponent } from './project/project-detail/project-detail.component';
@@ -60,11 +59,9 @@ const jwtConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    MenuComponent,
     ProfileHeaderComponent,
     ProjectListComponent,
     ProjectDetailComponent,
-    MenuComponent,
     HomeComponent,
     WorkItemListComponent,
     WorkItemDetailComponent,

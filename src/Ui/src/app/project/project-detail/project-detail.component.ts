@@ -1,5 +1,4 @@
 import { UserService } from './../../shared/user/user.service';
-import { ProjectService } from './../../shared/project/project.service';
 import { Component, OnInit } from '@angular/core';
 import { WorkItemService } from '../../shared/work-item/work-item.service';
 import {ActivatedRoute} from '@angular/router';

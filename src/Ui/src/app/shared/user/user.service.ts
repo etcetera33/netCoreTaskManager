@@ -1,3 +1,4 @@
+import { PopupService } from './../popup/popup.service';
 import { WorkItem } from './../work-item/work-item.model';
 import { ApiService } from './../api/api.service';
 import { User } from './user';
@@ -10,7 +11,7 @@ import { Injectable } from '@angular/core';
 export class UserService {
   private rootUrl = this.apiService.rootUrl + 'users/';
   private currentUser: User;
-  constructor(private http: HttpClient, private apiService: ApiService) { }
+  constructor(private http: HttpClient, private apiService: ApiService, private popupService: PopupService) { }
 
   getUserDictionary() {
     return this.http.get(this.rootUrl + 'dictionary');
@@ -34,7 +35,7 @@ export class UserService {
         this.currentUser = res;
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -44,6 +45,6 @@ export class UserService {
   }
 
   getCurrentRole() {
-    return this.getCurrentUser().Role;
+    return this.currentUser.Role;
   }
 }

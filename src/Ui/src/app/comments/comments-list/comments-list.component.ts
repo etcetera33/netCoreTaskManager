@@ -1,5 +1,5 @@
+import { PopupService } from './../../shared/popup/popup.service';
 import { UserService } from './../../shared/user/user.service';
-import { User } from './../../shared/user/user';
 import { NgForm } from '@angular/forms';
 import { Commentary } from './../../shared/comment/commentary';
 import { CommentService } from './../../shared/comment/comment.service';
@@ -17,7 +17,7 @@ export class CommentsListComponent implements OnInit {
   commentList: Commentary[];
   comment: Commentary;
   userId: number;
-  constructor(private commentService: CommentService, private userService: UserService) { }
+  constructor(private commentService: CommentService, private userService: UserService, private popupService: PopupService) { }
 
   ngOnInit() {
     this.refreshList();
@@ -26,14 +26,16 @@ export class CommentsListComponent implements OnInit {
 
   submit(form: NgForm) {
     const formData = JSON.stringify(form.value);
-    console.log(formData);
     this.commentService.addComment(formData).subscribe(
       res => {
         this.refreshList();
-        this.comment = null;
+        if (this.comment) {
+          console.log('Inside');
+          this.comment.Body = '';
+        }
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -44,7 +46,7 @@ export class CommentsListComponent implements OnInit {
         this.commentList = res as Commentary[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -59,7 +61,7 @@ export class CommentsListComponent implements OnInit {
         this.refreshList();
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }

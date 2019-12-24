@@ -1,3 +1,4 @@
+import { PopupService } from './../../shared/popup/popup.service';
 import { UserService } from './../../shared/user/user.service';
 import { WorkItem } from './../../shared/work-item/work-item.model';
 import { Component, OnInit, Input } from '@angular/core';
@@ -20,7 +21,7 @@ export class WorkItemListComponent implements OnInit {
   pagesCount: number;
   workItems: WorkItem[];
   users: User[];
-  constructor(protected workItemService: WorkItemService, protected userService: UserService) { }
+  constructor(protected workItemService: WorkItemService, protected userService: UserService, private popupService: PopupService) { }
 
   ngOnInit() {
     this.workItemService.setProjectId(this.projectId);
@@ -45,7 +46,7 @@ export class WorkItemListComponent implements OnInit {
         this.workItems = res.wokrItemList as WorkItem[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
@@ -56,7 +57,7 @@ export class WorkItemListComponent implements OnInit {
         this.users = res as User[];
       },
       err => {
-        console.log(err);
+        this.popupService.openModal('error', err);
       }
     );
   }
