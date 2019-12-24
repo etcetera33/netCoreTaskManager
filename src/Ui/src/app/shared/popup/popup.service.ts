@@ -11,7 +11,6 @@ export class PopupService {
   openModal(title: string, message: string) {
     const dialogConfig = new MatDialogConfig();
 
-    // dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
         title,

@@ -5,7 +5,6 @@ import { ProjectService } from './../../shared/project/project.service';
 import { Component, OnInit } from '@angular/core';
 import { NgForm  } from '@angular/forms';
 import { Project } from '../../shared/project/project.model';
-import { User } from '../../shared/user/user';
 
 @Component({
   selector: 'app-create-project',
@@ -15,7 +14,6 @@ import { User } from '../../shared/user/user';
 
 export class CreateProjectComponent implements OnInit {
   project: Project;
-  user: Promise<User>;
   role: string;
   constructor(
     protected projectService: ProjectService, private router: Router,
@@ -23,9 +21,7 @@ export class CreateProjectComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.user = this.userService.getCurrentUser();
-    this.user.then(res => this.role = res.Role);
-    console.log(this.role);
+    this.role = this.userService.getCurrentRole();
   }
 
   onSubmit(form: NgForm) {

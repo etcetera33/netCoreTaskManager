@@ -21,14 +21,13 @@ export class UserService {
     return this.http.get(this.rootUrl + 'roles');
   }
 
-  async getCurrentUser() {
+  getCurrentUser() {
     if (this.currentUser === undefined) {
-      const t = await this.http.get<User>(this.rootUrl).toPromise();
-      this.currentUser = t ;
+      const t = this.http.get<User>(this.rootUrl).toPromise();
+      this.loadUser();
     }
     return this.currentUser;
   }
-
 
   loadUser() {
     this.http.get<User>(this.rootUrl).subscribe(
@@ -46,6 +45,6 @@ export class UserService {
   }
 
   getCurrentRole() {
-    return this.currentUser.Role;
+    return localStorage.getItem('role');
   }
 }

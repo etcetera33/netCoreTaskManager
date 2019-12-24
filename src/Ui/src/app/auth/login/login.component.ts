@@ -19,8 +19,7 @@ export class LoginComponent implements OnInit {
     private userService: UserService, private popupService: PopupService
     ) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   login(form: NgForm) {
     const credentials = JSON.stringify(form.value);
@@ -29,6 +28,7 @@ export class LoginComponent implements OnInit {
       const token = response.token;
       this.authService.authorize(token);
       this.userService.loadUser();
+      this.authService.putRoleToLocalStorage(token);
       this.router.navigate(['/']);
     },
     err => {

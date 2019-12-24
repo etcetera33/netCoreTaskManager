@@ -1,10 +1,12 @@
 import { PopupService } from './../../shared/popup/popup.service';
 import { UserService } from './../../shared/user/user.service';
-import { NgForm, NgModel } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { Commentary } from './../../shared/comment/commentary';
 import { CommentService } from './../../shared/comment/comment.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { User } from '../../shared/user/user';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../shared/auth/auth.service';
 
 @Component({
   selector: 'app-comments-list',
@@ -17,8 +19,11 @@ export class CommentsListComponent implements OnInit {
 
   commentList: Commentary[];
   comment: Commentary;
-  user: User;
-  constructor(private commentService: CommentService, private userService: UserService, private popupService: PopupService) { }
+  userId: number;
+  constructor(
+    private commentService: CommentService, private userService: UserService,
+    private popupService: PopupService, private authService: AuthService
+    ) { }
 
   ngOnInit() {
     this.refreshList();
@@ -28,9 +33,9 @@ export class CommentsListComponent implements OnInit {
   submit(form: NgForm) {
     const formData = JSON.stringify(form.value);
     this.commentService.addComment(formData).subscribe(
-      res => {
+      () => {
         this.refreshList();
-        form.controls['Body'].reset();
+        form.reset('Body');
       },
       err => {
         this.popupService.openModal('error', err);
@@ -50,15 +55,16 @@ export class CommentsListComponent implements OnInit {
   }
 
   getUser() {
-    this.user = this.userService.getCurrentUser();
+    this.userId = this.authService.getIdFormToken();
   }
 
   remove(id: number) {
     this.commentService.removeComment(id).subscribe(
-      res => {
+      () => {
         this.refreshList();
       },
       err => {
+        console.log(err.status);
         this.popupService.openModal('error', err);
       }
     );
