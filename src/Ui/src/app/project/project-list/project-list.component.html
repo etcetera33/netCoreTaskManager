@@ -9,7 +9,7 @@
       <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
       <h1 class="h3 mb-0 text-gray-800">Projects</h1>
-      <a routerLink="/projects/create" *ngIf="userService.getCurrentRole() != 'Spectator'" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create Project</a>
+      <a routerLink="/projects/create" *ngIf="role != 'Spectator'" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create Project</a>
     </div>
     <div class="form-group">
       <input placeholder="Search" name="Search" [(ngModel)]="searchPhrase" value="{{searchPhrase}}" class="form-control form-control-user">

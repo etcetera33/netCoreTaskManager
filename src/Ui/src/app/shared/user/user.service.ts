@@ -11,7 +11,9 @@ import { Injectable } from '@angular/core';
 export class UserService {
   private rootUrl = this.apiService.rootUrl + 'users/';
   private currentUser: User;
-  constructor(private http: HttpClient, private apiService: ApiService, private popupService: PopupService) { }
+  constructor(private http: HttpClient, private apiService: ApiService, private popupService: PopupService) {
+    this.loadUser();
+  }
 
   getUserDictionary() {
     return this.http.get(this.rootUrl + 'dictionary');

@@ -14,10 +14,12 @@ export class ProjectListComponent implements OnInit {
   pagesCount: number;
   searchPhrase: string;
   currentPage: number;
+  role: string;
   constructor(protected projectService: ProjectService, protected userService: UserService, private popupService: PopupService) { }
 
   ngOnInit() {
     this.updateList();
+    this.role = this.userService.getCurrentRole();
   }
 
   paginate(page: number) {

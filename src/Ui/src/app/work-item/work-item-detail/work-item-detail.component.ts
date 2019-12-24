@@ -18,6 +18,7 @@ export class WorkItemDetailComponent implements OnInit {
   assigneeList: User[];
   workItemTypes: any[];
   workItemStatuses: any[];
+  role: string;
   constructor(
     private workItemService: WorkItemService, private activatedRoute: ActivatedRoute,
     protected userService: UserService, private router: Router, private popupService: PopupService
@@ -25,12 +26,13 @@ export class WorkItemDetailComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
-      this.workItemService.setProjectId(+params.get('projectId'))
+      this.workItemService.setProjectId(+params.get('projectId'));
       this.loadEntity(+params.get('id'));
     });
     this.loadAssigneeList();
     this.loadWorkItemTypes();
     this.loadWorkItemStatuses();
+    this.role = this.userService.getCurrentRole();
   }
 
   onSubmit(form: NgForm) {

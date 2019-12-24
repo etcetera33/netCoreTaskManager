@@ -14,12 +14,15 @@ import { Project } from '../../shared/project/project.model';
 
 export class CreateProjectComponent implements OnInit {
   project: Project;
+  role: string;
   constructor(
     protected projectService: ProjectService, private router: Router,
     protected userService: UserService, private popupService: PopupService
     ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.role = this.userService.getCurrentRole();
+  }
 
   onSubmit(form: NgForm) {
     this.projectService.createProject(form.value).subscribe(

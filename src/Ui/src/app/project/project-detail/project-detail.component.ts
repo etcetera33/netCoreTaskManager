@@ -11,11 +11,13 @@ import {ActivatedRoute} from '@angular/router';
 
 export class ProjectDetailComponent implements OnInit {
   projectId: number;
+  role: string;
   constructor(private workItemService: WorkItemService, private activatedRoute: ActivatedRoute, protected userService: UserService) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
       this.projectId = +params.get('id');
     });
+    this.role = this.userService.getCurrentRole();
   }
 }

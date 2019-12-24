@@ -13,23 +13,23 @@
         
         <div class="form-group col-md-5">
             <label for="Title">Title</label>
-            <input placeholder="Title" name="Title" #Title="ngModel" [ngModel]="workItem?.Title" value="{{workItem?.Title}}" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
+            <input placeholder="Title" name="Title" #Title="ngModel" [ngModel]="workItem?.Title" value="{{workItem?.Title}}" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
         </div>
         <div class="form-group col-md-8">
             <label for="Description">Description</label>
-            <input placeholder="Description" name="Description" #Description="ngModel" [ngModel]="workItem?.Description" value="{{workItem?.Description}}" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
+            <input placeholder="Description" name="Description" #Description="ngModel" [ngModel]="workItem?.Description" value="{{workItem?.Description}}" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
         </div>
         <div class="form-group col-md-5">
             <label for="Progress">Progress (1-100 %)</label>
-            <input type="number" placeholder="Progress" name="Progress" #Progress="ngModel" [ngModel]="workItem?.Progress" value="{{workItem?.Progress}}" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
+            <input type="number" placeholder="Progress" name="Progress" #Progress="ngModel" [ngModel]="workItem?.Progress" value="{{workItem?.Progress}}" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
         </div>
         <div class="form-group col-md-5">
             <label for="Priority">Priority (1-100 %)</label>
-            <input type="number" placeholder="Priority" name="Priority" #Priority="ngModel" [ngModel]="workItem?.Priority" value="{{workItem?.Priority}}" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
+            <input type="number" placeholder="Priority" name="Priority" #Priority="ngModel" [ngModel]="workItem?.Priority" value="{{workItem?.Priority}}" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
         </div>
         <div class="form-group col-md-5">
             <label for="StatusId">Status</label>
-            <select matNativeControl [(ngModel)]="workItem.StatusId" name="StatusId" #StatusId="ngModel" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
+            <select matNativeControl [(ngModel)]="workItem.StatusId" name="StatusId" #StatusId="ngModel" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
                 <option *ngFor="let status of workItemStatuses" [ngValue]="status.Id" [selected]="status.Id == workItem.StatusId">
                 {{status.Name}}
                 </option>
@@ -37,7 +37,7 @@
         </div>
         <div class="form-group col-md-5">
             <label for="WorkItemTypeId">ItemType</label>
-            <select matNativeControl [(ngModel)]="workItem.WorkItemTypeId" name="WorkItemTypeId" #WorkItemTypeId="ngModel" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
+            <select matNativeControl [(ngModel)]="workItem.WorkItemTypeId" name="WorkItemTypeId" #WorkItemTypeId="ngModel" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
                 <option *ngFor="let workItemType of workItemTypes" [ngValue]="workItemType.Id" [selected]="workItemType.Id == workItem.WorkItemTypeId">
                 {{workItemType.Name}}
                 </option>
@@ -45,14 +45,14 @@
         </div>
         <div class="form-group col-md-5">
             <label for="AssigneeId">Assignee</label>
-            <select matNativeControl [(ngModel)]="workItem.AssigneeId" name="AssigneeId" #AssigneeId="ngModel" [disabled]="userService.getCurrentRole() != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
+            <select matNativeControl [(ngModel)]="workItem.AssigneeId" name="AssigneeId" #AssigneeId="ngModel" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
                 <option *ngFor="let assignee of assigneeList" [ngValue]="assignee.Id" [selected]="assignee.Id == workItem.AssigneeId">
                 {{assignee.FullName}}
                 </option>
             </select>
         </div>
 
-        <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" [ngClass]="{disabled : userService.getCurrentRole() === 'Spectator'}" value="Update">
+        <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" [ngClass]="{disabled : role === 'Spectator'}" value="Update">
     </form>
     <h3>Comments</h3>
    <app-comments-list [workItemId]="workItem.Id"></app-comments-list>

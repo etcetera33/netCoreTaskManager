@@ -4,5 +4,6 @@ export class Commentary {
     Body: string;
     SentAt: Date;
     Author: User;
+    AuthorId: number;
     WorkItemId: number;
 }

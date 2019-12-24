@@ -24,7 +24,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-auto" *ngIf="comment.Author.Id == userId">
+            <div class="col-auto" *ngIf="comment.AuthorId == user.Id">
               <button (click)="remove(comment.Id)">Delete</button>
             </div>
           </div>
