@@ -1,7 +1,9 @@
-﻿using Data.Models;
+﻿using System;
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Data.Repositories
@@ -20,23 +22,20 @@ namespace Data.Repositories
                 .FirstOrDefaultAsync(i => i.WorkItemId == id);
         }
 
-        public async Task<IEnumerable<WorkItem>> PaginateFiltered(int projectId, int offset, int itemsCount, int assigneeId, string searchPhrase = "")
+        public async Task<IEnumerable<WorkItem>> PaginateFiltered(Expression<Func<WorkItem, bool>> expression, int offset, int itemsCount)
         {
-            return await DbContext.WorkItems
-                .Where(x => x.ProjectId == projectId)
-                .Where(x => x.Title.Contains(searchPhrase))
-                .Where(x => x.AssigneeId == assigneeId)
+            var res = DbContext.WorkItems
+                .Where(expression)
                 .Skip(offset)
-                .Take(itemsCount)
-                .ToListAsync();
+                .Take(itemsCount);
+
+            return await res.AsQueryable().ToListAsync();
         }
 
-        public async Task<int> GetFilteredDataCountAsync(int projectId, int assigneeId, string searchPhrase)
+        public async Task<int> GetFilteredDataCountAsync(Expression<Func<WorkItem, bool>> expression)
         {
             return await DbContext.WorkItems
-                .Where(x => x.ProjectId == projectId)
-                .Where(x => x.Title.Contains(searchPhrase))
-                .Where(x => x.AssigneeId == assigneeId)
+                .Where(expression)
                 .CountAsync();
         }
 

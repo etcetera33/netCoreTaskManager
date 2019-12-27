@@ -23,7 +23,6 @@ export class UserService {
 
   getCurrentUser() {
     if (this.currentUser === undefined) {
-      const t = this.http.get<User>(this.rootUrl).toPromise();
       this.loadUser();
     }
     return this.currentUser;

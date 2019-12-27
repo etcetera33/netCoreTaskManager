@@ -9,15 +9,9 @@ import { Component, OnInit } from '@angular/core';
   styles: []
 })
 export class ProfileHeaderComponent implements OnInit {
-  fullName: string;
-  constructor(private authService: AuthService, private userService: UserService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
-  ngOnInit() {
-    const user = this.userService.getCurrentUser();
-    if (user !== undefined) {
-      this.fullName = user.FullName;
-    }
-  }
+  ngOnInit() {}
 
   logout() {
     this.authService.logOut();

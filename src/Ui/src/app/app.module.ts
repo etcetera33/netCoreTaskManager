@@ -1,3 +1,5 @@
+import { ErrorInterceptor } from './interceptors/error-interceptor';
+import { appRoutes } from './routes';
 import { PopupService } from './services/popup.service';
 import { UserService } from './services/user.service';
 import { AuthInterceptor } from './interceptors/auth-interceptor';
@@ -9,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { JwtModule } from '@auth0/angular-jwt';
 
-import { RouterModule, Routes, CanActivate } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProfileHeaderComponent } from './components/header/profile-header/profile-header.component';
@@ -34,19 +36,6 @@ import { PopupComponent } from './components/popup/popup.component';
 export function tokenGetter() {
   return localStorage.getItem('jwt');
 }
-
-const appRoutes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard]},
-  { path: 'projects', component: ProjectListComponent, canActivate: [AuthGuard]},
-  { path: 'projects/create', component: CreateProjectComponent, canActivate: [AuthGuard]},
-  { path: 'projects/:id', component: ProjectDetailComponent, canActivate: [AuthGuard]},
-  { path: 'projects/:id/work-item/create', component: CreateWorkItemComponent, canActivate: [AuthGuard]},
-  { path: 'projects/:id/settings', component: ProjectSettingsComponent, canActivate: [AuthGuard]},
-  { path: 'projects/:projectId/work-items/:id', component: WorkItemDetailComponent, canActivate: [AuthGuard]},
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: '**', component: NotFoundComponent}
-];
 
 const jwtConfig = {
   config: {
@@ -93,7 +82,8 @@ const jwtConfig = {
     AuthGuard,
     UserService,
     PopupService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   entryComponents: [PopupComponent]

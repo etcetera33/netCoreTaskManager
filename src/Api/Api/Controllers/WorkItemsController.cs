@@ -22,7 +22,8 @@ namespace Api.Controllers
         [Authorize]
         public async Task<IActionResult> Get(int projectId, [FromQuery] WorkItemQueryParameters parameters)
         {
-            if (parameters.AssigneeId == 0) {
+            if (parameters.AssigneeId == null)
+            {
                 parameters.AssigneeId = int.Parse(User.Identity.Name);
             }
             

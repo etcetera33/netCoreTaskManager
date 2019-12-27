@@ -34,6 +34,7 @@ export class CommentsListComponent implements OnInit {
       () => {
         this.refreshList();
         form.reset('Body');
+        console.log('workItemId: ' + this.workItemId);
       },
       err => {
         this.popupService.openModal('error', err);

@@ -17,12 +17,12 @@
                   </div>
                   <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" class="user">
                     <div class="form-group">
-                      <input name="Login" [(ngModel)]="Login" type="text" class="form-control form-control-user" placeholder="Enter Login ..." required>
+                      <input name="Login" [(ngModel)]="Login" type="text" class="form-control" placeholder="Enter Login ..." required>
                     </div>
                     <div class="form-group">
-                      <input name="Password" [(ngModel)]="Password" type="password" class="form-control form-control-user" minlength="6" placeholder="Password">
+                      <input name="Password" [(ngModel)]="Password" type="password" class="form-control" minlength="6" placeholder="Password">
                     </div>
-                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Login"/>
+                    <input type="submit" class="btn btn-primary btn-block" value="Login"/>
                   </form>
                   <hr>
                   <a routerLink="/register" class="nav-link" rel="nofollow"  routerLinkActive="active">Don`t have an accound yet?</a>

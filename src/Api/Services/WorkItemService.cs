@@ -7,7 +7,10 @@ using Models.DTOs;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Services.Helpers;
 
 namespace Services
 {
@@ -22,7 +25,7 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
+        /*public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
         {
             var workItemList = await _unitOfWork.WorkItemRepository.PaginateFiltered(
                 projectId: projectId,
@@ -38,6 +41,40 @@ namespace Services
                 projectId: projectId,
                 assigneeId: parameters.AssigneeId,
                 searchPhrase: parameters.Search);
+
+            var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
+
+            return new
+            {
+                wokrItemList = workItemDtoList,
+                pagesCount
+            };
+        }*/
+
+        public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
+        {
+
+            Expression<Func<WorkItem, bool>> exp = w => w.ProjectId == projectId;
+
+            if (parameters.AssigneeId.HasValue)
+            {
+                exp = exp.AndAlso(w => w.AssigneeId == parameters.AssigneeId.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameters.Search))
+            {
+                exp = exp.AndAlso(w => w.Title.Contains(parameters.Search));
+            }
+
+            var workItemList = await _unitOfWork.WorkItemRepository.PaginateFiltered(
+                exp,
+                offset: (parameters.Page - 1) * parameters.ItemsPerPage,
+                itemsCount: parameters.ItemsPerPage
+            );
+
+            var workItemDtoList = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItemList);
+
+            var rowsCount = await _unitOfWork.WorkItemRepository.GetFilteredDataCountAsync(exp);
 
             var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
 

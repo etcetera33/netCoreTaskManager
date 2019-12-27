@@ -14,6 +14,10 @@ namespace Data
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
+            _projectRepository = new ProjectRepository(_dbContext);
+            _userRepository = new UserRepository(_dbContext);
+            _workItemRepository = new WorkItemRepository(_dbContext);
+            _commentRepository = new CommentRepository(_dbContext);
         }
 
         public ProjectRepository ProjectRepository => _projectRepository ?? new ProjectRepository(_dbContext);
