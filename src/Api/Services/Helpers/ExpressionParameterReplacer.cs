@@ -13,7 +13,9 @@ namespace Services.Helpers
             ParameterReplacements = new Dictionary<ParameterExpression, ParameterExpression>();
 
             for (int i = 0; i != fromParameters.Count && i != toParameters.Count; i++)
-            { ParameterReplacements.Add(fromParameters[i], toParameters[i]); }
+            {
+                ParameterReplacements.Add(fromParameters[i], toParameters[i]);
+            }
         }
 
         protected override Expression VisitParameter(ParameterExpression node)
@@ -21,7 +23,9 @@ namespace Services.Helpers
             ParameterExpression replacement;
 
             if (ParameterReplacements.TryGetValue(node, out replacement))
-            { node = replacement; }
+            {
+                node = replacement;
+            }
 
             return base.VisitParameter(node);
         }

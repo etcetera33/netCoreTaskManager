@@ -10,7 +10,7 @@
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
               </div>
-              <form #registerForm="ngForm" (ngSubmit)="register(registerForm)" class="user" ngNativeValidate>
+              <form #registerForm="ngForm" (ngSubmit)="register(registerForm)" class="user" autocomplete="off" ngNativeValidate>
                 <div class="form-group">
                   <label for="FullName">Full name:</label>
                   <input type="text" name="FullName" #FullName="ngModel" [ngModel]="user?.FullName" class="form-control" placeholder="Full Name" required>

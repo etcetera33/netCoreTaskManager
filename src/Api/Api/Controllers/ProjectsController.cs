@@ -19,6 +19,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get([FromQuery] BaseQueryParameters parameters)
         {
             var returnValue = await _projectService.GetPaginatedDataAsync(parameters);
