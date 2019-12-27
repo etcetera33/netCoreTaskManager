@@ -8,7 +8,6 @@ using Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Services.Helpers;
 
@@ -24,32 +23,6 @@ namespace Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
-        /*public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
-        {
-            var workItemList = await _unitOfWork.WorkItemRepository.PaginateFiltered(
-                projectId: projectId,
-                offset: (parameters.Page - 1) * parameters.ItemsPerPage,
-                itemsCount: parameters.ItemsPerPage,
-                assigneeId: parameters.AssigneeId,
-                searchPhrase: parameters.Search
-                );
-
-            var workItemDtoList = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItemList);
-
-            var rowsCount = await _unitOfWork.WorkItemRepository.GetFilteredDataCountAsync(
-                projectId: projectId,
-                assigneeId: parameters.AssigneeId,
-                searchPhrase: parameters.Search);
-
-            var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
-
-            return new
-            {
-                wokrItemList = workItemDtoList,
-                pagesCount
-            };
-        }*/
 
         public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
         {

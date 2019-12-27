@@ -14,6 +14,7 @@ namespace Data.Repositories
         {
             return await DbContext.Projects
                 .Where(x => x.ProjectName.Contains(searchPhrase))
+                .OrderBy(x => x.ProjectName)
                 .Skip(offset)
                 .Take(itemsCount)
                 .Include(x => x.Owner)

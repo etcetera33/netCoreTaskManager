@@ -15,7 +15,7 @@
                   <div class="text-center">
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                   </div>
-                  <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" class="user">
+                  <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" class="user" autocomplete="off">
                     <div class="form-group">
                       <input name="Login" [(ngModel)]="Login" type="text" class="form-control" placeholder="Enter Login ..." required>
                     </div>

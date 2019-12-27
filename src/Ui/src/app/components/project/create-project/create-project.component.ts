@@ -30,6 +30,7 @@ export class CreateProjectComponent implements OnInit {
         this.router.navigate(['/projects']);
       },
       err => {
+        console.log(err);
         this.popupService.openModal('error', err);
       }
     );

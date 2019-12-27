@@ -8,7 +8,7 @@ namespace Services.Validators
         public ProjectValidator()
         {
             RuleFor(x => x.Name).NotEmpty().Length(1, 50);
-            RuleFor(x => x.Description).NotEmpty().Length(1, 150);
+            RuleFor(x => x.Description).NotEmpty().Length(1, 300);
         }
     }
 }

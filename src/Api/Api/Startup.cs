@@ -45,7 +45,6 @@ namespace Api
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
             
-            // configure jwt authentication
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -63,18 +62,15 @@ namespace Api
                 };
             });
 
-            // DI
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
 
-            // mapper
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
 
-            // configs
             services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
             services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));
 

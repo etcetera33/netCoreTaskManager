@@ -8,13 +8,13 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 export class PopupService {
 
   constructor(public dialog: MatDialog) { }
-  openModal(title: string, message: string) {
+  openModal(title: string, response: any) {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
         title,
-        message
+        message: response.status
     };
     dialogConfig.minWidth = 400;
 
