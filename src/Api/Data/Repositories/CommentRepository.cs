@@ -1,8 +1,8 @@
 ﻿using Data.Models;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
@@ -12,9 +12,14 @@ namespace Data.Repositories
         {
 
         }
-        public IEnumerable<Comment> GetCommentsByWorkItemId(int workItemId)
+
+        public async Task<IEnumerable<Comment>> GetCommentsByWorkItemIdAsync(int workItemId)
         {
-            return _dbContext.Comments.Where(x => x.WorkItemId == workItemId).ToList();
+            return await DbContext.Comments
+                .Where(x => x.WorkItemId == workItemId)
+                .Include(x => x.Author)
+                .OrderByDescending(x => x.CommentId)
+                .ToListAsync();
         }
     }
 }

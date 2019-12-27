@@ -1,5 +1,7 @@
 ﻿using Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
@@ -7,12 +9,11 @@ namespace Data.Repositories
     {
         public UserRepository(ApplicationDbContext dbContext): base(dbContext) {}
 
-        public User FindUserByLoginPassword(string login, string password)
+        public async Task<User> FindUserByLoginAsync(string login)
         {
-            return _dbContext.Users
+            return await DbContext.Users
                 .Where(user => user.Login == login)
-                .Where(user => user.Password == password)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
     }
 }

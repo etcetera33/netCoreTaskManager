@@ -1,7 +1,10 @@
-﻿using Data.Models;
+﻿using System;
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
@@ -11,14 +14,38 @@ namespace Data.Repositories
         {
 
         }
-        public IEnumerable<WorkItem> GetAll()
+
+        public async override Task<WorkItem> GetById(int id)
         {
-            return _dbContext.WorkItems
+            return await DbContext.WorkItems
                 .Include(x => x.Assignee)
-                .Include(x => x.Author)
-                .Include(x => x.Project)
-                .Include(x => x.Comments)
-                .ToList();
+                .FirstOrDefaultAsync(i => i.WorkItemId == id);
+        }
+
+        public async Task<IEnumerable<WorkItem>> PaginateFiltered(Expression<Func<WorkItem, bool>> expression, int offset, int itemsCount)
+        {
+            var res = DbContext.WorkItems
+                .Where(expression)
+                .Skip(offset)
+                .Take(itemsCount);
+
+            return await res.AsQueryable().ToListAsync();
+        }
+
+        public async Task<int> GetFilteredDataCountAsync(Expression<Func<WorkItem, bool>> expression)
+        {
+            return await DbContext.WorkItems
+                .Where(expression)
+                .CountAsync();
+        }
+
+        public async Task<IEnumerable<WorkItem>> GetTopFivePriorityItems(int assigneeId)
+        {
+            return await DbContext.WorkItems
+                .Where(x => x.AssigneeId == assigneeId)
+                .OrderByDescending(x => x.Priority)
+                .Take(5)
+                .ToListAsync();
         }
     }
 }

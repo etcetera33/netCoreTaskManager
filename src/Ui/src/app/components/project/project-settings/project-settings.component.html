@@ -1,0 +1,18 @@
+ 
+      
+<div class="col-lg-7">
+    <div class="p-5"><div class="text-center">
+        <h1 class="h4 text-gray-900 mb-4">Project Info</h1>
+    </div>
+    <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" ngNativeValidate>
+        <div class="form-group">
+            <input name="Name" #Name="ngModel" [ngModel]="project?.Name" class="form-control form-control-user" disabled>
+        </div>
+        <div class="form-group">
+          <input name="Description" #Description="ngModel" [ngModel]="project?.Description" class="form-control form-control-user" disabled>
+        </div>
+    </form>
+</div>
+
+</div>
+      

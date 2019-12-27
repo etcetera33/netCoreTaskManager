@@ -1,0 +1,32 @@
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+  
+      <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+  
+        <!-- Main Content -->
+      <div id="content">
+  
+          <app-profile-header></app-profile-header>
+  
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+            <app-project-settings></app-project-settings>
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+              <h1 class="h3 mb-0 text-gray-800">Work Items</h1>
+              <a routerLink="/projects/{{projectId}}/work-item/create" *ngIf="role != 'Spectator'" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create a work item</a>
+            </div>
+  
+            <app-workitem-list [projectId]="projectId"></app-workitem-list>
+            
+          </div>
+          <!-- /.container-fluid -->
+  
+      </div>
+        <!-- End of Main Content -->
+
+    </div>
+      <!-- End of Content Wrapper -->
+      
+  </div>

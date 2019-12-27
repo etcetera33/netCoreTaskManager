@@ -1,6 +1,8 @@
 using Api.Auth;
+using Api.Middleware;
 using AutoMapper;
 using Data;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,8 +11,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
+using Serilog;
 using Services;
+using Services.Helpers;
 using Services.Interfaces;
+using Services.Mapper;
+using Services.Validators;
 
 namespace Api
 {
@@ -23,10 +30,17 @@ namespace Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddCors();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                })
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<UserValidator>())
+                ;
+
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
@@ -43,15 +57,13 @@ namespace Api
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = AuthConfig.GetKey(),
-                    // укзывает, будет ли валидироваться издатель при валидации токена
+                    IssuerSigningKey = AuthConfig.GetKey(Configuration.GetSection("AuthConfig").GetSection("SecretKey").Value),
                     ValidateIssuer = false,
-                    // будет ли валидироваться потребитель токена
-                    ValidateAudience = false,
-                    //ValidAudience = "http://localhost:44348/",
+                    ValidateAudience = false
                 };
             });
 
+            // DI
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
@@ -60,6 +72,12 @@ namespace Api
 
             // mapper
             services.AddAutoMapper(typeof(Startup));
+            services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
+
+            // configs
+            services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
+            services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,19 +88,26 @@ namespace Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAuthentication();
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
+            );
 
             app.UseHttpsRedirection();
 
+            app.UseSerilogRequestLogging();
+
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestResponseLogMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
         }
     }
 }

@@ -5,11 +5,11 @@ namespace Api.Auth
 {
     public class AuthConfig
     {
-        const string KEY = "SECRET_KEY_TASK_MANAGER";
-        public const int MINUTES_LIFETIME = 60;
-        public static SymmetricSecurityKey GetKey()
+        public string SecretKey { get; set; }
+        public int MinutesLifetime { get; set; }
+        public static SymmetricSecurityKey GetKey(string secretKey)
         {
-            return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));
+            return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
         }
     }
 }
