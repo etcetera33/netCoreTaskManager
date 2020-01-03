@@ -1,8 +1,10 @@
-using Api.Auth;
+using Api.Configs;
+using Api.Bus;
 using Api.Middleware;
 using AutoMapper;
 using Data;
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +20,7 @@ using Services.Helpers;
 using Services.Interfaces;
 using Services.Mapper;
 using Services.Validators;
+using Core.Configs;
 
 namespace Api
 {
@@ -62,6 +65,28 @@ namespace Api
                 };
             });
 
+            // Start of the service Bus
+            services.AddMassTransit();
+
+            services.AddSingleton(provider => MassTransit.Bus.Factory.CreateUsingRabbitMq(cfg =>
+            {
+                var host = cfg.Host(
+                    host: Configuration.GetSection("RabbitMqConfig").GetSection("Host").Value,
+                    virtualHost: Configuration.GetSection("RabbitMqConfig").GetSection("VirtualHost").Value,
+                    h => { });
+
+                cfg.ReceiveEndpoint(
+                    Configuration.GetSection("RabbitMqConfig").GetSection("Endpoint").Value,
+                    e => { });
+            }));
+
+            services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<ISendEndpointProvider>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
+
+            services.AddSingleton<IHostedService, BusService>();
+            // End of the service Bus
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
@@ -72,8 +97,8 @@ namespace Api
             services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
 
             services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
+            services.Configure<MailConfig>(Configuration.GetSection("MailConfig"));
             services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

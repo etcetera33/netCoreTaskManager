@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
-using Api.Auth;
+using Api.Configs;
 using System.Net;
 using Microsoft.Extensions.Options;
 using FluentValidation.AspNetCore;

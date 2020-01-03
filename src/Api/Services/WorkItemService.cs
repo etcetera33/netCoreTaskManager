@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Services.Helpers;
+using MassTransit;
+using Contracts;
+using Core.Configs;
+using Microsoft.Extensions.Options;
 
 namespace Services
 {
@@ -17,16 +21,21 @@ namespace Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IBus _bus;
+        private IUserService _userService;
+        private readonly IOptions<MailConfig> _mailConfig;
 
-        public WorkItemService(IUnitOfWork unitOfWork, IMapper mapper)
+        public WorkItemService(IUnitOfWork unitOfWork, IMapper mapper, IBus bus, IUserService userService, IOptions<MailConfig> mailConfig)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _bus = bus;
+            _userService = userService;
+            _mailConfig = mailConfig;
         }
 
         public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
         {
-
             Expression<Func<WorkItem, bool>> exp = w => w.ProjectId == projectId;
 
             if (parameters.AssigneeId.HasValue)
@@ -62,6 +71,16 @@ namespace Services
         {
             var workItemEntity = _mapper.Map<WorkItemDto, WorkItem>(workItemDto); 
             var workItem = await _unitOfWork.WorkItemRepository.Create(workItemEntity);
+
+            var user = await _userService.GetById(workItem.AssigneeId);
+            var email = _mapper.Map<MailConfig, EmailDto>(_mailConfig.Value);
+
+            await _bus.Publish(new WorkItemChanged {
+                AssigneeFullName = user.FullName,
+                AssigneeEmail = user.Email,
+                WorkItemId = workItem.WorkItemId,
+                Email = email
+            });
 
             return _mapper.Map<WorkItem, WorkItemDto>(workItem);
         }
