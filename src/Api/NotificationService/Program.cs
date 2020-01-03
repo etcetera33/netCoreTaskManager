@@ -1,25 +1,24 @@
 ﻿using MassTransit;
+using Microsoft.AspNetCore.Html;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using NotificationService.Aggregates.HtmlAggregate;
+using NotificationService.Aggregates.MailAggregate;
+using NotificationService.Configs;
+using NotificationService.Handlers;
+using Serilog;
 using System;
 using System.Threading.Tasks;
-using EntitiesObserver.Handlers;
-using Serilog;
-using Services.Interfaces;
-using Services;
-using Data;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using Services.Mapper;
-using EntitiesObserver.Configs;
 
-namespace EntitiesObserver
+namespace NotificationService
 {
-    public class Program
+    class Program
     {
+        private static RabbitmqConfig _appConfig;
+
         public static async Task Main(string[] args)
         {
             var builder = new HostBuilder()
@@ -35,25 +34,20 @@ namespace EntitiesObserver
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.Configure<AppConfig>(hostContext.Configuration.GetSection("AppConfig"));
-                    services.AddDbContext<ApplicationDbContext>(
-                       options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("DefaultConnection"))
-                    );
+                    services.Configure<RabbitmqConfig>(hostContext.Configuration.GetSection("RabbitmqConfig"));
+                    services.Configure<MailConfig>(hostContext.Configuration.GetSection("MailConfig"));
+
                     services.AddMassTransit(cfg =>
                     {
-                        cfg.AddConsumer<WorkItemChangedHandler>();
+                        cfg.AddConsumer<EmailSendHandler>();
 
                         cfg.AddBus(ConfigureBus);
                     });
 
                     services.AddSingleton<IHostedService, BusService>();
-                    services.AddScoped<IUnitOfWork, UnitOfWork>();
-                    services.AddTransient<IUserService, UserService>();
-                    services.AddTransient<IWorkItemService, WorkItemService>();
-
-
-                    services.AddAutoMapper(typeof(Program));
-                    services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
+                    services.AddSingleton<IHtmlContentBuilder, HtmlContentBuilder>();
+                    services.AddSingleton<IHtmlBuilder, HtmlBuilder>();
+                    services.AddSingleton<IMailer, Mailer>();
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
@@ -74,19 +68,19 @@ namespace EntitiesObserver
             {
                 Log.CloseAndFlush();
             }
-
+            
         }
 
         static IBusControl ConfigureBus(IServiceProvider provider)
         {
-            var appConfig = provider.GetRequiredService<IOptions<AppConfig>>().Value;
+            _appConfig = provider.GetRequiredService<IOptions<RabbitmqConfig>>().Value;
 
             var bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                var host = cfg.Host(new Uri(appConfig.Host), h =>
+                var host = cfg.Host(new Uri(_appConfig.Host), h =>
                 {
-                    h.Username(appConfig.Username);
-                    h.Password(appConfig.Password);
+                    h.Username(_appConfig.Username);
+                    h.Password(_appConfig.Password);
                 });
 
                 cfg.ConfigureEndpoints(provider);

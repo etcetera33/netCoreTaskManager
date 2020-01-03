@@ -39,11 +39,6 @@ namespace Services.Mapper
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
                     .ForMember(dst => dst.WorkItem, opt => opt.Ignore())
                     .ReverseMap();
-                cfg.CreateMap<MailConfig, EmailDto>()
-                    .ForMember(dst => dst.To, opt => opt.Ignore())
-                    .ForMember(dst => dst.Subject, opt => opt.Ignore())
-                    .ForMember(dst => dst.Body, opt => opt.Ignore())
-                    .ReverseMap();
             });
 
             return config;

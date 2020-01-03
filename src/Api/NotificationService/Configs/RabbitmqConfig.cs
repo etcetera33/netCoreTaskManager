@@ -1,6 +1,6 @@
-﻿namespace EntitiesObserver
+﻿namespace NotificationService.Configs
 {
-    public class AppConfig
+    internal class RabbitmqConfig
     {
         public string Host { get; set; }
         public string VirtualHost { get; set; }

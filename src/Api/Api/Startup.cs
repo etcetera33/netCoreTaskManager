@@ -20,7 +20,6 @@ using Services.Helpers;
 using Services.Interfaces;
 using Services.Mapper;
 using Services.Validators;
-using Core.Configs;
 
 namespace Api
 {
@@ -97,7 +96,6 @@ namespace Api
             services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
 
             services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
-            services.Configure<MailConfig>(Configuration.GetSection("MailConfig"));
             services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));
         }
 

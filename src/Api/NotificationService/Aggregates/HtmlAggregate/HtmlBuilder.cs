@@ -1,30 +1,29 @@
-﻿using EntitiesObserver.Interfaces;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using System.IO;
 using System.Text.Encodings.Web;
 
-namespace EntitiesObserver.Helpers
+namespace NotificationService.Aggregates.HtmlAggregate
 {
-    internal class HtmlBuilder: IHtmlBuilder
+    public class HtmlBuilder : IHtmlBuilder
     {
         private readonly IHtmlContentBuilder _builder;
-        
+
         public HtmlBuilder(IHtmlContentBuilder builder)
         {
             _builder = builder;
         }
 
-        public string GetWorkItemChangedEmailString(string receiver, int workItemId, string displayName)
+        public string GetEmailBodyForNewAssignee(string receiver, int workItemId)
         {
-            AppendHtml("Dear, <b>" + receiver + "</b>!");
+            AppendHtml($"Dear, <b> { receiver } </b>!");
             BreakLine();
             BreakLine();
-            AppendHtml("You are now assigned for the work item with Id: <b>" + workItemId + "</b>");
+            AppendHtml($"You are now assigned for the work item with Id: <b> { workItemId } </b>");
             BreakLine();
             BreakLine();
             AppendHtml("Best regards,");
             BreakLine();
-            AppendHtml("<i>" + displayName + "<i>");
+            AppendHtml($"<i> Task Manager <i>");
 
             return BuildHtml();
         }
@@ -45,6 +44,7 @@ namespace EntitiesObserver.Helpers
             using (var writer = new StringWriter())
             {
                 _builder.WriteTo(writer, HtmlEncoder.Default);
+
                 return writer.ToString();
             }
         }
