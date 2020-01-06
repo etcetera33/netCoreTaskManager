@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 using Services.Helpers;
 using MassTransit;
 using Contracts;
-using Core.Configs;
-using Microsoft.Extensions.Options;
 
 namespace Services
 {
@@ -97,7 +95,16 @@ namespace Services
         public async Task Update(int workItemId, WorkItemDto workItemDto)
         {
             var workItem = _mapper.Map<WorkItemDto, WorkItem>(workItemDto);
+
             await _unitOfWork.WorkItemRepository.Update(workItemId, workItem);
+
+            if (await IsAssigneeChanged(workItemId, workItemDto.AssigneeId))
+            {
+                await _bus.Publish(new WorkItemChanged
+                {
+                    WorkItemId = workItem.WorkItemId
+                });
+            }
         }
 
         public async Task<bool> WorkItemExists(int workItemId)
@@ -111,7 +118,6 @@ namespace Services
             
             foreach (var item in Enum.GetValues(typeof(WorkItemTypes)))
             {
-
                 enumTypes.Add(new
                 {
                     Id = (int)item,
@@ -137,6 +143,13 @@ namespace Services
             }
 
             return enumStatuses;
+        }
+
+        private async Task<bool> IsAssigneeChanged(int workItemId, int assigneeId)
+        {
+            var workItem = await _unitOfWork.WorkItemRepository.GetById(workItemId);
+
+            return workItem.AssigneeId != assigneeId;
         }
     }
 }

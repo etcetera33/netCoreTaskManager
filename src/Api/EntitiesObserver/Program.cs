@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using EntitiesObserver.Handlers;
@@ -23,6 +22,7 @@ namespace EntitiesObserver
         public static async Task Main(string[] args)
         {
             var builder = new HostBuilder()
+                .UseSerilog()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("appsettings.json", optional: true);
@@ -57,9 +57,13 @@ namespace EntitiesObserver
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
-                    Log.Logger = new LoggerConfiguration()
-                    .ReadFrom.Configuration(hostingContext.Configuration.GetSection("Serilog"))
-                    .CreateLogger();
+                    var configuration = new ConfigurationBuilder()
+                        .AddJsonFile("appsettings.json")
+                        .Build();
+
+                    var logger = new LoggerConfiguration()
+                        .ReadFrom.Configuration(configuration)
+                        .CreateLogger();
                 });
 
             try

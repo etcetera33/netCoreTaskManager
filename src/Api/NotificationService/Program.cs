@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NotificationService.Aggregates.HtmlAggregate;
 using NotificationService.Aggregates.MailAggregate;
@@ -21,7 +20,8 @@ namespace NotificationService
 
         public static async Task Main(string[] args)
         {
-            var builder = new HostBuilder()
+               var builder = new HostBuilder()
+                .UseSerilog()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("appsettings.json", optional: true);

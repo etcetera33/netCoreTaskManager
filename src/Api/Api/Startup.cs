@@ -64,7 +64,7 @@ namespace Api
                 };
             });
 
-            // Start of the service Bus
+            // Start of the service Bus1
             services.AddMassTransit();
 
             services.AddSingleton(provider => MassTransit.Bus.Factory.CreateUsingRabbitMq(cfg =>
