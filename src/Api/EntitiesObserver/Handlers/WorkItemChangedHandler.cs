@@ -2,6 +2,7 @@
 using EntitiesObserver.Exceptions;
 using MassTransit;
 using Services.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace EntitiesObserver.Handlers
@@ -21,14 +22,14 @@ namespace EntitiesObserver.Handlers
 
         public async Task Consume(ConsumeContext<WorkItemChanged> context)
         {
-            int workItemId = context.Message.WorkItemId;
-
-            if (workItemId == 0)
+            if (context.Message == null)
             {
-                throw new WorkItemNotProvidedException();
+                throw new InvalidOperationException("Message is null");
             }
 
-            var workItem = await _workItemService.GetById(workItemId);
+            int workItemId = context.Message.WorkItemId;
+
+            var workItem = await _workItemService.GetById(context.Message.WorkItemId);
 
             if (workItem == null)
             {
@@ -42,11 +43,11 @@ namespace EntitiesObserver.Handlers
                 throw new UserNotFoundException();
             }
 
-            await _bus.Publish(new WorkItemAssigneeNotify
+            await _bus.Publish(new EmailSend
             {
                 To = userData.Email,
-                RecieverFullName = userData.FullName,
-                WorkItemId = workItemId
+                Subject = "New work item assignee",
+                Body = $"Dear, {userData.FullName}! You are the new assignee for the work item #{workItemId}"
             });
         }
     }

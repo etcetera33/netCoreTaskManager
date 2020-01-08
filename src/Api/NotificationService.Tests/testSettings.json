@@ -1,0 +1,12 @@
+{
+  "MailConfig": {
+    "From": "dataart.taskmanager@gmail.com",
+    "Password": "%TGB6yhn^YHN5tgb",
+    "Host": "smtp.gmail.com",
+    "EnableSsl": true,
+    "Port": 587
+  },
+  "OtherData": {
+    "Name1":  "Name1"
+  }
+}

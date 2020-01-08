@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -9,34 +9,50 @@ namespace NotificationService.Aggregates.MailAggregate
     public class Mailer : IMailer
     {
         private readonly IOptions<MailConfig> _mailConfig;
+        private readonly ISmtpClientProxy _smtpClient;
 
-        public Mailer(IOptions<MailConfig> mailConfig)
+        public Mailer(IOptions<MailConfig> mailConfig, ISmtpClientProxy smtpClient)
         {
             _mailConfig = mailConfig;
+            _smtpClient = smtpClient;
         }
 
         public async Task SendMessageAsync(string to, string body, string subject)
         {
-            SmtpClient client = new SmtpClient
-            {
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                EnableSsl = _mailConfig.Value.EnableSsl,
-                Host = _mailConfig.Value.Host,
-                Port = _mailConfig.Value.Port,
-                Credentials = new NetworkCredential(_mailConfig.Value.From, _mailConfig.Value.Password)
-            };
+            Validate(to, body, subject);
 
             MailMessage message = new MailMessage
             {
                 From = new MailAddress(_mailConfig.Value.From),
                 Subject = subject,
-                Body = body,
-                IsBodyHtml = true
+                Body = body
             };
-
             message.To.Add(to);
 
-            await client.SendMailAsync(message);
+            await _smtpClient.SendMailAsync(message);
+        }
+
+        private void Validate(string to, string body, string subject)
+        {
+            if (string.IsNullOrEmpty(to))
+            {
+                throw new ArgumentException("Reciever not provided");
+            }
+            else
+            {
+                // throws Format exception in case of wrong email format
+                new MailAddress(to);
+            }
+
+            if (string.IsNullOrEmpty(body))
+            {
+                throw new ArgumentException("Body not provided");
+            }
+
+            if (string.IsNullOrEmpty(subject))
+            {
+                throw new ArgumentException("Subject not provided");
+            }
         }
     }
 }

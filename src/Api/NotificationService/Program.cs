@@ -4,11 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using NotificationService.Aggregates.HtmlAggregate;
+using Microsoft.Extensions.Logging;
 using NotificationService.Aggregates.MailAggregate;
 using NotificationService.Configs;
 using NotificationService.Handlers;
-using Serilog;
 using System;
 using System.Threading.Tasks;
 
@@ -18,10 +17,9 @@ namespace NotificationService
     {
         private static RabbitmqConfig _appConfig;
 
-        public static async Task Main(string[] args)
+        static async Task Main(string[] args)
         {
-               var builder = new HostBuilder()
-                .UseSerilog()
+            var builder = new HostBuilder()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("appsettings.json", optional: true);
@@ -46,28 +44,17 @@ namespace NotificationService
 
                     services.AddSingleton<IHostedService, BusService>();
                     services.AddSingleton<IHtmlContentBuilder, HtmlContentBuilder>();
-                    services.AddSingleton<IHtmlBuilder, HtmlBuilder>();
+                    services.AddSingleton<ISmtpClientProxy, SmtpClientProxy>();
                     services.AddSingleton<IMailer, Mailer>();
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
-                    Log.Logger = new LoggerConfiguration()
-                    .ReadFrom.Configuration(hostingContext.Configuration.GetSection("Serilog"))
-                    .CreateLogger();
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
                 });
 
-            try
-            {
-                await builder.RunConsoleAsync();
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex.Message);
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
+            await builder.RunConsoleAsync();
+            
             
         }
 

@@ -1,43 +1,38 @@
 ﻿using System.Threading.Tasks;
 using Contracts;
 using MassTransit;
-using NotificationService.Aggregates.HtmlAggregate;
 using NotificationService.Aggregates.MailAggregate;
 using NotificationService.Exceptions;
 
 namespace NotificationService.Handlers
 {
-    public class EmailSendHandler : IConsumer<WorkItemAssigneeNotify>
+    public class EmailSendHandler : IConsumer<EmailSend>
     {
         private readonly IMailer _mailer;
-        private readonly IHtmlBuilder _htmlBuilder;
 
-        public EmailSendHandler(IMailer mailer, IHtmlBuilder htmlBuilder)
+        public EmailSendHandler(IMailer mailer)
         {
             _mailer = mailer;
-            _htmlBuilder = htmlBuilder;
         }
 
-        public async Task Consume(ConsumeContext<WorkItemAssigneeNotify> context)
+        public async Task Consume(ConsumeContext<EmailSend> context)
         {
             if (context.Message.To == null)
             {
                 throw new RecipientDataNotProvidedException("No email address provided");
             }
 
-            if (context.Message.RecieverFullName == null)
+            if (context.Message.Body == null)
             {
-                throw new RecipientDataNotProvidedException("Fullname is not provided");
+                throw new RecipientDataNotProvidedException("Message body is not provided");
             }
 
-            if (context.Message.WorkItemId == 0)
+            if (context.Message.Subject == null)
             {
-                throw new DataNotProvidedException("Work item Id is not provided");
+                throw new DataNotProvidedException("Message subject is not provided");
             }
 
-            var body = _htmlBuilder.GetEmailBodyForNewAssignee(context.Message.RecieverFullName, context.Message.WorkItemId);
-            
-            await _mailer.SendMessageAsync(context.Message.To, body, "New Work Item");
+            await _mailer.SendMessageAsync(context.Message.To, context.Message.Body, context.Message.Subject);
         }
     }
 }
