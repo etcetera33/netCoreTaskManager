@@ -1,4 +1,5 @@
-﻿using Data.Models;
+﻿using Data.Interfaces;
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class CommentRepository: BaseRepository<Comment>
+    public class CommentRepository: BaseRepository<Comment>, ICommentRepository
     {
         public CommentRepository(ApplicationDbContext dbContext) : base(dbContext)
         {

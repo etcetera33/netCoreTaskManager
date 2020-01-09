@@ -20,6 +20,8 @@ using Services.Helpers;
 using Services.Interfaces;
 using Services.Mapper;
 using Services.Validators;
+using Data.Interfaces;
+using Data.Repositories;
 
 namespace Api
 {
@@ -87,6 +89,12 @@ namespace Api
             // End of the service Bus
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<IWorkItemRepository, WorkItemRepository>();
+
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICommentService, CommentService>();

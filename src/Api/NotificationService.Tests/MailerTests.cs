@@ -18,7 +18,8 @@ namespace NotificationService.Tests
 
         public MailerTests()
         {
-            string from = "dataarttest@gmail.com";
+            var from = "dataarttest@gmail.com";
+
             var mailOptions = Options.Create(new MailConfig());
             mailOptions.Value.From = from;
 

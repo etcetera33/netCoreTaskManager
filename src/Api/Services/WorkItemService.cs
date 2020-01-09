@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Core.Enums;
-using Data;
 using Data.Models;
 using Models.QueryParameters;
 using Models.DTOs;
@@ -12,18 +11,19 @@ using System.Threading.Tasks;
 using Services.Helpers;
 using MassTransit;
 using Contracts;
+using Data.Interfaces;
 
 namespace Services
 {
     public class WorkItemService : IWorkItemService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IWorkItemRepository _workItemRepository;
         private readonly IMapper _mapper;
         private readonly IBus _bus;
 
-        public WorkItemService(IUnitOfWork unitOfWork, IMapper mapper, IBus bus)
+        public WorkItemService(IWorkItemRepository workItemRepository, IMapper mapper, IBus bus)
         {
-            _unitOfWork = unitOfWork;
+            _workItemRepository = workItemRepository;
             _mapper = mapper;
             _bus = bus;
         }
@@ -42,7 +42,7 @@ namespace Services
                 exp = exp.AndAlso(w => w.Title.Contains(parameters.Search));
             }
 
-            var workItemList = await _unitOfWork.WorkItemRepository.PaginateFiltered(
+            var workItemList = await _workItemRepository.PaginateFiltered(
                 exp,
                 offset: (parameters.Page - 1) * parameters.ItemsPerPage,
                 itemsCount: parameters.ItemsPerPage
@@ -50,7 +50,7 @@ namespace Services
 
             var workItemDtoList = _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItemList);
 
-            var rowsCount = await _unitOfWork.WorkItemRepository.GetFilteredDataCountAsync(exp);
+            var rowsCount = await _workItemRepository.GetFilteredDataCountAsync(exp);
 
             var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
 
@@ -64,7 +64,7 @@ namespace Services
         public async Task<WorkItemDto> Create(WorkItemDto workItemDto)
         {
             var workItemEntity = _mapper.Map<WorkItemDto, WorkItem>(workItemDto); 
-            var workItem = await _unitOfWork.WorkItemRepository.Create(workItemEntity);
+            var workItem = await _workItemRepository.Create(workItemEntity);
 
             await _bus.Publish(new WorkItemChanged {
                 WorkItemId = workItem.WorkItemId
@@ -75,19 +75,19 @@ namespace Services
 
         public async Task<WorkItemDto> GetById(int workItemId)
         {
-            var workItem = await _unitOfWork.WorkItemRepository.GetById(workItemId);
+            var workItem = await _workItemRepository.GetById(workItemId);
 
             return _mapper.Map<WorkItem, WorkItemDto>(workItem);
         }
 
         public async Task Remove(int workItemId)
         {
-            await _unitOfWork.WorkItemRepository.Delete(workItemId);
+            await _workItemRepository.Delete(workItemId);
         }
 
         public async Task<IEnumerable<WorkItemDto>> GetTopFivePriorityItems(int assigneeId)
         {
-            var workItems = await _unitOfWork.WorkItemRepository.GetTopFivePriorityItems(assigneeId);
+            var workItems = await _workItemRepository.GetTopFivePriorityItems(assigneeId);
 
             return _mapper.Map<IEnumerable<WorkItem>, IEnumerable<WorkItemDto>>(workItems);
         }
@@ -96,7 +96,7 @@ namespace Services
         {
             var workItem = _mapper.Map<WorkItemDto, WorkItem>(workItemDto);
 
-            await _unitOfWork.WorkItemRepository.Update(workItemId, workItem);
+            await _workItemRepository.Update(workItemId, workItem);
 
             if (await IsAssigneeChanged(workItemId, workItemDto.AssigneeId))
             {
@@ -109,7 +109,7 @@ namespace Services
 
         public async Task<bool> WorkItemExists(int workItemId)
         {
-            return (await _unitOfWork.WorkItemRepository.GetById(workItemId) != null);
+            return (await _workItemRepository.GetById(workItemId) != null);
         }
 
         public IEnumerable<object> GetWorkItemTypes()
@@ -147,7 +147,7 @@ namespace Services
 
         private async Task<bool> IsAssigneeChanged(int workItemId, int assigneeId)
         {
-            var workItem = await _unitOfWork.WorkItemRepository.GetById(workItemId);
+            var workItem = await _workItemRepository.GetById(workItemId);
 
             return workItem.AssigneeId != assigneeId;
         }
