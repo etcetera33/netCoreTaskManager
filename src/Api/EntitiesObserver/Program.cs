@@ -63,8 +63,6 @@ namespace EntitiesObserver
                 });
 
             await builder.RunConsoleAsync();
-            
-
         }
 
         static IBusControl ConfigureBus(IServiceProvider provider)

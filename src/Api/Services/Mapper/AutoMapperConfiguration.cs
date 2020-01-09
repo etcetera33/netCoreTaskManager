@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.Configs;
 using Data.Models;
 using Models.DTOs;
 
