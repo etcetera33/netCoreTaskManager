@@ -40,6 +40,11 @@ namespace Services
 
         public async Task<ProjectDto> GetById(int projectId)
         {
+            if (projectId == 0)
+            {
+                return null;
+            }
+
             var project = await _projectRepository.GetById(projectId);
             var projectDto = _mapper.Map<Project, ProjectDto>(project);
             

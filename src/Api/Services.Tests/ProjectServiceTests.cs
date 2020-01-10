@@ -13,24 +13,26 @@ using Models.PaginatedResponse;
 
 namespace Services.Tests
 {
-    public class ProjectTests
+    public class ProjectServiceTests
     {
         private readonly ProjectService _projectService;
         private readonly IProjectRepository _projectRepository;
         private readonly IMapper _mapper;
 
-        public ProjectTests()
+        public ProjectServiceTests()
         {
             _mapper = AutoMapperConfiguration.Configure().CreateMapper();
 
             _projectRepository = Substitute.For<IProjectRepository>();
             _projectRepository.GetAll().Returns(ProjectModelList);
             _projectRepository.Create(Arg.Any<Project>()).Returns(ProjectModel);
-            _projectRepository.GetById(Arg.Any<int>()).Returns(ProjectModel);
             _projectRepository.PaginateFiltered(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<string>()).Returns(ProjectModelList);
             _projectRepository.GetFilteredDataCountAsync(Arg.Any<string>()).Returns(1);
-            
-            _projectService = Substitute.For<ProjectService>(_projectRepository, _mapper);
+
+            _projectRepository.GetById(1).Returns(ProjectModel);
+            _projectRepository.GetById(2).Returns<Project>(val => null);
+
+            _projectService = new ProjectService(_projectRepository, _mapper);
         }
 
         [Fact]
@@ -44,15 +46,7 @@ namespace Services.Tests
         }
 
         [Fact]
-        public async Task GetAll_Should_Be_Recieved_Once()
-        {
-            await _projectService.GetAll();
-
-            await _projectRepository.Received(1).GetAll();
-        }
-
-        [Fact]
-        public async Task Create_Should_Successfully_Create_Project()
+        public async Task Create_Should_Successfully_Map_Created_Project()
         {
             var actual = await _projectService.Create(new ProjectDto
                 {
@@ -71,28 +65,13 @@ namespace Services.Tests
                 Id = 1
             };
 
-            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
-        }
-
-        [Fact]
-        public async Task Create_Should_Be_Recieved_Once()
-        {
-            await _projectService.Create(ProjectDto);
-
-            await _projectRepository.Received(1).Create(Arg.Any<Project>());
-        }
-
-        [Fact]
-        public async Task Create_Should_Call_Repo_With_Correct_Args()
-        {
-            await _projectService.Create(ProjectDto);
-
-            await _projectRepository.Received().Create(Arg.Is<Project>(
+            await _projectRepository.Received(1).Create(Arg.Is<Project>(
                 project => project.ProjectName == ProjectModel.ProjectName
                     && project.Owner == ProjectModel.Owner
                     && project.OwnerId == ProjectModel.OwnerId
                     && project.WorkItems == ProjectModel.WorkItems
                 ));
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
 
         [Theory]
@@ -102,16 +81,18 @@ namespace Services.Tests
             var expected = ProjectDto;
             var actual = await _projectService.GetById(projectId);
 
+            await _projectRepository.Received(1).GetById(Arg.Any<int>());
             Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
 
         [Theory]
-        [InlineData(1)]
-        public async Task GetById_Should_Should_Be_Recieved_Once(int projectId)
+        [InlineData(0)]
+        public async Task GetById_Should_Return_Null(int projectId)
         {
-            await _projectService.GetById(projectId);
+            var actual = await _projectService.GetById(projectId);
 
-            await _projectRepository.Received(1).GetById(Arg.Any<int>());
+            await _projectRepository.DidNotReceive().GetById(Arg.Any<int>());
+            Assert.Null(actual);
         }
 
         [Theory]
@@ -136,34 +117,22 @@ namespace Services.Tests
         {
             var exists = await _projectService.ProjectExists(projectId);
 
+            await _projectRepository.Received(1).GetById(projectId);
             Assert.True(exists);
         }
 
         [Theory]
-        [InlineData(1123)]
+        [InlineData(2)]
         public async Task ProjectExists_Should_Return_False(int projectId)
         {
-            var projectRepo = _projectRepository;
-            projectRepo.GetById(Arg.Any<int>()).Returns<Project>(value => null);
+            var exists = await _projectService.ProjectExists(projectId);
 
-            var service = Substitute.For<ProjectService>(projectRepo, _mapper);
-
-            var exists = await service.ProjectExists(projectId);
-
+            await _projectRepository.Received(1).GetById(projectId);
             Assert.False(exists);
         }
 
         [Theory]
-        [InlineData(1)]
-        public async Task ProjectExists_Should_Be_Recieved_Once(int projectId)
-        {
-            await _projectService.ProjectExists(projectId);
-
-            await _projectRepository.Received(1).GetById(projectId);
-        }
-
-        [Theory]
-        [InlineData(1, 1, "")]
+        [InlineData(10, 1, "")]
         public async Task GetPaginatedDataAsync_Should_Return_Proper_Values(int itemsPerPage, int page, string search)
         {
             var expected = new BasePaginatedResponse<ProjectDto>
@@ -173,17 +142,9 @@ namespace Services.Tests
             };
             var actual = await _projectService.GetPaginatedDataAsync(new BaseQueryParameters { ItemsPerPage = itemsPerPage, Page = page, Search = search });
 
-            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
-        }
-
-        [Theory]
-        [InlineData(1, 1, "")]
-        public async Task GetPaginatedDataAsync_Should_Be_Recieved_Once(int itemsPerPage, int page, string search)
-        {
-            await _projectService.GetPaginatedDataAsync(new BaseQueryParameters { ItemsPerPage = itemsPerPage, Page = page, Search = search });
-
             await _projectRepository.Received(1).GetFilteredDataCountAsync(Arg.Any<string>());
             await _projectRepository.Received(1).PaginateFiltered(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<string>());
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
 
         #region Helpers

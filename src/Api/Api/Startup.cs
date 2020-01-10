@@ -88,7 +88,7 @@ namespace Api
             services.AddSingleton<IHostedService, BusService>();
             // End of the service Bus
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IProjectRepository, ProjectRepository>();

@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Services.Mapper;
 using EntitiesObserver.Configs;
+using Data.Interfaces;
+using Data.Repositories;
 
 namespace EntitiesObserver
 {
@@ -48,7 +50,10 @@ namespace EntitiesObserver
                     });
 
                     services.AddSingleton<IHostedService, BusService>();
-                    services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+                    services.AddTransient<IUserRepository, UserRepository>();
+                    services.AddTransient<IWorkItemRepository, WorkItemRepository>();
+
                     services.AddTransient<IUserService, UserService>();
                     services.AddTransient<IWorkItemService, WorkItemService>();
 

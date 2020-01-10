@@ -12,6 +12,7 @@ using Services.Helpers;
 using MassTransit;
 using Contracts;
 using Data.Interfaces;
+using Models.PaginatedResponse;
 
 namespace Services
 {
@@ -28,7 +29,7 @@ namespace Services
             _bus = bus;
         }
 
-        public async Task<object> Paginate(int projectId, WorkItemQueryParameters parameters)
+        public async Task<BasePaginatedResponse<WorkItemDto>> Paginate(int projectId, WorkItemQueryParameters parameters)
         {
             Expression<Func<WorkItem, bool>> exp = w => w.ProjectId == projectId;
 
@@ -54,10 +55,10 @@ namespace Services
 
             var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
 
-            return new
+            return new BasePaginatedResponse<WorkItemDto>
             {
-                wokrItemList = workItemDtoList,
-                pagesCount
+                EntityList = workItemDtoList,
+                PagesCount = pagesCount
             };
         }
 
