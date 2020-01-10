@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data.Interfaces;
+using Models.PaginatedResponse;
 
 namespace Services
 {
@@ -56,7 +57,7 @@ namespace Services
             return (await _projectRepository.GetById(projectId) != null);
         }
 
-        public async Task<object> GetPaginatedDataAsync(BaseQueryParameters parameters)
+        public async Task<BasePaginatedResponse<ProjectDto>> GetPaginatedDataAsync(BaseQueryParameters parameters)
         {
             var projectList = await _projectRepository.PaginateFiltered(
                 offset: (parameters.Page - 1) * parameters.ItemsPerPage,
@@ -69,10 +70,10 @@ namespace Services
 
             var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
 
-            return new
+            return new BasePaginatedResponse<ProjectDto>
             {
-                projectList = projectDtoList,
-                pagesCount
+                EntityList = projectDtoList,
+                PagesCount = pagesCount
             };
         }
     }
