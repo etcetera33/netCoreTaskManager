@@ -34,6 +34,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Post(CommentDto commentDto)
         {
             commentDto.AuthorId = int.Parse(User.Identity.Name);
@@ -43,6 +44,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await _commentService.CommentExists(id))

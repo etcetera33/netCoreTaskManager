@@ -1,4 +1,4 @@
-﻿using Data;
+﻿using Data.Interfaces;
 using FluentValidation;
 using Models.DTOs;
 
@@ -6,11 +6,11 @@ namespace Services.Validators
 {
     public class WorkItemValidator : AbstractValidator<WorkItemDto>
     {
-        public WorkItemValidator(ApplicationDbContext dbContext)
+        public WorkItemValidator(IProjectRepository projectRepository, IUserRepository userRepository)
         {
             RuleFor(x => x.ProjectId)
                 .NotEmpty()
-                .Must(projectId => dbContext.Projects.Find(projectId) != null)
+                .Must(projectId => projectRepository.GetById(projectId).Result != null)
                 .WithMessage("Foreign key constraint failure");
 
             RuleFor(x => x.Title).NotEmpty();
@@ -18,7 +18,7 @@ namespace Services.Validators
             RuleFor(x => x.Description).NotEmpty();
             RuleFor(x => x.AssigneeId)
                 .NotEmpty()
-                .Must(assigneeId => dbContext.Users.Find(assigneeId) != null)
+                .Must(assigneeId => userRepository.GetById(assigneeId).Result != null)
                 .WithMessage("Foreign key constraint failure");
 
             RuleFor(x => x.Priority).NotEmpty().InclusiveBetween(0, 100);

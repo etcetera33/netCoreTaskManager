@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Models.DTOs;
-using Data;
 using Data.Models;
 using Services.Interfaces;
 using System.Threading.Tasks;
@@ -8,18 +7,20 @@ using Services.Helpers;
 using System.Collections.Generic;
 using Core.Enums;
 using Microsoft.Extensions.Options;
+using Data.Repositories;
+using Data.Interfaces;
 
 namespace Services
 {
     public class UserService : IUserService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IOptions<PasswordHasher> _passwordHasher;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IOptions<PasswordHasher> passwordHasher)
+        public UserService(IUserRepository userRepository, IMapper mapper, IOptions<PasswordHasher> passwordHasher)
         {
-            _unitOfWork = unitOfWork;
+            _userRepository = userRepository;
             _mapper = mapper;
             _passwordHasher = passwordHasher;
         }
@@ -31,14 +32,14 @@ namespace Services
                 _passwordHasher.Value.IterationCount,
                 _passwordHasher.Value.BytesRequested);
             var user= _mapper.Map<UserDto, User>(userDto);
-            var createdEntity = await _unitOfWork.UserRepository.Create(user);
+            var createdEntity = await _userRepository.Create(user);
 
             return _mapper.Map<User, UserDto>(createdEntity);
         }
 
         public async Task<UserDto> GetUserByLoginAsync(UserDto userDto)
         {
-            var user = await _unitOfWork.UserRepository.FindUserByLoginAsync(userDto.Login);
+            var user = await _userRepository.FindUserByLoginAsync(userDto.Login);
             var isPasswordMatch = PasswordHasher.PasswordHashValid(userDto.Password, user.Password, _passwordHasher.Value.Salt, _passwordHasher.Value.IterationCount, _passwordHasher.Value.BytesRequested);
 
             if (user == null || !isPasswordMatch)
@@ -51,7 +52,7 @@ namespace Services
 
         public async Task<UserDto> GetById(int userId)
         {
-            var user = await _unitOfWork.UserRepository.GetById(userId);
+            var user = await _userRepository.GetById(userId);
             var userDto = _mapper.Map<User, UserDto>(user);
 
             return userDto;
@@ -60,12 +61,12 @@ namespace Services
         public async Task Update(int userId, UserDto userDto)
         {
             var user = _mapper.Map<UserDto, User>(userDto);
-            await _unitOfWork.UserRepository.Update(userId, user);
+            await _userRepository.Update(userId, user);
         }
 
         public async Task<IEnumerable<UserDictionaryDto>> GetUserList()
         {
-            var userList = await _unitOfWork.UserRepository.GetAll();
+            var userList = await _userRepository.GetAll();
 
             return _mapper.Map<IEnumerable<User>, IEnumerable<UserDictionaryDto>>(userList);
         }

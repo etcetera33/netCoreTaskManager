@@ -35,8 +35,8 @@ export class ProjectListComponent implements OnInit {
     this.projectService.getProjectList(this.currentPage, this.searchPhrase)
     .subscribe(
       res => {
-        this.pagesCount = +res.pagesCount;
-        this.projectList = res.projectList as Project[];
+        this.pagesCount = +res.PagesCount;
+        this.projectList = res.EntityList as Project[];
       },
       err => {
         this.popupService.openModal('error', err);
