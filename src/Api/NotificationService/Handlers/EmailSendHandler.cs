@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Contracts;
 using MassTransit;
 using NotificationService.Aggregates.MailAggregate;
-using NotificationService.Exceptions;
 
 namespace NotificationService.Handlers
 {
@@ -17,19 +17,24 @@ namespace NotificationService.Handlers
 
         public async Task Consume(ConsumeContext<EmailSend> context)
         {
+            if (context.Message == null)
+            {
+                throw new ArgumentNullException("Message is null");
+            }
+
             if (context.Message.To == null)
             {
-                throw new RecipientDataNotProvidedException("No email address provided");
+                throw new ArgumentNullException("No email address provided");
             }
 
             if (context.Message.Body == null)
             {
-                throw new RecipientDataNotProvidedException("Message body is not provided");
+                throw new ArgumentNullException("Message body is not provided");
             }
 
             if (context.Message.Subject == null)
             {
-                throw new DataNotProvidedException("Message subject is not provided");
+                throw new ArgumentNullException("Message subject is not provided");
             }
 
             await _mailer.SendMessageAsync(context.Message.To, context.Message.Body, context.Message.Subject);

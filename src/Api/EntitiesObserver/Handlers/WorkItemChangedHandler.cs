@@ -1,5 +1,4 @@
 ﻿using Contracts;
-using EntitiesObserver.Exceptions;
 using MassTransit;
 using Services.Interfaces;
 using System;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesObserver.Handlers
 {
-    class WorkItemChangedHandler: IConsumer<WorkItemChanged>
+    public class WorkItemChangedHandler: IConsumer<WorkItemChanged>
     {
         private readonly IWorkItemService _workItemService;
         private readonly IUserService _userService;
@@ -24,23 +23,28 @@ namespace EntitiesObserver.Handlers
         {
             if (context.Message == null)
             {
-                throw new InvalidOperationException("Message is null");
+                throw new ArgumentNullException("Message is null");
             }
 
             int workItemId = context.Message.WorkItemId;
 
-            var workItem = await _workItemService.GetById(context.Message.WorkItemId);
+            if (workItemId == 0)
+            {
+                throw new ArgumentException("Work item should not be equal 0");
+            }
+
+            var workItem = await _workItemService.GetById(workItemId);
 
             if (workItem == null)
             {
-                throw new WorkItemNotFoundException();
+                throw new ArgumentNullException("Work item not found");
             }
 
             var userData = await _userService.GetById(workItem.AssigneeId);
 
             if (userData == null)
             {
-                throw new UserNotFoundException();
+                throw new ArgumentNullException("Assignee not found");
             }
 
             await _bus.Publish(new EmailSend
