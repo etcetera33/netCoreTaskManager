@@ -46,10 +46,10 @@ namespace EntitiesObserver.Tests
             await _bus.Received(1).Publish(Arg.Any<EmailSend>());
 
             await _bus.Received(1).Publish(Arg.Is<EmailSend>(
-                x => x.To == User.Email
-                    && x.Subject == "New work item assignee"
-                    && x.Body == $"Dear, {User.FullName}! You are the new assignee for the work item #{workItemId}"
-                ));
+               x => x.To == User.Email
+                   && x.Subject == "New work item assignee"
+                   && x.Body == $"Dear, {User.FullName}! You are the new assignee for the work item #{workItemId}"
+               ));
         }
 
         [Fact]
