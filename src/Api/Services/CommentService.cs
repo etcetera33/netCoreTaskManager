@@ -13,11 +13,13 @@ namespace Services
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
+        private readonly IRedisService _redisService;
 
-        public CommentService(ICommentRepository commentRepository, IMapper mapper)
+        public CommentService(ICommentRepository commentRepository, IMapper mapper, IRedisService redisService)
         {
             _commentRepository = commentRepository;
             _mapper = mapper;
+            _redisService = redisService;
         }
 
         public async Task<CommentDto> Create(CommentDto commentDto)
