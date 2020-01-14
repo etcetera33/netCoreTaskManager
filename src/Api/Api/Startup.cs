@@ -22,6 +22,9 @@ using Services.Mapper;
 using Services.Validators;
 using Data.Interfaces;
 using Data.Repositories;
+using StackExchange.Redis.Extensions.Core.Abstractions;
+using StackExchange.Redis.Extensions.Core.Implementations;
+using StackExchange.Redis.Extensions.Core.Configuration;
 
 namespace Api
 {
@@ -48,7 +51,7 @@ namespace Api
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
-            
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -100,6 +103,8 @@ namespace Api
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
 
+            services.AddSingleton<IRedisService, RedisService>();
+
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
 
@@ -108,7 +113,7 @@ namespace Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRedisService redisService)
         {
             if (env.IsDevelopment())
             {
@@ -128,6 +133,8 @@ namespace Api
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            redisService.Connect();
 
             app.UseMiddleware<RequestResponseLogMiddleware>();
 

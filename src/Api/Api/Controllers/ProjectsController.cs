@@ -22,7 +22,7 @@ namespace Api.Controllers
         [Authorize]
         public async Task<IActionResult> Get([FromQuery] BaseQueryParameters parameters)
         {
-            var returnValue = await _projectService.GetPaginatedDataAsync(parameters);
+            var returnValue = await _projectService.GetProjects(parameters);
 
             return Ok(returnValue);
         }

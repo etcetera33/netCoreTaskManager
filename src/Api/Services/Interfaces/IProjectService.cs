@@ -13,6 +13,6 @@ namespace Services.Interfaces
         Task<ProjectDto> GetById(int projectId);
         Task Update(int projectId, ProjectDto projectDto);
         Task<bool> ProjectExists(int projectId);
-        Task<BasePaginatedResponse<ProjectDto>> GetPaginatedDataAsync(BaseQueryParameters parameters);
+        Task<BasePaginatedResponse<ProjectDto>> GetProjects(BaseQueryParameters parameters);
     }
 }
