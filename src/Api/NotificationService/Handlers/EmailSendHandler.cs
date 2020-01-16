@@ -3,16 +3,20 @@ using System.Threading.Tasks;
 using Contracts;
 using MassTransit;
 using NotificationService.Aggregates.MailAggregate;
+using Microsoft.Extensions.Logging;
+using Core.Adapters;
 
 namespace NotificationService.Handlers
 {
     public class EmailSendHandler : IConsumer<EmailSend>
     {
         private readonly IMailer _mailer;
+        private readonly ILoggerAdapter<EmailSendHandler> _logger;
 
-        public EmailSendHandler(IMailer mailer)
+        public EmailSendHandler(IMailer mailer, ILoggerAdapter<EmailSendHandler> logger)
         {
             _mailer = mailer;
+            _logger = logger;
         }
 
         public async Task Consume(ConsumeContext<EmailSend> context)
@@ -38,6 +42,8 @@ namespace NotificationService.Handlers
             }
 
             await _mailer.SendMessageAsync(context.Message.To, context.Message.Body, context.Message.Subject);
+
+            _logger.Information($"Email sent to: {context.Message.To}, with body: {context.Message.Body}");
         }
     }
 }

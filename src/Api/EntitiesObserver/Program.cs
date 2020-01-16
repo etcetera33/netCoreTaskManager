@@ -17,6 +17,7 @@ using Services.Mapper;
 using EntitiesObserver.Configs;
 using Data.Interfaces;
 using Data.Repositories;
+using Core.Adapters;
 
 namespace EntitiesObserver
 {
@@ -57,6 +58,7 @@ namespace EntitiesObserver
                     services.AddTransient<IUserService, UserService>();
                     services.AddTransient<IWorkItemService, WorkItemService>();
 
+                    services.AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 
                     services.AddAutoMapper(typeof(Program));
                     services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());

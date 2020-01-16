@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "EntitiesObserver": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

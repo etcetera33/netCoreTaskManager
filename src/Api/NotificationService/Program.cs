@@ -10,6 +10,7 @@ using NotificationService.Configs;
 using NotificationService.Handlers;
 using System;
 using System.Threading.Tasks;
+using Core.Adapters;
 
 namespace NotificationService
 {
@@ -46,6 +47,8 @@ namespace NotificationService
                     services.AddSingleton<IHtmlContentBuilder, HtmlContentBuilder>();
                     services.AddSingleton<ISmtpClientProxy, SmtpClientProxy>();
                     services.AddSingleton<IMailer, Mailer>();
+
+                    services.AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {

@@ -19,11 +19,11 @@ namespace Services
             _redisPort = Convert.ToInt32(config["Redis:Port"]);
         }
 
-        public async Task SetItemAsync<T>(string key, T value)
+        public async Task SetItemAsync<T>(string key, T value, int expirySeconds)
         {
             var serialized = JsonConvert.SerializeObject(value);
 
-            await _redis.GetDatabase().StringSetAsync(key, serialized);
+            await _redis.GetDatabase().StringSetAsync(key, serialized, TimeSpan.FromMinutes(expirySeconds));
         }
 
         public async Task<T> GetItemAsync<T>(string key)
