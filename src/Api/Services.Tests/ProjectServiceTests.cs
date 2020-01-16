@@ -10,6 +10,7 @@ using Services.Mapper;
 using Newtonsoft.Json;
 using Models.QueryParameters;
 using Models.PaginatedResponse;
+using Services.Interfaces;
 
 namespace Services.Tests
 {
@@ -32,7 +33,9 @@ namespace Services.Tests
             _projectRepository.GetById(1).Returns(ProjectModel);
             _projectRepository.GetById(2).Returns<Project>(val => null);
 
-            _projectService = new ProjectService(_projectRepository, _mapper);
+            var _redis = Substitute.For<IRedisService>();
+
+            _projectService = new ProjectService(_projectRepository, _redis, _mapper);
         }
 
         [Fact]
@@ -140,7 +143,7 @@ namespace Services.Tests
                 EntityList = ProjectDtoList,
                 PagesCount = 1
             };
-            var actual = await _projectService.GetPaginatedDataAsync(new BaseQueryParameters { ItemsPerPage = itemsPerPage, Page = page, Search = search });
+            var actual = await _projectService.GetProjects(new BaseQueryParameters { ItemsPerPage = itemsPerPage, Page = page, Search = search });
 
             await _projectRepository.Received(1).GetFilteredDataCountAsync(Arg.Any<string>());
             await _projectRepository.Received(1).PaginateFiltered(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<string>());

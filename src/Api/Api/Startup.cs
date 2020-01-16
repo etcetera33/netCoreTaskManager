@@ -22,9 +22,7 @@ using Services.Mapper;
 using Services.Validators;
 using Data.Interfaces;
 using Data.Repositories;
-using StackExchange.Redis.Extensions.Core.Abstractions;
-using StackExchange.Redis.Extensions.Core.Implementations;
-using StackExchange.Redis.Extensions.Core.Configuration;
+using Core.Adapters;
 
 namespace Api
 {
@@ -91,8 +89,6 @@ namespace Api
             services.AddSingleton<IHostedService, BusService>();
             // End of the service Bus
 
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<ICommentRepository, CommentRepository>();
@@ -107,6 +103,8 @@ namespace Api
 
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
+
+            services.AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 
             services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
             services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));

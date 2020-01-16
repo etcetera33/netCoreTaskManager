@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using Core.Adapters;
 using MassTransit;
 using NotificationService.Aggregates.MailAggregate;
 using NotificationService.Handlers;
@@ -13,14 +14,16 @@ namespace NotificationService.Tests
     {
         private readonly IMailer _mailer;
         private readonly EmailSendHandler _handler;
+        private readonly ILoggerAdapter<EmailSendHandler> _logger;
         private ConsumeContext<EmailSend> _consumeContext;
 
         public EmailSendHandlerTests()
         {
             _mailer = Substitute.For<IMailer>();
             _consumeContext = Substitute.For<ConsumeContext<EmailSend>>();
+            _logger = Substitute.For<ILoggerAdapter<EmailSendHandler>>();
 
-            _handler = new EmailSendHandler(_mailer);
+            _handler = new EmailSendHandler(_mailer, _logger);
         }
 
         [Theory]
@@ -28,10 +31,12 @@ namespace NotificationService.Tests
         public async Task Should_Successfully_Invoke_Send_Method(string body, string subject, string to)
         {
             _consumeContext.Message.Returns(new EmailSend { Body = body, Subject = subject, To = to });
-            
+
             await _handler.Consume(_consumeContext);
 
             await _mailer.Received(1).SendMessageAsync(to, body, subject);
+
+            _logger.Received(1).Information($"Email sent to: {to}, with body: {body}");
         }
 
         [Fact]

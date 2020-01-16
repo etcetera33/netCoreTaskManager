@@ -1,5 +1,7 @@
 ﻿using Contracts;
+using Core.Adapters;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Services.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -11,12 +13,14 @@ namespace EntitiesObserver.Handlers
         private readonly IWorkItemService _workItemService;
         private readonly IUserService _userService;
         private readonly IBus _bus;
+        private readonly ILoggerAdapter<WorkItemChangedHandler> _logger;
 
-        public WorkItemChangedHandler(IWorkItemService workItemService, IUserService userService, IBus bus)
+        public WorkItemChangedHandler(IWorkItemService workItemService, IUserService userService, IBus bus, ILoggerAdapter<WorkItemChangedHandler> logger)
         {
             _workItemService = workItemService;
             _userService = userService;
             _bus = bus;
+            _logger = logger;
         }
 
         public async Task Consume(ConsumeContext<WorkItemChanged> context)
@@ -53,6 +57,8 @@ namespace EntitiesObserver.Handlers
                 Subject = "New work item assignee",
                 Body = $"Dear, {userData.FullName}! You are the new assignee for the work item #{workItemId}"
             });
+
+            _logger.Information($"Bus published EmailSend contract with email: {userData.Email}. WorkItemId: {workItemId}");
         }
     }
 }

@@ -1,6 +1,8 @@
 using Contracts;
+using Core.Adapters;
 using EntitiesObserver.Handlers;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Models.DTOs;
 using NSubstitute;
 using Services.Interfaces;
@@ -17,6 +19,7 @@ namespace EntitiesObserver.Tests
         private readonly IBus _bus;
         private readonly ConsumeContext<WorkItemChanged> _consumeContext;
         private readonly WorkItemChangedHandler _handler;
+        private readonly ILoggerAdapter<WorkItemChangedHandler> _logger;
 
         public WorkItemChangedHandlerTests()
         {
@@ -24,6 +27,7 @@ namespace EntitiesObserver.Tests
             _userService = Substitute.For<IUserService>();
             _consumeContext = Substitute.For<ConsumeContext<WorkItemChanged>>();
             _bus = Substitute.For<IBus>();
+            _logger = Substitute.For<ILoggerAdapter<WorkItemChangedHandler>>();
 
             _workItemService.GetById(1).Returns(WorkItem);
             _workItemService.GetById(2).Returns(WorkItemWithNotValidAssignee);
@@ -32,7 +36,8 @@ namespace EntitiesObserver.Tests
             _userService.GetById(1).Returns(User);
             _userService.GetById(2).Returns<UserDto>(value => null);
 
-            _handler = new WorkItemChangedHandler(_workItemService, _userService, _bus);
+
+            _handler = new WorkItemChangedHandler(_workItemService, _userService, _bus, _logger);
         }
 
         [Theory]
@@ -50,6 +55,8 @@ namespace EntitiesObserver.Tests
                    && x.Subject == "New work item assignee"
                    && x.Body == $"Dear, {User.FullName}! You are the new assignee for the work item #{workItemId}"
                ));
+
+            _logger.Received(1).Information($"Bus published EmailSend contract with email: {User.Email}. WorkItemId: {workItemId}");
         }
 
         [Fact]
@@ -64,7 +71,7 @@ namespace EntitiesObserver.Tests
         [InlineData(0)]
         public async Task Should_Throw_Work_Item_Id_ArgumentException(int workItemId)
         {
-            _consumeContext.Message.Returns(new WorkItemChanged { WorkItemId = workItemId});
+            _consumeContext.Message.Returns(new WorkItemChanged { WorkItemId = workItemId });
 
             await Assert.ThrowsAsync<ArgumentException>(() => _handler.Consume(_consumeContext));
         }

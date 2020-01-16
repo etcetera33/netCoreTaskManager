@@ -1,8 +1,13 @@
 using System;
+using System.Data.Entity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
+using Data.Helpers;
+using Data;
 
 namespace Api
 {
@@ -21,7 +26,7 @@ namespace Api
             try
             {
                 Log.Information("Starting up");
-                CreateHostBuilder(args).Build().Run();
+                CreateHostBuilder(args).Build().MigrateDatabase<ApplicationDbContext>().Run();
             }
             catch(Exception exception)
             {

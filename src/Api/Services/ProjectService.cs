@@ -92,7 +92,10 @@ namespace Services
                     PagesCount = pagesCount
                 };
 
-                await _redisService.SetItemAsync($"projects.{parameters.ItemsPerPage}.{parameters.Page}", projectsPaginated);
+                if (parameters.Search == "")
+                {
+                    await _redisService.SetItemAsync($"projects.{parameters.ItemsPerPage}.{parameters.Page}", projectsPaginated, 60);
+                }
             }
             
             return projectsPaginated;
