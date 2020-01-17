@@ -1,5 +1,6 @@
 using Contracts;
 using Core.Adapters;
+using Core.Enums;
 using EntitiesObserver.Handlers;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -17,17 +18,19 @@ namespace EntitiesObserver.Tests
         private readonly IWorkItemService _workItemService;
         private readonly IUserService _userService;
         private readonly IBus _bus;
-        private readonly ConsumeContext<WorkItemChanged> _consumeContext;
+        private readonly ConsumeContext<WorkItemUpdated> _consumeContext;
         private readonly WorkItemChangedHandler _handler;
         private readonly ILoggerAdapter<WorkItemChangedHandler> _logger;
+        private IWorkItemAuditService _workItemAuditService;
 
         public WorkItemChangedHandlerTests()
         {
             _workItemService = Substitute.For<IWorkItemService>();
             _userService = Substitute.For<IUserService>();
-            _consumeContext = Substitute.For<ConsumeContext<WorkItemChanged>>();
+            _consumeContext = Substitute.For<ConsumeContext<WorkItemUpdated>>();
             _bus = Substitute.For<IBus>();
             _logger = Substitute.For<ILoggerAdapter<WorkItemChangedHandler>>();
+            _workItemAuditService = Substitute.For<IWorkItemAuditService>();
 
             _workItemService.GetById(1).Returns(WorkItem);
             _workItemService.GetById(2).Returns(WorkItemWithNotValidAssignee);
@@ -37,14 +40,14 @@ namespace EntitiesObserver.Tests
             _userService.GetById(2).Returns<UserDto>(value => null);
 
 
-            _handler = new WorkItemChangedHandler(_workItemService, _userService, _bus, _logger);
+            _handler = new WorkItemChangedHandler(_workItemService, _userService, _bus, _logger, _workItemAuditService);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Should_Successfully_Publish_To_Bus(int workItemId)
         {
-            _consumeContext.Message.Returns(new WorkItemChanged { WorkItemId = workItemId });
+            _consumeContext.Message.Returns(new WorkItemUpdated { WorkItemId = workItemId });
 
             await _handler.Consume(_consumeContext);
 
@@ -57,6 +60,8 @@ namespace EntitiesObserver.Tests
                ));
 
             _logger.Received(1).Information($"Bus published EmailSend contract with email: {User.Email}. WorkItemId: {workItemId}");
+
+            await _workItemAuditService.Received(1).Create(workItemId, WIAuditStatuses.Updated, oldWorkItem: Arg.Any<WorkItemHistoryDto>(), newWorkItem: Arg.Any<WorkItemHistoryDto>());
         }
 
         [Fact]
@@ -71,7 +76,7 @@ namespace EntitiesObserver.Tests
         [InlineData(0)]
         public async Task Should_Throw_Work_Item_Id_ArgumentException(int workItemId)
         {
-            _consumeContext.Message.Returns(new WorkItemChanged { WorkItemId = workItemId });
+            _consumeContext.Message.Returns(new WorkItemUpdated { WorkItemId = workItemId });
 
             await Assert.ThrowsAsync<ArgumentException>(() => _handler.Consume(_consumeContext));
         }
@@ -80,7 +85,7 @@ namespace EntitiesObserver.Tests
         [InlineData(3)]
         public async Task Should_Throw_Work_Item_ArgumentException(int workItemId)
         {
-            _consumeContext.Message.Returns(new WorkItemChanged { WorkItemId = workItemId });
+            _consumeContext.Message.Returns(new WorkItemUpdated { WorkItemId = workItemId });
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Consume(_consumeContext));
         }
@@ -89,7 +94,7 @@ namespace EntitiesObserver.Tests
         [InlineData(2)]
         public async Task Should_Throw_User_ArgumentNullException(int workItemId)
         {
-            _consumeContext.Message.Returns(new WorkItemChanged { WorkItemId = workItemId });
+            _consumeContext.Message.Returns(new WorkItemUpdated { WorkItemId = workItemId });
 
             await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Consume(_consumeContext));
         }
@@ -98,7 +103,7 @@ namespace EntitiesObserver.Tests
         public WorkItemDto WorkItem => new WorkItemDto { Id = 1, Title = "Project 1", Description = "Descr of Project 1", ProjectId = 1, Priority = 10, AssigneeId = 1, Progress = 10, StatusId = 1, AuthorId = 1, WorkItemTypeId = (int)Core.Enums.WorkItemTypes.Feature, Project = null, Assignee = null, Author = null, Comments = null };
         public WorkItemDto WorkItemWithNotValidAssignee => new WorkItemDto { Id = 1, Title = "Project 1", Description = "Descr of Project 1", ProjectId = 1, Priority = 10, AssigneeId = 2, Progress = 10, StatusId = 1, AuthorId = 1, WorkItemTypeId = (int)Core.Enums.WorkItemTypes.Feature, Project = null, Assignee = null, Author = null, Comments = null };
         public UserDto User => new UserDto { Id = 1, Email = "test@test.com", FullName = "Test Name", Login = "test.user", Position = "Test Position", RoleId = 1};
-        public WorkItemChanged WorkItemChanged => new WorkItemChanged { WorkItemId = 1 };
+        public WorkItemUpdated WorkItemChanged => new WorkItemUpdated { WorkItemId = 1 };
         #endregion
     }
 }

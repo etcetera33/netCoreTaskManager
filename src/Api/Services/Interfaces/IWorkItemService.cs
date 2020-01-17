@@ -12,10 +12,10 @@ namespace Services.Interfaces
         Task<WorkItemDto> Create(WorkItemDto workItemDto);
         Task<WorkItemDto> GetById(int workItemId);
         Task Update(int workItemId, WorkItemDto workItemDto);
-        Task Remove(int workItemId);
         Task<bool> WorkItemExists(int workItemId);
         IEnumerable<object> GetWorkItemTypes();
         IEnumerable<object> GetWorkItemStatuses();
         Task<IEnumerable<WorkItemDto>> GetTopFivePriorityItems(int assigneeId);
+        Task Delete(int workItemId);
     }
 }

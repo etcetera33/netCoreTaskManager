@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Data.Models;
 using Models.DTOs;
+using Newtonsoft.Json;
 
 namespace Services.Mapper
 {
@@ -32,11 +33,32 @@ namespace Services.Mapper
                     .ForMember(dst => dst.Status, opt => opt.Ignore())
                     .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())
                     .ReverseMap();
+                cfg.CreateMap<WorkItemHistoryDto, WorkItem>()
+                    .ReverseMap();
+                cfg.CreateMap<WorkItemHistoryDto, WorkItemDto>()
+                    .ForMember(dst => dst.Id, opt => opt.Ignore())
+                    .ForMember(dst => dst.Assignee, opt => opt.Ignore())
+                    .ForMember(dst => dst.Author, opt => opt.Ignore())
+                    .ForMember(dst => dst.Comments, opt => opt.Ignore())
+                    .ForMember(dst => dst.Project, opt => opt.Ignore())
+                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())
+                    .ReverseMap();
                 cfg.CreateMap<CommentDto, Comment>()
                     .ForMember(dst => dst.CommentId, src => src.MapFrom(e => e.Id))
                     .ForMember(dst => dst.CommentBody, src => src.MapFrom(e => e.Body))
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
                     .ForMember(dst => dst.WorkItem, opt => opt.Ignore())
+                    .ReverseMap();
+                cfg.CreateMap<WorkItemAuditDto, WorkItemAudit>()
+                    .ForMember(dst => dst.WorkItemAuditId, src => src.MapFrom(e => e.Id))
+                    .ForMember(dest => dest.OldWorkItem, opt =>
+                    {
+                        opt.MapFrom(src => (WorkItemHistoryDto)JsonConvert.DeserializeObject(src.OldWorkItem));
+                    })
+                    .ForMember(dest => dest.NewWorkItem, opt =>
+                    {
+                        opt.MapFrom(src => (WorkItemHistoryDto)JsonConvert.DeserializeObject(src.NewWorkItem));
+                    })
                     .ReverseMap();
             });
 

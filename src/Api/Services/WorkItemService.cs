@@ -67,8 +67,10 @@ namespace Services
             var workItemEntity = _mapper.Map<WorkItemDto, WorkItem>(workItemDto); 
             var workItem = await _workItemRepository.Create(workItemEntity);
 
-            await _bus.Publish(new WorkItemChanged {
-                WorkItemId = workItem.WorkItemId
+            var newWorkItemDto = _mapper.Map<WorkItem, WorkItemHistoryDto>(workItem);
+            await _bus.Publish(new WorkItemCreated {
+                WorkItemId = workItem.WorkItemId,
+                NewWorkItem = newWorkItemDto
             });
 
             return _mapper.Map<WorkItem, WorkItemDto>(workItem);
@@ -81,11 +83,6 @@ namespace Services
             return _mapper.Map<WorkItem, WorkItemDto>(workItem);
         }
 
-        public async Task Remove(int workItemId)
-        {
-            await _workItemRepository.Delete(workItemId);
-        }
-
         public async Task<IEnumerable<WorkItemDto>> GetTopFivePriorityItems(int assigneeId)
         {
             var workItems = await _workItemRepository.GetTopFivePriorityItems(assigneeId);
@@ -95,17 +92,20 @@ namespace Services
 
         public async Task Update(int workItemId, WorkItemDto workItemDto)
         {
+            var oldWorkItem = await GetHistoryById(workItemId);
+
             var workItem = _mapper.Map<WorkItemDto, WorkItem>(workItemDto);
 
             await _workItemRepository.Update(workItemId, workItem);
 
-            if (await IsAssigneeChanged(workItemId, workItemDto.AssigneeId))
+            var newWorkItem = await GetHistoryById(workItemId);
+
+            await _bus.Publish(new WorkItemUpdated
             {
-                await _bus.Publish(new WorkItemChanged
-                {
-                    WorkItemId = workItem.WorkItemId
-                });
-            }
+                WorkItemId = workItemId,
+                OldWorkItem = oldWorkItem,
+                NewWorkItem = newWorkItem
+            });
         }
 
         public async Task<bool> WorkItemExists(int workItemId)
@@ -146,11 +146,24 @@ namespace Services
             return enumStatuses;
         }
 
-        private async Task<bool> IsAssigneeChanged(int workItemId, int assigneeId)
+        public async Task<WorkItemHistoryDto> GetHistoryById(int workItemId)
         {
-            var workItem = await _workItemRepository.GetById(workItemId);
+            var workItem = await _workItemRepository.GetByIdNoTracking(workItemId);
 
-            return workItem.AssigneeId != assigneeId;
+            return _mapper.Map<WorkItem, WorkItemHistoryDto>(workItem);
+        }
+
+        public async Task Delete(int workItemId)
+        {
+            var oldWorkItem = await GetHistoryById(workItemId);
+
+            await _workItemRepository.Delete(workItemId);
+
+            await _bus.Publish(new WorkItemDeleted
+            {
+                WorkItemId = workItemId,
+                OldWorkItem = oldWorkItem 
+            });
         }
     }
 }

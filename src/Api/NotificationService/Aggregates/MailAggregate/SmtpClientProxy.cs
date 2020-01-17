@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.Options;
 using NotificationService.Configs;
-using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace NotificationService.Aggregates.MailAggregate
 {
-    public class SmtpClientProxy: ISmtpClientProxy, IDisposable
+    public class SmtpClientProxy: ISmtpClientProxy
     {
         private readonly SmtpClient _client;
 
@@ -23,19 +22,9 @@ namespace NotificationService.Aggregates.MailAggregate
             };
         }
 
-
         public async Task SendMailAsync(MailMessage msg)
         {
             await _client.SendMailAsync(msg);
-
-            Dispose();
         }
-
-        #region Dispose
-        public void Dispose()
-        {
-            _client.Dispose();
-        }
-        #endregion
     }
 }

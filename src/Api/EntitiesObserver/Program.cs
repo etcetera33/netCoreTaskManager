@@ -45,7 +45,9 @@ namespace EntitiesObserver
                     );
                     services.AddMassTransit(cfg =>
                     {
+                        cfg.AddConsumer<WorkItemCreatedHandler>();
                         cfg.AddConsumer<WorkItemChangedHandler>();
+                        cfg.AddConsumer<WorkItemDeletedHandler>();
 
                         cfg.AddBus(ConfigureBus);
                     });
@@ -54,9 +56,11 @@ namespace EntitiesObserver
 
                     services.AddTransient<IUserRepository, UserRepository>();
                     services.AddTransient<IWorkItemRepository, WorkItemRepository>();
+                    services.AddTransient<IWorkItemAuditRepository, WorkItemAuditRepository>();
 
                     services.AddTransient<IUserService, UserService>();
                     services.AddTransient<IWorkItemService, WorkItemService>();
+                    services.AddTransient<IWorkItemAuditService, WorkItemAuditService>();
 
                     services.AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 
@@ -69,7 +73,10 @@ namespace EntitiesObserver
                     logging.AddConsole();
                 });
 
+            
             await builder.RunConsoleAsync();
+            
+
         }
 
         static IBusControl ConfigureBus(IServiceProvider provider)

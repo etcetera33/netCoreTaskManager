@@ -40,9 +40,15 @@ namespace Services
         public async Task<UserDto> GetUserByLoginAsync(UserDto userDto)
         {
             var user = await _userRepository.FindUserByLoginAsync(userDto.Login);
+
+            if (user == null)
+            {
+                return null;
+            }
+
             var isPasswordMatch = PasswordHasher.PasswordHashValid(userDto.Password, user.Password, _passwordHasher.Value.Salt, _passwordHasher.Value.IterationCount, _passwordHasher.Value.BytesRequested);
 
-            if (user == null || !isPasswordMatch)
+            if (!isPasswordMatch)
             {
                 return null;
             }
