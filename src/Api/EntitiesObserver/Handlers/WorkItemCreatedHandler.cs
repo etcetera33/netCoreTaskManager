@@ -1,8 +1,6 @@
 ﻿using Contracts;
 using Core.Adapters;
-using Core.Enums;
 using MassTransit;
-using Models.DTOs;
 using Services.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -51,7 +49,7 @@ namespace EntitiesObserver.Handlers
 
                 _logger.Information($"Bus published EmailSend contract with email: {userData.Email}. WorkItemId: {context.Message.WorkItemId}");
 
-                var createdEntity = await _workItemAuditService.Create(context.Message.WorkItemId, WIAuditStatuses.Created, newWorkItem: context.Message.NewWorkItem);
+                var createdEntity = await _workItemAuditService.WICreated(context.Message.WorkItemId, context.Message.NewWorkItem);
 
                 _logger.Information($"Successfully logged work item creation. WorkItemAuditId: {createdEntity.Id}");
             }

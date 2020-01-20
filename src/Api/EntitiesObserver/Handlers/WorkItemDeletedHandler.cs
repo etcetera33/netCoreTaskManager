@@ -1,6 +1,5 @@
 ﻿using Contracts;
 using Core.Adapters;
-using Core.Enums;
 using MassTransit;
 using Services.Interfaces;
 using System;
@@ -10,17 +9,11 @@ namespace EntitiesObserver.Handlers
 {
     public class WorkItemDeletedHandler : IConsumer<WorkItemDeleted>
     {
-        private readonly IWorkItemService _workItemService;
-        private readonly IUserService _userService;
-        private readonly IBus _bus;
         private readonly ILoggerAdapter<WorkItemDeletedHandler> _logger;
         private readonly IWorkItemAuditService _workItemAuditService;
 
-        public WorkItemDeletedHandler(IWorkItemService workItemService, IUserService userService, IBus bus, ILoggerAdapter<WorkItemDeletedHandler> logger, IWorkItemAuditService workItemAuditService)
+        public WorkItemDeletedHandler(ILoggerAdapter<WorkItemDeletedHandler> logger, IWorkItemAuditService workItemAuditService)
         {
-            _workItemService = workItemService;
-            _userService = userService;
-            _bus = bus;
             _logger = logger;
             _workItemAuditService = workItemAuditService;
         }
@@ -36,12 +29,12 @@ namespace EntitiesObserver.Handlers
 
                 int workItemId = context.Message.WorkItemId;
 
-                if (workItemId == 0)
+                if (workItemId < 1)
                 {
-                    throw new ArgumentException("Work item should not be equal 0");
+                    throw new ArgumentException($"Work item should be equal to 1 or higher. Current value: {workItemId}");
                 }
 
-                var createdEnitty = await _workItemAuditService.Create(workItemId, WIAuditStatuses.Deleted, oldWorkItem: context.Message.OldWorkItem);
+                var createdEnitty = await _workItemAuditService.WIDeleted(workItemId, context.Message.OldWorkItem);
 
                 _logger.Information($"Successfully logged work item deletion. WorkItemAuditId: {createdEnitty.Id}");
             }

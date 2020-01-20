@@ -16,5 +16,14 @@ namespace Data.Repositories
                 .Where(user => user.Login == login)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<bool> UserWithEmailExists(string email)
+        {
+            var user = await DbContext.Users
+                .Where(e => e.Email == email)
+                .FirstOrDefaultAsync();
+
+            return user != null;
+        }
     }
 }

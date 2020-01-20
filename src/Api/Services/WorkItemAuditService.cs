@@ -21,7 +21,7 @@ namespace Services
             _mapper = mapper;
         }
 
-        public async Task<WorkItemAuditDto> Create(int workItemId, WIAuditStatuses status, WorkItemHistoryDto oldWorkItem = null, WorkItemHistoryDto newWorkItem = null)
+        private async Task<WorkItemAuditDto> Log(int workItemId, WIAuditStatuses status, WorkItemHistoryDto oldWorkItem = null, WorkItemHistoryDto newWorkItem = null)
         {
             var oldEntity = _mapper.Map<WorkItemHistoryDto, WorkItem>(oldWorkItem);
             var newEntity = _mapper.Map<WorkItemHistoryDto, WorkItem>(newWorkItem);
@@ -42,6 +42,21 @@ namespace Services
             var wiHistory = await _wiAuditRepository.GetByWorkItemId(workItemId);
 
             return _mapper.Map<IEnumerable<WorkItemAudit>, IEnumerable<WorkItemAuditDto>>(wiHistory);
+        }
+
+        public async Task<WorkItemAuditDto> WICreated(int workItemId, WorkItemHistoryDto newWorkItem)
+        {
+            return await Log(workItemId, WIAuditStatuses.Created, newWorkItem: newWorkItem);
+        }
+
+        public async Task<WorkItemAuditDto> WIDeleted(int workItemId, WorkItemHistoryDto oldWorkItem)
+        {
+            return await Log(workItemId, WIAuditStatuses.Deleted, oldWorkItem: oldWorkItem);
+        }
+
+        public async Task<WorkItemAuditDto> WIUpdated(int workItemId, WorkItemHistoryDto oldWorkItem, WorkItemHistoryDto newWorkItem)
+        {
+            return await Log(workItemId, WIAuditStatuses.Deleted, oldWorkItem, newWorkItem);
         }
     }
 }

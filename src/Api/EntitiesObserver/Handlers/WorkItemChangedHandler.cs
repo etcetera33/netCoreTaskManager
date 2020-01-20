@@ -64,7 +64,7 @@ namespace EntitiesObserver.Handlers
 
                 if (context.Message.OldWorkItem != context.Message.NewWorkItem)
                 {
-                    var createdEntity = await _workItemAuditService.Create(context.Message.WorkItemId, WIAuditStatuses.Updated, oldWorkItem: context.Message.OldWorkItem, newWorkItem: context.Message.NewWorkItem);
+                    var createdEntity = await _workItemAuditService.WIUpdated(context.Message.WorkItemId, context.Message.OldWorkItem, newWorkItem: context.Message.NewWorkItem);
 
                     _logger.Information($"Successfully logged work item editing. WorkItemAuditId: {createdEntity.Id}");
                 }

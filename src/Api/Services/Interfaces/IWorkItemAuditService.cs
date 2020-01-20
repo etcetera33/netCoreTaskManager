@@ -7,7 +7,9 @@ namespace Services.Interfaces
 {
     public interface IWorkItemAuditService
     {
-        Task<WorkItemAuditDto> Create(int workItemId, WIAuditStatuses status, WorkItemHistoryDto oldWorkItem = null, WorkItemHistoryDto newWorkItem = null);
+        Task<WorkItemAuditDto> WICreated(int workItemId, WorkItemHistoryDto newWorkItem);
+        Task<WorkItemAuditDto> WIUpdated(int workItemId, WorkItemHistoryDto oldWorkItem, WorkItemHistoryDto newWorkItem);
+        Task<WorkItemAuditDto> WIDeleted(int workItemId, WorkItemHistoryDto oldWorkItem);
         Task<IEnumerable<WorkItemAuditDto>> GetWorkItemsHistoryById(int workItemId);
     }
 }

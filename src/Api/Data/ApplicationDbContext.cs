@@ -42,6 +42,13 @@ namespace Data
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Login)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
+
+            modelBuilder.Entity<WorkItemAudit>()
+               .HasIndex(u => u.WorkItemId);
         }
     }
 }

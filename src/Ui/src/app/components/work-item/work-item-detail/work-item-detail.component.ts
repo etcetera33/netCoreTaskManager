@@ -90,4 +90,16 @@ export class WorkItemDetailComponent implements OnInit {
       }
     );
   }
+
+  removeWorkItem() {
+    const projectId = this.workItem.ProjectId;
+    this.workItemService.removeItem(this.workItem.Id).subscribe(
+      () => {
+        this.router.navigate(['/projects/' + projectId]);
+      },
+      err => {
+        this.popupService.openModal('error', err);
+      }
+    );
+  }
 }

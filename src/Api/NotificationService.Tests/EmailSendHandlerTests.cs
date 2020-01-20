@@ -35,44 +35,27 @@ namespace NotificationService.Tests
             await _handler.Consume(_consumeContext);
 
             await _mailer.Received(1).SendMessageAsync(to, body, subject);
-
-            _logger.Received(1).Information($"Email sent to: {to}, with body: {body}");
         }
 
         [Fact]
-        public async Task Should_Throw_Message_ArgumentNullException()
+        public async Task Should_Not_Recieve_Mailer_Email_Null()
         {
             _consumeContext.Message.Returns(value => null);
+            await _handler.Consume(_consumeContext);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Consume(_consumeContext));
-        }
-
-        [Theory]
-        [InlineData("Message body", "Message subject", null)]
-        public async Task Should_Throw_Message_To_ArgumentNullException(string body, string subject, string to)
-        {
-            _consumeContext.Message.Returns(new EmailSend { Body = body, Subject = subject, To = to });
-
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Consume(_consumeContext));
+            await _mailer.DidNotReceive().SendMessageAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
         }
 
         [Theory]
         [InlineData(null, "Message subject", "Message to")]
-        public async Task Should_Throw_Message_Body_ArgumentNullException(string body, string subject, string to)
-        {
-            _consumeContext.Message.Returns(new EmailSend { Body = body, Subject = subject, To = to });
-
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Consume(_consumeContext));
-        }
-
-        [Theory]
         [InlineData("Message body", null, "Message to")]
-        public async Task Should_Throw_Message_Subject_ArgumentNullException(string body, string subject, string to)
+        [InlineData("Message body", "Message subject", null)]
+        public async Task Should_Not_Recieve_Mailer_Properties_Null(string body, string subject, string to)
         {
             _consumeContext.Message.Returns(new EmailSend { Body = body, Subject = subject, To = to });
+            await _handler.Consume(_consumeContext);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Consume(_consumeContext));
+            await _mailer.DidNotReceive().SendMessageAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
         }
-
     }
 }
