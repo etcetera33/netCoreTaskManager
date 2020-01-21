@@ -4,7 +4,6 @@ services:
     - docker:18-dind
 
 stages:
-    #- test
     - build
 
 before_script:
@@ -50,13 +49,13 @@ build_notification_service:
     after_script:
         - docker logout ${AZURE_REGISTRY}
 
-test_services:
-    stage: test
-    script:
-        - 'cd src/Api'
-        - 'dotnet test Services.Tests\Services.Tests.csproj'
-        - 'cd ..'
-        - 'cd ..'
+#test_services:
+#    stage: test
+#    script:
+#        - 'cd src/Api'
+#        - 'dotnet test Services.Tests\Services.Tests.csproj'
+#        - 'cd ..'
+#        - 'cd ..'
 
 #test_entities_observer_service:
 #    stage: test
