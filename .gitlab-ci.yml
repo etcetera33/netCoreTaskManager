@@ -1,5 +1,4 @@
 image: docker:18-git
-image: microsoft/dotnet:latest
 
 services:
     - docker:18-dind
@@ -51,6 +50,7 @@ build_notification_service:
         - docker logout ${AZURE_REGISTRY}
 
 test_services:
+    image: microsoft/dotnet:latest
     stage: test
     script:
         - 'dotnet test src\Api\Services.Tests\Services.Tests.csproj'
