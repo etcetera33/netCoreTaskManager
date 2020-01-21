@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Data;
+using Data.Interfaces;
 using Data.Models;
 using Models.DTOs;
 using Services.Interfaces;
@@ -11,13 +11,15 @@ namespace Services
 {
     public class CommentService: ICommentService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
+        private readonly IRedisService _redisService;
 
-        public CommentService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CommentService(ICommentRepository commentRepository, IMapper mapper, IRedisService redisService)
         {
-            _unitOfWork = unitOfWork;
+            _commentRepository = commentRepository;
             _mapper = mapper;
+            _redisService = redisService;
         }
 
         public async Task<CommentDto> Create(CommentDto commentDto)
@@ -25,14 +27,14 @@ namespace Services
             commentDto.SentAt = DateTime.Now;
 
             var comment = _mapper.Map<CommentDto, Comment>(commentDto);
-            var createdEntity = await _unitOfWork.CommentRepository.Create(comment);
+            var createdEntity = await _commentRepository.Create(comment);
 
             return _mapper.Map<Comment, CommentDto>(createdEntity);
         }
 
         public async Task<IEnumerable<CommentDto>> GetWorkItemsComments(int workItemId)
         {
-            var comments = await _unitOfWork.CommentRepository.GetCommentsByWorkItemIdAsync(workItemId);
+            var comments = await _commentRepository.GetCommentsByWorkItemIdAsync(workItemId);
             var commentsDto = _mapper.Map<IEnumerable<Comment>, IEnumerable<CommentDto>>(comments);
 
             return commentsDto;
@@ -40,17 +42,17 @@ namespace Services
 
         public async Task Remove(int commentId)
         {
-            await _unitOfWork.CommentRepository.Delete(commentId);
+            await _commentRepository.Delete(commentId);
         }
 
         public async Task<bool> CommentExists(int commentId)
         {
-            return (await _unitOfWork.CommentRepository.GetById(commentId) != null);
+            return (await _commentRepository.GetById(commentId) != null);
         }
 
         public async Task<int> GetCommentAuthorId(int commentId)
         {
-            return (await _unitOfWork.CommentRepository.GetById(commentId)).AuthorId;
+            return (await _commentRepository.GetById(commentId)).AuthorId;
         }
     }
 }

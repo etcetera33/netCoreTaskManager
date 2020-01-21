@@ -42,8 +42,8 @@ export class WorkItemListComponent implements OnInit {
     this.workItemService.getWorkitemsByProjectId(this.assigneeId, this.currentPage, this.searchPhrase)
     .subscribe(
       res => {
-        this.pagesCount = +res.pagesCount;
-        this.workItems = res.wokrItemList as WorkItem[];
+        this.pagesCount = +res.PagesCount;
+        this.workItems = res.EntityList as WorkItem[];
       },
       err => {
         this.popupService.openModal('error', err);

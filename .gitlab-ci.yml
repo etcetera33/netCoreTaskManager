@@ -1,0 +1,63 @@
+image: docker:stable
+
+services:
+    - docker:dind
+
+stages:
+    - build_api
+    - build_entity_observer_service
+    - build_notification_service
+    #- run_tests
+
+before_script:
+  - docker info
+
+build_api:
+  stage: build_api
+  only:
+    - master
+  before_script:
+    - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+  script:
+    - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
+    - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
+  after_script:
+    - docker logout ${AZURE_REGISTRY}
+  tags:
+    - docker
+
+build_api:
+    stage: build_entity_observer_service
+    only:
+        - master
+    before_script:
+        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+    script:
+        - docker build -f ./src/Api/EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
+        - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
+    after_script:
+        - docker logout ${AZURE_REGISTRY}
+    tags:
+        - docker
+
+build_api:
+    stage: build_notification_service
+    only:
+        - master
+    before_script:
+        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+    script:
+        - docker build -f ./src/Api/NotificationService/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
+        - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
+    after_script:
+        - docker logout ${AZURE_REGISTRY}
+    tags:
+        - docker
+
+#run_tests:
+#    stage: run_tests
+#    only: master
+#    script:
+#        - "cd $test"
+#        - "dotnet test"
+

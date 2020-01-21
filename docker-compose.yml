@@ -1,0 +1,82 @@
+version: '3'
+
+services:
+  api:
+    image: "api"
+    ports:
+        - "8037:80"
+        - "9098:8080"
+    environment:
+        ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
+        Redis__Host: redis
+        Redis__Port: "${Redis_Port}"
+        RabbitMqConfig__Host: rabbit
+        RabbitMqConfig__VirtualHost: "${Rabbit_VirtualHost}"
+        RabbitMqConfig__Username: "${Rabbit_Username}"
+        RabbitMqConfig__Password: "${Rabbit_Password}"
+        RabbitMqConfig__SSLActive: "${Rabbit_SSLActive}"
+        RabbitMqConfig__Endpoint: "api-endpoint"
+    depends_on:
+      - db
+      - rabbit
+      - redis
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+        SA_PASSWORD: ${Database_Password}
+        ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssqldata:/var/opt/mssql
+    hostname: ${Database_Server}
+  rabbit:
+    image: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    expose:
+      - 15672
+      - 5672
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - /srv/docker/redis:/var/lib/redis
+    restart: always
+  entities_observer:
+    image: "entities-observer"
+    ports:
+        - "8036:80"
+    environment:
+        ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
+        AppConfig__Host: rabbitmq://rabbit
+        AppConfig__VirtualHost: "${Rabbit_VirtualHost}"
+        AppConfig__Username: "${Rabbit_Username}"
+        AppConfig__Password: "${Rabbit_Password}"
+        AppConfig__SSLActive: "${Rabbit_SSLActive}"
+        AppConfig__Endpoint: "entities-observer-endpoint"
+    depends_on:
+      - api
+  notification_service:
+    image: "notification-service"
+    ports:
+        - "8035:80"
+    environment:
+        MailConfig__From: "${Mail_From}"
+        MailConfig__Password: "${Mail_Password}"
+        MailConfig__Host: "${Mail_Host}"
+        MailConfig__EnableSsl: ${Mail_EnableSsl}
+        MailConfig__Port: ${Mail_Port}
+        RabbitmqConfig__Host: rabbitmq://rabbit
+        RabbitmqConfig__VirtualHost: "${Rabbit_VirtualHost}"
+        RabbitmqConfig__Username: "${Rabbit_Username}"
+        RabbitmqConfig__Password: "${Rabbit_Password}"
+        RabbitmqConfig__SSLActive: "${Rabbit_SSLActive}"
+        RabbitmqConfig__Endpoint: "notification-service-endpoint"
+    depends_on:
+      - entities_observer
+volumes:
+  mssqldata:
+    

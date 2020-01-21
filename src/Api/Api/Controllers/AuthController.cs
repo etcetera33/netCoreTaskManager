@@ -6,10 +6,12 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
-using Api.Auth;
+using Api.Configs;
 using System.Net;
 using Microsoft.Extensions.Options;
 using FluentValidation.AspNetCore;
+using Services;
+using StackExchange.Redis.Extensions.Core.Abstractions;
 
 namespace Api.Controllers
 {
@@ -19,6 +21,7 @@ namespace Api.Controllers
     {
         private readonly IUserService _userService;
         private readonly IOptions<AuthConfig> _config;
+
         public AuthController(IUserService userService, IOptions<AuthConfig> config)
         {
             _userService = userService;

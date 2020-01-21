@@ -1,11 +1,12 @@
-﻿using Data.Models;
+﻿using Data.Interfaces;
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class UserRepository: BaseRepository<User>
+    public class UserRepository: BaseRepository<User>, IUserRepository
     {
         public UserRepository(ApplicationDbContext dbContext): base(dbContext) {}
 
@@ -14,6 +15,15 @@ namespace Data.Repositories
             return await DbContext.Users
                 .Where(user => user.Login == login)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> UserWithEmailExists(string email)
+        {
+            var user = await DbContext.Users
+                .Where(e => e.Email == email)
+                .FirstOrDefaultAsync();
+
+            return user != null;
         }
     }
 }

@@ -54,4 +54,8 @@ export class WorkItemService {
   setProjectId(projectId: number) {
     this.projectId = projectId;
   }
+
+  removeItem(workItemId: number) {
+    return this.http.delete(this.getRootUrl() + workItemId);
+  }
 }

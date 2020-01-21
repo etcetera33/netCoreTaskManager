@@ -77,6 +77,9 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
@@ -96,6 +99,10 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.HasIndex("Login")
                         .IsUnique()
@@ -153,6 +160,32 @@ namespace Data.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("WorkItems");
+                });
+
+            modelBuilder.Entity("Data.Models.WorkItemAudit", b =>
+                {
+                    b.Property<int>("WorkItemAuditId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("NewWorkItem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldWorkItem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WorkItemAuditId");
+
+                    b.HasIndex("WorkItemId");
+
+                    b.ToTable("WorkItemAudits");
                 });
 
             modelBuilder.Entity("Data.Models.Comment", b =>

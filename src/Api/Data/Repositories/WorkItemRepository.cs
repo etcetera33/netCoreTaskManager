@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Data.Interfaces;
 
 namespace Data.Repositories
 {
-    public class WorkItemRepository : BaseRepository<WorkItem>
+    public class WorkItemRepository : BaseRepository<WorkItem>, IWorkItemRepository
     {
         public WorkItemRepository(ApplicationDbContext dbContext) : base (dbContext)
         {
@@ -47,5 +48,19 @@ namespace Data.Repositories
                 .Take(5)
                 .ToListAsync();
         }
+
+        public async Task<WorkItem> GetByIdNoTracking(int id)
+        {
+            return await DbContext.WorkItems
+                .Include(x => x.Assignee)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.WorkItemId == id);
+        }
+
+        /*public async override Task Update(int id, WorkItem entity)
+        {
+            DbContext.Entry(entity).State = EntityState.Modified;
+            await DbContext.SaveChangesAsync();
+        }*/
     }
 }

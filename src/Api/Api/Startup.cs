@@ -1,8 +1,10 @@
-using Api.Auth;
+using Api.Configs;
+using Api.Bus;
 using Api.Middleware;
 using AutoMapper;
 using Data;
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,6 +20,9 @@ using Services.Helpers;
 using Services.Interfaces;
 using Services.Mapper;
 using Services.Validators;
+using Data.Interfaces;
+using Data.Repositories;
+using Core.Adapters;
 
 namespace Api
 {
@@ -44,7 +49,7 @@ namespace Api
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
-            
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -62,22 +67,53 @@ namespace Api
                 };
             });
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            // Start of the service Bus1
+            services.AddMassTransit();
+
+            services.AddSingleton(provider => MassTransit.Bus.Factory.CreateUsingRabbitMq(cfg =>
+            {
+                var host = cfg.Host(
+                    host: Configuration.GetSection("RabbitMqConfig").GetSection("Host").Value,
+                    virtualHost: Configuration.GetSection("RabbitMqConfig").GetSection("VirtualHost").Value,
+                    h => { });
+
+                cfg.ReceiveEndpoint(
+                    Configuration.GetSection("RabbitMqConfig").GetSection("Endpoint").Value,
+                    e => { });
+            }));
+
+            services.AddSingleton<IPublishEndpoint>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<ISendEndpointProvider>(provider => provider.GetRequiredService<IBusControl>());
+            services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
+
+            services.AddSingleton<IHostedService, BusService>();
+            // End of the service Bus
+
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<IWorkItemRepository, WorkItemRepository>();
+            services.AddTransient<IWorkItemAuditRepository, WorkItemAuditRepository>();
+
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
+            services.AddTransient<IWorkItemAuditService, WorkItemAuditService>();
+
+            services.AddSingleton<IRedisService, RedisService>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton(AutoMapperConfiguration.Configure().CreateMapper());
 
+            services.AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
+
             services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
             services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRedisService redisService)
         {
             if (env.IsDevelopment())
             {
@@ -97,6 +133,8 @@ namespace Api
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            redisService.Connect();
 
             app.UseMiddleware<RequestResponseLogMiddleware>();
 

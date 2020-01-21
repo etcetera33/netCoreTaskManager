@@ -2,6 +2,7 @@
 using Models.DTOs;
 using System.Threading.Tasks;
 using Models.QueryParameters;
+using Models.PaginatedResponse;
 
 namespace Services.Interfaces
 {
@@ -12,6 +13,6 @@ namespace Services.Interfaces
         Task<ProjectDto> GetById(int projectId);
         Task Update(int projectId, ProjectDto projectDto);
         Task<bool> ProjectExists(int projectId);
-        Task<object> GetPaginatedDataAsync(BaseQueryParameters parameters);
+        Task<BasePaginatedResponse<ProjectDto>> GetProjects(BaseQueryParameters parameters);
     }
 }

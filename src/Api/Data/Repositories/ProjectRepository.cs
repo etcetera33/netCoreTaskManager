@@ -1,4 +1,5 @@
-﻿using Data.Models;
+﻿using Data.Interfaces;
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class ProjectRepository: BaseRepository<Project>
+    public class ProjectRepository: BaseRepository<Project>, IProjectRepository
     {
         public ProjectRepository(ApplicationDbContext dbContext) : base(dbContext) {}
 

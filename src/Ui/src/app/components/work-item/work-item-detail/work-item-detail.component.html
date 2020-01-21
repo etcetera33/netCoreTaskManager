@@ -6,7 +6,12 @@
           <!-- Begin Page Content -->
     <div class="container-fluid" *ngIf="workItem!=null">
   
+    <div class="d-sm-flex align-items-center justify-content-between mb-4"><h1 class="h3 mb-0 text-gray-800">Work Item {{workItem.Title}}</h1>
+        <button class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm"(click)="removeWorkItem()"> Remove a work item</button>
+    </div>
+        
     <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid mb-4" (submit)="onSubmit(form)" ngNativeValidate>
+        
         <input type="hidden" name="Id" #Id="ngModel" [ngModel]="workItem?.Id" value="{{workItem?.Id}}"/>
         <input type="hidden" name="ProjectId" #ProjectId="ngModel" [ngModel]="workItem?.ProjectId" value="{{workItem?.ProjectId}}"/>
         <input type="hidden" name="AuthorId" #AuthorId="ngModel" [ngModel]="workItem?.AuthorId" value="{{workItem?.AuthorId}}"/>
