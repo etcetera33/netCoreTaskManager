@@ -23,8 +23,6 @@ build_api:
     - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
   after_script:
     - docker logout ${AZURE_REGISTRY}
-  tags:
-    - docker
 
 build_entity_observer_service:
     stage: build_entity_observer_service
@@ -37,8 +35,6 @@ build_entity_observer_service:
         - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
-    tags:
-        - docker
 
 build_notification_service:
     stage: build_notification_service
@@ -51,8 +47,6 @@ build_notification_service:
         - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
-    tags:
-        - docker
 
 #run_tests:
 #    stage: run_tests
