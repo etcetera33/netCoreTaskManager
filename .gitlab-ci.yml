@@ -51,30 +51,18 @@ build_notification_service:
 
 test_services:
     stage: test
-    before_script:
-        - cd src/Api
     script:
-        - 'dotnet test Services.Tests\Services.Tests.csproj'
-    after_script:
-        - cd ../..
+        - 'dotnet test src\Api\Services.Tests\Services.Tests.csproj'
 
 test_entities_observer_service:
     stage: test
-    before_script:
-        - cd src/Api
     script:
-        - 'dotnet test EntitiesObserver.Tests\EntitiesObserver.Tests.csproj'
-    after_script:
-        - cd ../..
+        - 'dotnet test src\Api\EntitiesObserver.Tests\EntitiesObserver.Tests.csproj'
 
 test_notification_service:
     stage: test
-    before_script:
-        - cd src/Api
     script:
-        - 'dotnet test NotificationService.Tests\NotificationService.Tests.csproj'
-    after_script:
-        - cd ../..
+        - 'dotnet test src\Api\NotificationService.Tests\NotificationService.Tests.csproj'
 
         
         
