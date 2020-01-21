@@ -5,7 +5,7 @@ services:
 
 stages:
     - build
-    - test
+    #- test
 
 before_script:
   - docker info
@@ -49,18 +49,17 @@ build_notification_service:
     after_script:
         - docker logout ${AZURE_REGISTRY}
 
-test_services:
-    image: microsoft/dotnet:latest
-    stage: test
-    script:
-        - 'dotnet test src\Api\Services.Tests\Services.Tests.csproj'
-        
-test_entities_observer_service:
-    stage: test
-    script:
-        - 'dotnet test src\Api\EntitiesObserver.Tests\EntitiesObserver.Tests.csproj'
-
-test_notification_service:
-    stage: test
-    script:
-        - 'dotnet test src\Api\NotificationService.Tests\NotificationService.Tests.csproj'
+#test_services:
+#    stage: test
+#    script:
+#        - 'dotnet test src\Api\Services.Tests\Services.Tests.csproj'
+#        
+#test_entities_observer_service:
+#    stage: test
+#    script:
+#        - 'dotnet test src\Api\EntitiesObserver.Tests\EntitiesObserver.Tests.csproj'
+#
+#test_notification_service:
+#    stage: test
+#    script:
+#        - 'dotnet test src\Api\NotificationService.Tests\NotificationService.Tests.csproj'
