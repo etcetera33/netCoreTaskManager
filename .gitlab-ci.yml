@@ -1,23 +1,24 @@
-image: docker:stable
+image: docker:19.03.1
+
+variables:
+    DOCKER_HOST: tcp://localhost:2376
 
 services:
     - docker:dind
 
 stages:
-    - build_api
-    - build_entity_observer_service
-    - build_notification_service
-    #- run_tests
+    - build
 
 before_script:
   - docker info
 
 build_api:
-  stage: build_api
+  stage: build
   only:
     - master
     - web
   before_script:
+   
     - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
   script:
     - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
@@ -26,7 +27,7 @@ build_api:
     - docker logout ${AZURE_REGISTRY}
 
 build_entity_observer_service:
-    stage: build_entity_observer_service
+    stage: build
     only:
         - master
         - web
@@ -39,7 +40,7 @@ build_entity_observer_service:
         - docker logout ${AZURE_REGISTRY}
 
 build_notification_service:
-    stage: build_notification_service
+    stage: build
     only:
         - master
         - web
