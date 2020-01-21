@@ -26,7 +26,7 @@ build_api:
   tags:
     - docker
 
-build_api:
+build_entity_observer_service:
     stage: build_entity_observer_service
     only:
         - master
@@ -40,7 +40,7 @@ build_api:
     tags:
         - docker
 
-build_api:
+build_notification_service:
     stage: build_notification_service
     only:
         - master
