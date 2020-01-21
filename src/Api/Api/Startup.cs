@@ -93,11 +93,13 @@ namespace Api
             services.AddTransient<IProjectRepository, ProjectRepository>();
             services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<IWorkItemRepository, WorkItemRepository>();
+            services.AddTransient<IWorkItemAuditRepository, WorkItemAuditRepository>();
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
+            services.AddTransient<IWorkItemAuditService, WorkItemAuditService>();
 
             services.AddSingleton<IRedisService, RedisService>();
 

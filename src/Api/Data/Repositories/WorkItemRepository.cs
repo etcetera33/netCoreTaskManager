@@ -48,5 +48,19 @@ namespace Data.Repositories
                 .Take(5)
                 .ToListAsync();
         }
+
+        public async Task<WorkItem> GetByIdNoTracking(int id)
+        {
+            return await DbContext.WorkItems
+                .Include(x => x.Assignee)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.WorkItemId == id);
+        }
+
+        /*public async override Task Update(int id, WorkItem entity)
+        {
+            DbContext.Entry(entity).State = EntityState.Modified;
+            await DbContext.SaveChangesAsync();
+        }*/
     }
 }

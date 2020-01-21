@@ -12,6 +12,7 @@ namespace Data
         public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<WorkItem> WorkItems { get; set; }
+        public DbSet<WorkItemAudit> WorkItemAudits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +42,13 @@ namespace Data
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Login)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
+
+            modelBuilder.Entity<WorkItemAudit>()
+               .HasIndex(u => u.WorkItemId);
         }
     }
 }

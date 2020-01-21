@@ -11,6 +11,7 @@ using NotificationService.Handlers;
 using System;
 using System.Threading.Tasks;
 using Core.Adapters;
+using Serilog;
 
 namespace NotificationService
 {
@@ -56,9 +57,15 @@ namespace NotificationService
                     logging.AddConsole();
                 });
 
-            await builder.RunConsoleAsync();
-            
-            
+            try
+            {
+                await builder.RunConsoleAsync();
+                Log.Logger.Information("Started notofication service");
+            }
+            catch (Exception exception)
+            {
+                Log.Logger.Error(exception.Message);
+            }
         }
 
         static IBusControl ConfigureBus(IServiceProvider provider)

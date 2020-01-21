@@ -85,5 +85,21 @@ namespace Api.Controllers
         {
             return Ok(_workItemService.GetWorkItemStatuses());
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Owner")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var workItemExists = await _workItemService.WorkItemExists(id);
+
+            if (!workItemExists)
+            {
+                return NotFound();
+            }
+
+            await _workItemService.Delete(id);
+
+            return NoContent();
+        }
     }
 }
