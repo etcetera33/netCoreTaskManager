@@ -1,8 +1,5 @@
 image: docker:18-git
 
-variables:
-    DOCKER_HOST: tcp://localhost:2376
-
 services:
     - docker:18-dind
 
