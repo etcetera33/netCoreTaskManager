@@ -18,7 +18,7 @@ build_api:
    
     - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
   script:
-    - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
+    - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest ./src/Api
     - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
   after_script:
     - docker logout ${AZURE_REGISTRY}
@@ -31,7 +31,7 @@ build_entity_observer_service:
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
-        - docker build -f ./src/Api/EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
+        - docker build -f ./src/Api/EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
@@ -44,7 +44,7 @@ build_notification_service:
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
-        - docker build -f ./src/Api/NotificationService/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
+        - docker build -f ./src/Api/NotificationService/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
