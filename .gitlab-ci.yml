@@ -52,7 +52,7 @@ build_notification_service:
 test_services:
     stage: test
     script:
-        - 'cd src\Api'
+        - 'cd src/Api'
         - 'dotnet test Services.Tests\Services.Tests.csproj'
         - 'cd ..'
         - 'cd ..'
