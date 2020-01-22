@@ -1,7 +1,7 @@
 image: mcr.microsoft.com/dotnet/core/sdk:3.1.101-alpine
 
 stages:
-    - test
+    #- test
     - build
 
 before_script:
@@ -16,9 +16,9 @@ build_api:
     services:
         - docker:18-dind
     before_script:
-        - docker info
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
+        - ls
         - docker build -f ./Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest .
         - docker push ${AZURE_REGISTRY}/api:latest
     after_script:
@@ -33,7 +33,6 @@ build_entity_observer_service:
     services:
         - docker:18-dind
     before_script:
-        - docker info
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
         - docker build -f ./EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/entity-observer-service:latest .
@@ -50,7 +49,6 @@ build_notification_service:
     services:
         - docker:18-dind
     before_script:
-        - docker info
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
         - docker build -f ./NotificationService/Dockerfile -t ${AZURE_REGISTRY}/notification-service:latest .
