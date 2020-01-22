@@ -19,7 +19,7 @@ build_api:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
         - ls
-        - docker build -f ./Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest .
+        - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/api:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
@@ -35,7 +35,7 @@ build_entity_observer_service:
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
-        - docker build -f ./EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/entity-observer-service:latest .
+        - docker build -f ./src/Api/EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/entity-observer-service:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/entity-observer-service:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
@@ -51,7 +51,7 @@ build_notification_service:
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
-        - docker build -f ./NotificationService/Dockerfile -t ${AZURE_REGISTRY}/notification-service:latest .
+        - docker build -f ./src/Api/NotificationService/Dockerfile -t ${AZURE_REGISTRY}/notification-service:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/notification-service:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
@@ -66,16 +66,13 @@ build_front:
         - docker info
         - docker:18-dind
     before_script:
-        - cd ..
-        - cd Ui
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
-        - docker build -f ./Dockerfile -t ${AZURE_REGISTRY}/front:latest .
+        - docker build -f ./src/Ui/Dockerfile -t ${AZURE_REGISTRY}/front:latest ./src/Ui
         - docker push ${AZURE_REGISTRY}/front:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
-        - cd ..
-        - cd Api
+
 
 #test_services:
 #    stage: test
