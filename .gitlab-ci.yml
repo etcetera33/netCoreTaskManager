@@ -1,21 +1,23 @@
-image: docker:18-git
 
-services:
-    - docker:18-dind
+image: mcr.microsoft.com/dotnet/core/sdk:2.2.301
 
 stages:
+    - test
     - build
 
 before_script:
   - docker info
 
 build_api:
-  stage: build
-  only:
-    - master
-    - web
-  before_script:
-    - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+    stage: build
+    only:
+        - master
+        - web
+    image: docker:18-git
+    services:
+        - docker:18-dind
+    before_script:
+        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
   script:
     - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest ./src/Api
     - docker push ${AZURE_REGISTRY}/api:latest
@@ -27,6 +29,9 @@ build_entity_observer_service:
     only:
         - master
         - web
+    image: docker:18-git
+    services:
+        - docker:18-dind
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
@@ -40,6 +45,9 @@ build_notification_service:
     only:
         - master
         - web
+    image: docker:18-git
+    services:
+        - docker:18-dind
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
@@ -53,6 +61,9 @@ build_front:
     only:
         - master
         - web
+    image: docker:18-git
+    services:
+        - docker:18-dind
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
@@ -60,3 +71,11 @@ build_front:
         - docker push ${AZURE_REGISTRY}/front:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
+
+test_services:
+    stage: test
+    only:
+        - master
+        - web
+    script:
+        - dotnet test src\Api\NotificationService.Tests
