@@ -23,7 +23,7 @@ namespace Services
         {
             var serialized = JsonConvert.SerializeObject(value);
 
-            await _redis.GetDatabase().StringSetAsync(key, serialized, TimeSpan.FromMinutes(expirySeconds));
+            await _redis.GetDatabase().StringSetAsync(key, serialized, TimeSpan.FromSeconds(expirySeconds));
         }
 
         public async Task<T> GetItemAsync<T>(string key)
