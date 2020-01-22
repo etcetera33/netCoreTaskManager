@@ -78,4 +78,4 @@ test_services:
         - master
         - web
     script:
-        - dotnet test src\Api\NotificationService.Tests
+        - dotnet test src\Api\NotificationService.Tests\NotificationService.Tests.csproj
