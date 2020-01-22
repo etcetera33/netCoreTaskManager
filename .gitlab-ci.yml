@@ -77,30 +77,30 @@ build_front:
         - cd ..
         - cd Api
 
-test_services:
-    stage: test
-    only:
-        - master
-        - web
-    #before_script:
-    #    - cd NotificationService.Tests/
-    script:
-        - dotnet test Services.Tests/.
-    #after_script:
-    #    - cd ..
-
-test_entity_observer:
-    stage: test
-    only:
-        - master
-        - web
-    script:
-        - dotnet test EntitiesObserver.Tests/.
-
-test_notification_service:
-    stage: test
-    only:
-        - master
-        - web
-    script:
-        - dotnet test NotificationService.Tests/.
+#test_services:
+#    stage: test
+#    only:
+#        - master
+#        - web
+#    #before_script:
+#    #    - cd NotificationService.Tests/
+#    script:
+#        - dotnet test Services.Tests/.
+#    #after_script:
+#    #    - cd ..
+#
+#test_entity_observer:
+#    stage: test
+#    only:
+#        - master
+#        - web
+#    script:
+#        - dotnet test EntitiesObserver.Tests/.
+#
+#test_notification_service:
+#    stage: test
+#    only:
+#        - master
+#        - web
+#    script:
+#        - dotnet test NotificationService.Tests/.
