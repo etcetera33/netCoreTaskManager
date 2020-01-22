@@ -54,7 +54,7 @@ namespace EntitiesObserver.Tests
                    && x.Body == $"Dear, {User.FullName}! You are the new assignee for the work item #{workItemId}"
                ));
 
-            await _workItemAuditService.Received(1).LogWorkItemEditing(workItemId, Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.Received(1).WIUpdated(workItemId, Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         [Theory]
@@ -67,7 +67,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
 
-            await _workItemAuditService.Received(1).LogWorkItemEditing(workItemId, Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.Received(1).WIUpdated(workItemId, Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         [Theory]
@@ -80,7 +80,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
 
-            await _workItemAuditService.DidNotReceive().LogWorkItemEditing(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().WIUpdated(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
 
-            await _workItemAuditService.DidNotReceive().LogWorkItemEditing(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().WIUpdated(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         [Theory]
@@ -111,7 +111,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
 
-            await _workItemAuditService.DidNotReceive().LogWorkItemEditing(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().WIUpdated(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         [Theory]
@@ -127,7 +127,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
 
-            await _workItemAuditService.DidNotReceive().LogWorkItemEditing(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().WIUpdated(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         [Theory]
@@ -143,7 +143,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
 
-            await _workItemAuditService.DidNotReceive().LogWorkItemEditing(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().WIUpdated(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         #region Helpers

@@ -21,7 +21,7 @@ namespace Services
             _mapper = mapper;
         }
 
-        private async Task<WorkItemAuditDto> LogWorkItemChanges(int workItemId, WorkItemAuditStatuses status, WorkItemHistoryDto oldWorkItem = null, WorkItemHistoryDto newWorkItem = null)
+        private async Task<WorkItemAuditDto> Log(int workItemId, WIAuditStatuses status, WorkItemHistoryDto oldWorkItem = null, WorkItemHistoryDto newWorkItem = null)
         {
             var oldEntity = _mapper.Map<WorkItemHistoryDto, WorkItem>(oldWorkItem);
             var newEntity = _mapper.Map<WorkItemHistoryDto, WorkItem>(newWorkItem);
@@ -44,19 +44,19 @@ namespace Services
             return _mapper.Map<IEnumerable<WorkItemAudit>, IEnumerable<WorkItemAuditDto>>(wiHistory);
         }
 
-        public async Task<WorkItemAuditDto> LogWorkItemCreation(int workItemId, WorkItemHistoryDto newWorkItem)
+        public async Task<WorkItemAuditDto> WICreated(int workItemId, WorkItemHistoryDto newWorkItem)
         {
-            return await LogWorkItemChanges(workItemId, WorkItemAuditStatuses.Created, newWorkItem: newWorkItem);
+            return await Log(workItemId, WIAuditStatuses.Created, newWorkItem: newWorkItem);
         }
 
-        public async Task<WorkItemAuditDto> LogWorkItemDeletion(int workItemId, WorkItemHistoryDto oldWorkItem)
+        public async Task<WorkItemAuditDto> WIDeleted(int workItemId, WorkItemHistoryDto oldWorkItem)
         {
-            return await LogWorkItemChanges(workItemId, WorkItemAuditStatuses.Deleted, oldWorkItem: oldWorkItem);
+            return await Log(workItemId, WIAuditStatuses.Deleted, oldWorkItem: oldWorkItem);
         }
 
-        public async Task<WorkItemAuditDto> LogWorkItemEditing(int workItemId, WorkItemHistoryDto oldWorkItem, WorkItemHistoryDto newWorkItem)
+        public async Task<WorkItemAuditDto> WIUpdated(int workItemId, WorkItemHistoryDto oldWorkItem, WorkItemHistoryDto newWorkItem)
         {
-            return await LogWorkItemChanges(workItemId, WorkItemAuditStatuses.Updated, oldWorkItem, newWorkItem);
+            return await Log(workItemId, WIAuditStatuses.Deleted, oldWorkItem, newWorkItem);
         }
     }
 }

@@ -5,6 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
 
-  rootUrl = 'http://localhost:8037/api/';
+  rootUrl = 'https://localhost:44348/api/';
   constructor() { }
 }

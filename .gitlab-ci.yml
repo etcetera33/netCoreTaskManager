@@ -5,6 +5,7 @@ services:
 
 stages:
     - build
+    #- test
 
 before_script:
   - docker info
@@ -48,15 +49,17 @@ build_notification_service:
     after_script:
         - docker logout ${AZURE_REGISTRY}
 
-build_front:
-    stage: build
-    only:
-        - master
-        - web
-        before_script:
-            - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
-        script:
-            - docker build -f ./src/Ui/Dockerfile -t ${AZURE_REGISTRY}/front:latest ./src/Ui
-            - docker push ${AZURE_REGISTRY}/front:latest
-        after_script:
-            - docker logout ${AZURE_REGISTRY}
+#test_services:
+#    stage: test
+#    script:
+#        - 'dotnet test src\Api\Services.Tests\Services.Tests.csproj'
+#        
+#test_entities_observer_service:
+#    stage: test
+#    script:
+#        - 'dotnet test src\Api\EntitiesObserver.Tests\EntitiesObserver.Tests.csproj'
+#
+#test_notification_service:
+#    stage: test
+#    script:
+#        - 'dotnet test src\Api\NotificationService.Tests\NotificationService.Tests.csproj'

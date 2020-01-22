@@ -12,7 +12,6 @@ using Microsoft.Extensions.Options;
 using FluentValidation.AspNetCore;
 using Services;
 using StackExchange.Redis.Extensions.Core.Abstractions;
-using System.Data.Common;
 
 namespace Api.Controllers
 {
