@@ -53,10 +53,10 @@ build_front:
     only:
         - master
         - web
-        before_script:
-            - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
-        script:
-            - docker build -f ./src/Ui/Dockerfile -t ${AZURE_REGISTRY}/front:latest ./src/Ui
-            - docker push ${AZURE_REGISTRY}/front:latest
-        after_script:
-            - docker logout ${AZURE_REGISTRY}
+    before_script:
+        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+    script:
+        - docker build -f ./src/Ui/Dockerfile -t ${AZURE_REGISTRY}/front:latest ./src/Ui
+        - docker push ${AZURE_REGISTRY}/front:latest
+    after_script:
+        - docker logout ${AZURE_REGISTRY}
