@@ -18,11 +18,11 @@ build_api:
         - docker:18-dind
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
-  script:
-    - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest ./src/Api
-    - docker push ${AZURE_REGISTRY}/api:latest
-  after_script:
-    - docker logout ${AZURE_REGISTRY}
+    script:
+        - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest ./src/Api
+        - docker push ${AZURE_REGISTRY}/api:latest
+    after_script:
+        - docker logout ${AZURE_REGISTRY}
 
 build_entity_observer_service:
     stage: build
