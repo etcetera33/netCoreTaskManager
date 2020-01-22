@@ -49,7 +49,7 @@ namespace EntitiesObserver.Handlers
 
                 _logger.Information($"Bus published EmailSend contract with email: {userData.Email}. WorkItemId: {context.Message.WorkItemId}");
 
-                var createdEntity = await _workItemAuditService.WICreated(context.Message.WorkItemId, context.Message.NewWorkItem);
+                var createdEntity = await _workItemAuditService.LogWorkItemCreation(context.Message.WorkItemId, context.Message.NewWorkItem);
 
                 _logger.Information($"Successfully logged work item creation. WorkItemAuditId: {createdEntity.Id}");
             }

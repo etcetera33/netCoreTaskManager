@@ -138,6 +138,8 @@ namespace Api
 
             app.UseMiddleware<RequestResponseLogMiddleware>();
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -35,7 +35,7 @@ namespace EntitiesObserver.Tests
 
             await _handler.Consume(_context);
 
-            await _workItemAuditService.Received(1).WIDeleted(workItemId, Arg.Is<WorkItemHistoryDto>(value => value == OldWorkItem));
+            await _workItemAuditService.Received(1).LogWorkItemDeletion(workItemId, Arg.Is<WorkItemHistoryDto>(value => value == OldWorkItem));
         }
 
         [Theory]
@@ -47,7 +47,7 @@ namespace EntitiesObserver.Tests
 
             await _handler.Consume(_context);
 
-            await _workItemAuditService.DidNotReceive().WIDeleted(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().LogWorkItemDeletion(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace EntitiesObserver.Tests
 
             await _handler.Consume(_context);
 
-            await _workItemAuditService.DidNotReceive().WIDeleted(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().LogWorkItemDeletion(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         #region Helpers

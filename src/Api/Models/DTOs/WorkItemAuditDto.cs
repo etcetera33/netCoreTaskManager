@@ -16,11 +16,11 @@ namespace Models.DTOs
             }
             set
             {
-                Status = (WIAuditStatuses)value;
+                Status = (WorkItemAuditStatuses)value;
             }
         }
-        [EnumDataType(typeof(WIAuditStatuses))]
-        public WIAuditStatuses Status { get; set; }
+        [EnumDataType(typeof(WorkItemAuditStatuses))]
+        public WorkItemAuditStatuses Status { get; set; }
         public string OldWorkItem { get; set; }
         public string NewWorkItem { get; set; }
     }

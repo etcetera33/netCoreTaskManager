@@ -34,7 +34,7 @@ namespace EntitiesObserver.Handlers
                     throw new ArgumentException($"Work item should be equal to 1 or higher. Current value: {workItemId}");
                 }
 
-                var createdEnitty = await _workItemAuditService.WIDeleted(workItemId, context.Message.OldWorkItem);
+                var createdEnitty = await _workItemAuditService.LogWorkItemDeletion(workItemId, context.Message.OldWorkItem);
 
                 _logger.Information($"Successfully logged work item deletion. WorkItemAuditId: {createdEnitty.Id}");
             }

@@ -7,7 +7,7 @@ namespace Data.Models
     {
         public int WorkItemAuditId { get; set; }
         public int WorkItemId { get; set; }
-        public WIAuditStatuses Status { get; set; }
+        public WorkItemAuditStatuses Status { get; set; }
         public string OldWorkItem { get; set; }
         public string NewWorkItem { get; set; }
     }
