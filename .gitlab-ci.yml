@@ -1,11 +1,35 @@
 image: mcr.microsoft.com/dotnet/core/sdk:3.1.101-alpine
 
 stages:
-    #- test
+    - test
     - build
 
 before_script:
     - cd src/Api/
+
+test_services:
+    stage: test
+    only:
+        - master
+        - web
+    script:
+        - dotnet test Services.Tests/.
+
+test_entity_observer:
+    stage: test
+    only:
+        - master
+        - web
+    script:
+        - dotnet test EntitiesObserver.Tests/.
+
+test_notification_service:
+    stage: test
+    only:
+        - master
+        - web
+    script:
+        - dotnet test NotificationService.Tests/.
 
 build_api:
     stage: build
@@ -18,7 +42,6 @@ build_api:
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
-        - ls
         - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/api:latest
     after_script:
@@ -72,32 +95,3 @@ build_front:
         - docker push ${AZURE_REGISTRY}/front:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
-
-
-#test_services:
-#    stage: test
-#    only:
-#        - master
-#        - web
-#    #before_script:
-#    #    - cd NotificationService.Tests/
-#    script:
-#        - dotnet test Services.Tests/.
-#    #after_script:
-#    #    - cd ..
-#
-#test_entity_observer:
-#    stage: test
-#    only:
-#        - master
-#        - web
-#    script:
-#        - dotnet test EntitiesObserver.Tests/.
-#
-#test_notification_service:
-#    stage: test
-#    only:
-#        - master
-#        - web
-#    script:
-#        - dotnet test NotificationService.Tests/.
