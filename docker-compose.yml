@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-    image: "api"
+    image: "dapracticepoliit.azurecr.io/api:latest"
     ports:
         - "8037:80"
         - "9098:8080"
@@ -32,6 +32,8 @@ services:
     hostname: ${Database_Server}
   rabbit:
     image: rabbitmq
+    volumes:
+      - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -46,9 +48,7 @@ services:
       - /srv/docker/redis:/var/lib/redis
     restart: always
   entities_observer:
-    image: "entities-observer"
-    ports:
-        - "8036:80"
+    image: "dapracticepoliit.azurecr.io/entity-observer-service:latest"
     environment:
         ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
         AppConfig__Host: rabbitmq://rabbit
@@ -59,10 +59,9 @@ services:
         AppConfig__Endpoint: "entities-observer-endpoint"
     depends_on:
       - api
+      - rabbit
   notification_service:
-    image: "notification-service"
-    ports:
-        - "8035:80"
+    image: "dapracticepoliit.azurecr.io/notification-service:latest"
     environment:
         MailConfig__From: "${Mail_From}"
         MailConfig__Password: "${Mail_Password}"
@@ -77,6 +76,13 @@ services:
         RabbitmqConfig__Endpoint: "notification-service-endpoint"
     depends_on:
       - entities_observer
+      - rabbit
+  front:
+    image: angular_app:latest
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
 volumes:
   mssqldata:
     
