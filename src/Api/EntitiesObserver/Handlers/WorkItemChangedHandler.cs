@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Core.Adapters;
+using Core.Enums;
 using MassTransit;
 using Services.Interfaces;
 using System;
@@ -63,7 +64,7 @@ namespace EntitiesObserver.Handlers
 
                 if (context.Message.OldWorkItem != context.Message.NewWorkItem)
                 {
-                    var createdEntity = await _workItemAuditService.LogWorkItemEditing(context.Message.WorkItemId, context.Message.OldWorkItem, newWorkItem: context.Message.NewWorkItem);
+                    var createdEntity = await _workItemAuditService.WIUpdated(context.Message.WorkItemId, context.Message.OldWorkItem, newWorkItem: context.Message.NewWorkItem);
 
                     _logger.Information($"Successfully logged work item editing. WorkItemAuditId: {createdEntity.Id}");
                 }

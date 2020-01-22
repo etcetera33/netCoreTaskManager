@@ -31,8 +31,8 @@ namespace EntitiesObserver.Tests
             _userService.GetById(1).Returns(UserDto);
             _userService.GetById(2).Returns<UserDto>(value => null);
 
-            _workItemAuditService.LogWorkItemCreation(1, Arg.Any<WorkItemHistoryDto>()).Returns(WorkItemAuditDto);
-            _workItemAuditService.LogWorkItemCreation(2, ValidNewWorkItem).Returns(WorkItemAuditDto);
+            _workItemAuditService.WICreated(1, Arg.Any<WorkItemHistoryDto>()).Returns(WorkItemAuditDto);
+            _workItemAuditService.WICreated(2, ValidNewWorkItem).Returns(WorkItemAuditDto);
 
             _handler = new WorkItemCreatedHandler(_workItemAuditService, _logger, _userService, _bus);
         }
@@ -49,7 +49,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.Received(1).Publish(Arg.Is<EmailSend>(x => x.Body == $"Dear, {UserDto.FullName}! You are the new assignee for the work item #{workItemId}" && x.To == UserDto.Email && x.Subject == "New work item assignee"));
 
-            await _workItemAuditService.Received(1).LogWorkItemCreation(workItemId, Arg.Is<WorkItemHistoryDto>(value => value == ValidNewWorkItem));
+            await _workItemAuditService.Received(1).WICreated(workItemId, Arg.Is<WorkItemHistoryDto>(value => value == ValidNewWorkItem));
         }
         
         [Theory]
@@ -64,7 +64,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
 
-            await _workItemAuditService.DidNotReceive().LogWorkItemCreation(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().WICreated(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         [Theory]
@@ -80,7 +80,7 @@ namespace EntitiesObserver.Tests
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
             
-            await _workItemAuditService.DidNotReceive().LogWorkItemCreation(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
+            await _workItemAuditService.DidNotReceive().WICreated(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
         }
 
         #region Helpers

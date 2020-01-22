@@ -1,6 +1,6 @@
 ﻿namespace Core.Enums
 {
-    public enum WorkItemAuditStatuses
+    public enum WIAuditStatuses
     {
         Created,
         Updated,
