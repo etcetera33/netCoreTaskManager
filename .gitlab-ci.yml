@@ -77,8 +77,6 @@ test_services:
     only:
         - master
         - web
-    job:
-        script:
-            - ls
     script:
+        - ls
         - dotnet test .\src\Api\NotificationService.Tests\NotificationService.Tests.csproj
