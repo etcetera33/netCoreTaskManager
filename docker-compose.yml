@@ -6,6 +6,9 @@ services:
     ports:
         - "8037:80"
         - "9098:8080"
+    networks: 
+        - frontend
+        - backend
     environment:
         ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
         Redis__Host: redis
@@ -27,11 +30,15 @@ services:
         ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
+    networks:
+      - backend
     volumes:
       - mssqldata:/var/opt/mssql
     hostname: ${Database_Server}
   rabbit:
     image: rabbitmq
+    networks:
+      - backend
     volumes:
       - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
     ports:
@@ -41,14 +48,19 @@ services:
       - 15672
       - 5672
   redis:
+    hostname: redis
     image: redis
+    networks:
+      - backend
     ports:
       - "6379:6379"
     volumes:
-      - /srv/docker/redis:/var/lib/redis
+      - ../data/redis:/data
     restart: always
   entities_observer:
     image: "dapracticepoliit.azurecr.io/entity-observer-service:latest"
+    networks:
+      - backend
     environment:
         ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
         AppConfig__Host: rabbitmq://rabbit
@@ -62,6 +74,8 @@ services:
       - rabbit
   notification_service:
     image: "dapracticepoliit.azurecr.io/notification-service:latest"
+    networks:
+      - backend
     environment:
         MailConfig__From: "${Mail_From}"
         MailConfig__Password: "${Mail_Password}"
@@ -81,8 +95,12 @@ services:
     image: angular_app:latest
     ports:
       - "4200:80"
+    networks:
+      - frontend
     depends_on:
       - api
-volumes:
+networks:
+  frontend:
+  backend:
+volumes: 
   mssqldata:
-    

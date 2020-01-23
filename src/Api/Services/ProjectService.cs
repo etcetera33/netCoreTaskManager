@@ -29,8 +29,6 @@ namespace Services
             var projectEntity = _mapper.Map<ProjectDto, Project>(projectDto);
             var createdEntity = await _projectRepository.Create(projectEntity);
 
-            await _redisService.SetItemAsync("projects.contents_valid_cache", false, 60);
-
             return _mapper.Map<Project, ProjectDto>(createdEntity);
         }
 
@@ -51,8 +49,6 @@ namespace Services
         {
             var project = _mapper.Map<ProjectDto, Project>(projectDto);
             await _projectRepository.Update(projectId, project);
-
-            await _redisService.SetItemAsync("projects.contents_valid_cache", false, 60);
         }
 
         public async Task<bool> ProjectExists(int projectId)
@@ -64,9 +60,7 @@ namespace Services
         {
             BasePaginatedResponse<ProjectDto> projectsPaginated = null;
 
-            var isCacheValid = await _redisService.GetItemAsync<bool>("projects.contents_valid_cache");
-
-            if (parameters.Search == "" && isCacheValid != false)
+            if (parameters.Search == "")
             {
                 projectsPaginated = await _redisService.GetItemAsync<BasePaginatedResponse<ProjectDto>>($"projects.{parameters.ItemsPerPage}.{parameters.Page}");
             }
@@ -92,8 +86,7 @@ namespace Services
 
                 if (parameters.Search == "")
                 {
-                    await _redisService.SetItemAsync($"projects.{parameters.ItemsPerPage}.{parameters.Page}", projectsPaginated, 3600);
-                    await _redisService.SetItemAsync("projects.contents_valid_cache", true, 3600);
+                    await _redisService.SetItemAsync($"projects.{parameters.ItemsPerPage}.{parameters.Page}", projectsPaginated, 60);
                 }
             }
             
