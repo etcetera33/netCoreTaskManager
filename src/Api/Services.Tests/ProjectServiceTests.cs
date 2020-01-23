@@ -25,7 +25,6 @@ namespace Services.Tests
             _mapper = AutoMapperConfiguration.Configure().CreateMapper();
 
             _projectRepository = Substitute.For<IProjectRepository>();
-            _projectRepository.GetAll().Returns(ProjectModelList);
             _projectRepository.Create(Arg.Any<Project>()).Returns(ProjectModel);
             _projectRepository.PaginateFiltered(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<string>()).Returns(ProjectModelList);
             _projectRepository.GetFilteredDataCountAsync(Arg.Any<string>()).Returns(1);
@@ -36,16 +35,6 @@ namespace Services.Tests
             var _redis = Substitute.For<IRedisService>();
 
             _projectService = new ProjectService(_projectRepository, _redis, _mapper);
-        }
-
-        [Fact]
-        public async Task GetAll_Should_Successfully_Return_Collection()
-        {
-            var actual = await _projectService.GetAll();
-            var expected = ProjectDtoList;
-
-            await _projectRepository.Received(1).GetAll();
-            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
         }
 
         [Fact]

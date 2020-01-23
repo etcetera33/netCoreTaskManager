@@ -32,14 +32,6 @@ namespace Services
             return _mapper.Map<Project, ProjectDto>(createdEntity);
         }
 
-        public async Task<IEnumerable<ProjectDto>> GetAll()
-        {
-            var projectList = await _projectRepository.GetAll();
-            var projectDtoList = _mapper.Map<IEnumerable<Project>, IEnumerable<ProjectDto>>(projectList);
-            
-            return projectDtoList;
-        }
-
         public async Task<ProjectDto> GetById(int projectId)
         {
             if (projectId == 0)

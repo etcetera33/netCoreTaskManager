@@ -1,63 +1,97 @@
-image: docker:stable
-
-services:
-    - docker:dind
+image: mcr.microsoft.com/dotnet/core/sdk:3.1.101-alpine
 
 stages:
-    - build_api
-    - build_entity_observer_service
-    - build_notification_service
-    #- run_tests
+    - test
+    - build
 
 before_script:
-  - docker info
+    - cd src/Api/
 
-build_api:
-  stage: build_api
-  only:
-    - master
-  before_script:
-    - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
-  script:
-    - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
-    - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
-  after_script:
-    - docker logout ${AZURE_REGISTRY}
-  tags:
-    - docker
-
-build_api:
-    stage: build_entity_observer_service
+test_services:
+    stage: test
     only:
         - master
+        - web
+    script:
+        - dotnet test Services.Tests/.
+
+test_entity_observer:
+    stage: test
+    only:
+        - master
+        - web
+    script:
+        - dotnet test EntitiesObserver.Tests/.
+
+test_notification_service:
+    stage: test
+    only:
+        - master
+        - web
+    script:
+        - dotnet test NotificationService.Tests/.
+
+build_api:
+    stage: build
+    only:
+        - master
+        - web
+    image: docker:18-git
+    services:
+        - docker:18-dind
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
-        - docker build -f ./src/Api/EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
-        - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
+        - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest ./src/Api
+        - docker push ${AZURE_REGISTRY}/api:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
-    tags:
-        - docker
 
-build_api:
-    stage: build_notification_service
+build_entity_observer_service:
+    stage: build
     only:
         - master
+        - web
+    image: docker:18-git
+    services:
+        - docker:18-dind
     before_script:
         - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
-        - docker build -f ./src/Api/NotificationService/Dockerfile -t ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest .
-        - docker push ${AZURE_REGISTRY}/${AZURE_PROJECT_PATH}:latest
+        - docker build -f ./src/Api/EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/entity-observer-service:latest ./src/Api
+        - docker push ${AZURE_REGISTRY}/entity-observer-service:latest
     after_script:
         - docker logout ${AZURE_REGISTRY}
-    tags:
-        - docker
 
-#run_tests:
-#    stage: run_tests
-#    only: master
-#    script:
-#        - "cd $test"
-#        - "dotnet test"
+build_notification_service:
+    stage: build
+    only:
+        - master
+        - web
+    image: docker:18-git
+    services:
+        - docker:18-dind
+    before_script:
+        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+    script:
+        - docker build -f ./src/Api/NotificationService/Dockerfile -t ${AZURE_REGISTRY}/notification-service:latest ./src/Api
+        - docker push ${AZURE_REGISTRY}/notification-service:latest
+    after_script:
+        - docker logout ${AZURE_REGISTRY}
 
+build_front:
+    stage: build
+    only:
+        - master
+        - web
+    image: docker:18-git
+    services:
+        - docker info
+        - docker:18-dind
+    before_script:
+        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+    script:
+        - docker build -f ./src/Ui/Dockerfile -t ${AZURE_REGISTRY}/front:latest ./src/Ui
+        - docker push ${AZURE_REGISTRY}/front:latest
+    after_script:
+        - docker logout ${AZURE_REGISTRY}
