@@ -6,12 +6,10 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
-using Api.Configs;
+using Core.Configs;
 using System.Net;
 using Microsoft.Extensions.Options;
 using FluentValidation.AspNetCore;
-using Services;
-using StackExchange.Redis.Extensions.Core.Abstractions;
 
 namespace Api.Controllers
 {

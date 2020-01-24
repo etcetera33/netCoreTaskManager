@@ -58,5 +58,13 @@ namespace Data.Repositories
         {
             return await DbContext.Set<TEntity>().CountAsync();
         }
+
+        public virtual async Task<IEnumerable<TEntity>> Create(IEnumerable<TEntity> entityList)
+        {
+            DbContext.Set<TEntity>().AddRange(entityList);
+            await DbContext.SaveChangesAsync();
+
+            return entityList;
+        }
     }
 }

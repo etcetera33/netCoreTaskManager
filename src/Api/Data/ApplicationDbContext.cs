@@ -13,6 +13,9 @@ namespace Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<WorkItem> WorkItems { get; set; }
         public DbSet<WorkItemAudit> WorkItemAudits { get; set; }
+        public DbSet<File> Files { get; set; }
+        public DbSet<WorkItemFile> WorkItemFiles { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,4 @@
-using Api.Configs;
+using Core.Configs;
 using Api.Bus;
 using Api.Middleware;
 using AutoMapper;
@@ -86,6 +86,8 @@ namespace Api
             services.AddSingleton<ISendEndpointProvider>(provider => provider.GetRequiredService<IBusControl>());
             services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
 
+            services.AddTransient<IFileUploader, FileUploader>();
+            
             services.AddSingleton<IHostedService, BusService>();
             // End of the service Bus
 
@@ -94,12 +96,15 @@ namespace Api
             services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<IWorkItemRepository, WorkItemRepository>();
             services.AddTransient<IWorkItemAuditRepository, WorkItemAuditRepository>();
+            services.AddTransient<IFileRepository, FileRepository>();
+            services.AddTransient<IWorkItemFileRepository, WorkItemFileRepository>();
 
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IWorkItemService, WorkItemService>();
             services.AddTransient<IWorkItemAuditService, WorkItemAuditService>();
+            services.AddTransient<IFileService, FileService>();
 
             services.AddSingleton<IRedisService, RedisService>();
 
@@ -109,6 +114,7 @@ namespace Api
             services.AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 
             services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
+            services.Configure<AzureConfig>(Configuration.GetSection("AzureConfig"));
             services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));
         }
 

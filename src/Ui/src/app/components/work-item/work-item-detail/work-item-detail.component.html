@@ -59,6 +59,9 @@
 
         <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" [ngClass]="{disabled : role == 'Spectator'}" value="Update">
     </form>
+    
+    <app-image-list *ngIf="workItem.Id" [entityId]="workItem.Id"></app-image-list>
+    
     <h3>Comments</h3>
    <app-comments-list [workItemId]="workItem.Id"></app-comments-list>
       

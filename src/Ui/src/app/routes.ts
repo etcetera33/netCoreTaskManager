@@ -1,3 +1,4 @@
+import { CreateImageComponent } from './components/images/create-image/create-image.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { LoginComponent } from './components/auth/login/login.component';
@@ -10,6 +11,7 @@ import { ProjectListComponent } from './components/project/project-list/project-
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './guards/auth-guard';
 import { Routes } from '@angular/router';
+import { ImageListComponent } from './components/images/image-list/image-list.component';
 
 export const appRoutes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -19,6 +21,8 @@ export const appRoutes: Routes = [
     { path: 'projects/:id/work-item/create', component: CreateWorkItemComponent, canActivate: [AuthGuard]},
     { path: 'projects/:id/settings', component: ProjectSettingsComponent, canActivate: [AuthGuard]},
     { path: 'projects/:projectId/work-items/:id', component: WorkItemDetailComponent, canActivate: [AuthGuard]},
+    { path: 'images', component: ImageListComponent },
+    { path: 'images/create', component: CreateImageComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: '**', component: NotFoundComponent}

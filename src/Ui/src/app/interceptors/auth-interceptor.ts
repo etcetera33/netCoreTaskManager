@@ -13,15 +13,25 @@ export class AuthInterceptor implements HttpInterceptor {
       req: HttpRequest<any>,
       next: HttpHandler
     ): Observable<HttpEvent<any>> {
-      const cloneReq = req.clone({
-        headers: req.headers
-        .set(
-          'Authorization', 'Bearer ' + localStorage.getItem('jwt')
-        )
-        .set(
-          'content-type', 'application/json'
-        )
-      });
-      return next.handle(cloneReq);
+      if (req.headers.has('Accept')) {
+        const cloneReq = req.clone({
+          headers: req.headers
+          .set(
+            'Authorization', 'Bearer ' + localStorage.getItem('jwt')
+          )
+        });
+        return next.handle(cloneReq);
+      } else {
+        const cloneReq = req.clone({
+          headers: req.headers
+          .set(
+            'Authorization', 'Bearer ' + localStorage.getItem('jwt')
+          )
+          .set(
+            'Content-type', 'application/json'
+          )
+        });
+        return next.handle(cloneReq);
+      }
     }
 }

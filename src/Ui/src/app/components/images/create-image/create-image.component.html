@@ -1,0 +1,7 @@
+<form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" (submit)="onClick(form)" ngNativeValidate >
+    <div class="form-group">
+        <img *ngFor='let url of urls'  [src]="url" height="200"> <br/>
+        <input type='file' #file name="Files" (change)="onSelectFile(file.files)" multiple>
+    </div>
+    <input type="submit" class="btn btn-primary btn-user btn-block" value="Upload">
+</form>
