@@ -8,5 +8,6 @@ namespace Services.Helpers
     public interface IFileUploader
     {
         Task<IEnumerable<FileDto>> UploadToAzureAsync(IEnumerable<IFormFile> files);
+        Task DeleteFromAzureAsync(string filePath);
     }
 }

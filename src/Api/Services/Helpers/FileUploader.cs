@@ -23,47 +23,18 @@ namespace Services.Helpers
             _logger = logger;
         }
 
-        public async Task<FileDto> Upload(IFormFile file)
+        private CloudBlobContainer ConnectToContainer()
         {
-            try
-            {
-                var container = CloudStorageAccount.Parse(_azureConfig.Value.ConnectionString)
+            return CloudStorageAccount.Parse(_azureConfig.Value.ConnectionString)
                     .CreateCloudBlobClient()
                     .GetContainerReference(_azureConfig.Value.ContainerName);
-
-                CloudBlockBlob blockBlob;
-
-                do
-                {
-                    blockBlob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
-                } while (await blockBlob.ExistsAsync() != false);
-
-                using (var fileStream = file.OpenReadStream())
-                {
-                    await blockBlob.UploadFromStreamAsync(fileStream);
-                }
-
-                return new FileDto
-                {
-                    Name = file.FileName,
-                    Path = blockBlob.Uri.ToString()
-                };
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.Message);
-                return default;
-            }
-            
         }
 
         public async Task<IEnumerable<FileDto>> UploadToAzureAsync(IEnumerable<IFormFile> files)
         {
             try
             {
-                var container = CloudStorageAccount.Parse(_azureConfig.Value.ConnectionString)
-                    .CreateCloudBlobClient()
-                    .GetContainerReference(_azureConfig.Value.ContainerName);
+                var container = ConnectToContainer();
 
                 var filesListDto = new List<FileDto>();
 
@@ -90,28 +61,6 @@ namespace Services.Helpers
                     });
                 }
 
-                /*Parallel.ForEach(files, async file =>
-                {
-                    Stream fileStream;
-                    fileStream = file.OpenReadStream();
-
-                    CloudBlockBlob blockBlob;
-
-                    do
-                    {
-                        blockBlob = container.GetBlockBlobReference(Guid.NewGuid().ToString());
-                    } while (await blockBlob.ExistsAsync() != false);
-
-                    await blockBlob.UploadFromStreamAsync(fileStream);
-
-                    filesListDto.Add(new FileDto
-                    {
-                        Name = file.FileName,
-                        Path = blockBlob.Uri.ToString()
-                    });
-
-                });*/
-
                 return filesListDto;
             }
             catch (Exception ex)
@@ -119,6 +68,15 @@ namespace Services.Helpers
                 _logger.Error(ex.Message);
                 return default;
             }
+        }
+
+        public async Task DeleteFromAzureAsync(string filePath)
+        {
+            var container = ConnectToContainer();
+
+            var blockBlob = container.GetBlockBlobReference(filePath);
+
+            await blockBlob.DeleteIfExistsAsync();
         }
     }
 }

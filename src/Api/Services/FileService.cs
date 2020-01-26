@@ -112,9 +112,18 @@ namespace Services
             return entity.WorkItemFileId;
         }
 
-        public async Task DeleteWorkItemFile(int id)
+        public async Task<FileDto> GetById(int fileId)
         {
-            await _workItemFileRepository.Delete(id);
+            var entity = await _fileRepository.GetById(fileId);
+
+            return _mapper.Map<File, FileDto>(entity);
+        }
+
+        public async Task Delete(FileDto file)
+        {
+            await _fileUploader.DeleteFromAzureAsync(file.Path);
+            await _workItemFileRepository.Delete(file.Id);
+            await _fileRepository.Delete(file.Id);
         }
     }
 }

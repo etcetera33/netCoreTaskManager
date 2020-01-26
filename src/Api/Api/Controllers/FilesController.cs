@@ -28,36 +28,18 @@ namespace Api.Controllers
             return new JsonResult(entity);
         }
 
-        [HttpPost]
-        [Route("work-items/{workItemId}")]
-        public async Task<IActionResult> Create([CustomizeValidator(Properties = "Id")] IEnumerable<FileDto> files, int workItemId)
-        {
-            await _fileService.AttachFilesToWorkItem(files, workItemId);
-
-            return Ok();
-        }
-
-        [HttpGet]
-        [Route("work-items/{workItemId}")]
-        public async Task<IActionResult> Get(int workItemId)
-        {
-            var list = await _fileService.GetByWorkItemId(workItemId);
-
-            return Ok(list);
-        }
-
         [HttpDelete]
-        [Route("{fileId}/work-items/{workItemId}")]
-        public async Task<IActionResult> Get(int fileId, int workItemId)
+        [Route("{fileId}")]
+        public async Task<IActionResult> Get(int fileId)
         {
-            var id = await _fileService.GetEntityIdOrNull(fileId, workItemId);
+            var exists = await _fileService.Exists(fileId);
 
-            if (id == null)
+            if (!exists)
             {
                 return NotFound();
             }
 
-            await _fileService.DeleteWorkItemFile(id.Value);
+            await _fileService.Delete(fileId);
 
             return Ok();
         }

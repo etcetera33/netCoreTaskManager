@@ -21,8 +21,6 @@ export const appRoutes: Routes = [
     { path: 'projects/:id/work-item/create', component: CreateWorkItemComponent, canActivate: [AuthGuard]},
     { path: 'projects/:id/settings', component: ProjectSettingsComponent, canActivate: [AuthGuard]},
     { path: 'projects/:projectId/work-items/:id', component: WorkItemDetailComponent, canActivate: [AuthGuard]},
-    { path: 'images', component: ImageListComponent },
-    { path: 'images/create', component: CreateImageComponent },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: '**', component: NotFoundComponent}

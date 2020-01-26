@@ -115,6 +115,7 @@ namespace Api
 
             services.Configure<AuthConfig>(Configuration.GetSection("AuthConfig"));
             services.Configure<AzureConfig>(Configuration.GetSection("AzureConfig"));
+            services.Configure<RedisConfig>(Configuration.GetSection("Redis"));
             services.Configure<PasswordHasher>(Configuration.GetSection("PasswordHash"));
         }
 
