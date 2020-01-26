@@ -6,6 +6,9 @@ import { WorkItemService } from './../../../services/work-item.service';
 import { User } from './../../../models/user';
 import { WorkItem } from './../../../models/work-item.model';
 import { Component, OnInit } from '@angular/core';
+import { ImageService } from 'src/app/services/image.service';
+import { File as FileEntity } from 'src/app/models/file';
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-create-work-item',
@@ -19,12 +22,18 @@ export class CreateWorkItemComponent implements OnInit {
   workItemTypes: any[];
   workItemStatuses: any[];
   role: string;
+  urls: any[];
+  files: FormData;
+  filesEntity: FileEntity[];
   constructor(
     private workItemService: WorkItemService, private activatedRoute: ActivatedRoute,
-    protected userService: UserService, private router: Router, private popupService: PopupService
+    protected userService: UserService, private router: Router, private popupService: PopupService,
+    protected imageService: ImageService,
     ) { }
 
   ngOnInit() {
+    this.workItem = new WorkItem();
+    this.files = new FormData();
     this.activatedRoute.paramMap.subscribe(params => {
       this.projectId = +params.get('id');
     });
@@ -35,7 +44,7 @@ export class CreateWorkItemComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    const data = JSON.stringify(form.value);
+    var data = JSON.stringify(form.value);
     this.workItemService.createEntity(data).subscribe(
       res => {
         this.router.navigate(['/projects/' + this.projectId]);
@@ -88,5 +97,28 @@ export class CreateWorkItemComponent implements OnInit {
         this.popupService.openModal('error', err);
       }
     );
+  }
+
+  onSelectFile(files) {
+    if (files.length === 0) {
+      return;
+    }
+    Array.from(files).forEach(file => {
+      const fileToUpload = file as File; 
+      this.files.append('file', fileToUpload);
+    });
+    this.saveFiles();
+  }
+
+  saveFiles() {
+    console.log('saveChanges');
+    this.imageService.createImage(this.files).subscribe(
+    res => {
+      this.workItem.Files = res as FileEntity[];
+    },
+    err => {
+      console.log(err);
+      this.popupService.openModal('error', err);
+    });
   }
 }

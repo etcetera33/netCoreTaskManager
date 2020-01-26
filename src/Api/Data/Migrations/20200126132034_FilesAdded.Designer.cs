@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200124142820_FilesAdded")]
+    [Migration("20200126132034_FilesAdded")]
     partial class FilesAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -210,20 +210,16 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.WorkItemFile", b =>
                 {
-                    b.Property<int>("WorkItemFileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("FileId")
                         .HasColumnType("int");
 
                     b.Property<int>("WorkItemId")
                         .HasColumnType("int");
 
-                    b.HasKey("WorkItemFileId");
+                    b.Property<int>("WorkItemFileId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("FileId");
+                    b.HasKey("FileId", "WorkItemId");
 
                     b.HasIndex("WorkItemId");
 
@@ -278,13 +274,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Models.WorkItemFile", b =>
                 {
                     b.HasOne("Data.Models.File", "File")
-                        .WithMany()
+                        .WithMany("WorkItemFiles")
                         .HasForeignKey("FileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Data.Models.WorkItem", "WorkItem")
-                        .WithMany()
+                        .WithMany("WorkItemFiles")
                         .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

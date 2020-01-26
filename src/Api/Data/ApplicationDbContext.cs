@@ -52,6 +52,17 @@ namespace Data
 
             modelBuilder.Entity<WorkItemAudit>()
                .HasIndex(u => u.WorkItemId);
+
+            modelBuilder.Entity<WorkItemFile>()
+                .HasKey(bc => new { bc.FileId, bc.WorkItemId });
+            modelBuilder.Entity<WorkItemFile>()
+                .HasOne(bc => bc.File)
+                .WithMany(b => b.WorkItemFiles)
+                .HasForeignKey(bc => bc.FileId);
+            modelBuilder.Entity<WorkItemFile>()
+                .HasOne(bc => bc.WorkItem)
+                .WithMany(c => c.WorkItemFiles)
+                .HasForeignKey(bc => bc.WorkItemId);
         }
     }
 }

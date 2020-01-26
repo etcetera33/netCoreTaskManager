@@ -8,6 +8,7 @@
   
     <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" (submit)="onSubmit(form)" ngNativeValidate>
         <input type="hidden" name="ProjectId" #ProjectId="ngModel" [ngModel]="projectId"/>
+        <input type="hidden" name="Files" #Files="ngModel" [(ngModel)]="workItem.Files"/>
         
         <div class="form-group col-md-5">
             <label for="Title">Title</label>
@@ -49,7 +50,12 @@
                 </option>
             </select>
         </div>
-        <input type="submit" class="btn btn-primary btn-user btn-block col-md-5" [ngClass]="{disabled : role === 'Spectator'}" value="Create">
+        <div class="form-group">
+            <img *ngFor='let url of urls'  [src]="url" height="200"> <br/>
+            <input type='file' #file name="Files" (change)="onSelectFile(file.files)" multiple>
+        </div>
+        <hr>
+        <input type="submit" class="btn btn-success btn-user btn-block col-md-5" [ngClass]="{disabled : role === 'Spectator'}" value="Create">
     </form>
   </div>
   <!-- /.container-fluid -->

@@ -13,6 +13,7 @@ using MassTransit;
 using Contracts;
 using Data.Interfaces;
 using Models.PaginatedResponse;
+using System.Linq;
 
 namespace Services
 {
@@ -21,12 +22,16 @@ namespace Services
         private readonly IWorkItemRepository _workItemRepository;
         private readonly IMapper _mapper;
         private readonly IBus _bus;
+        private readonly IFileUploader _fileUploader;
+        private readonly IWorkItemFileRepository _workItemFileRepository;
 
-        public WorkItemService(IWorkItemRepository workItemRepository, IMapper mapper, IBus bus)
+        public WorkItemService(IWorkItemRepository workItemRepository, IMapper mapper, IBus bus, IFileUploader fileUploader, IWorkItemFileRepository workItemFileRepository)
         {
             _workItemRepository = workItemRepository;
             _mapper = mapper;
             _bus = bus;
+            _fileUploader = fileUploader;
+            _workItemFileRepository = workItemFileRepository;
         }
 
         public async Task<BasePaginatedResponse<WorkItemDto>> Paginate(int projectId, WorkItemQueryParameters parameters)
@@ -64,8 +69,11 @@ namespace Services
 
         public async Task<WorkItemDto> Create(WorkItemDto workItemDto)
         {
-            var workItemEntity = _mapper.Map<WorkItemDto, WorkItem>(workItemDto); 
+            var workItemEntity = _mapper.Map<WorkItemDto, WorkItem>(workItemDto);
+
             var workItem = await _workItemRepository.Create(workItemEntity);
+
+            await AttachFilesToWorkItem(workItemDto.Files, workItemEntity.WorkItemId);
 
             var newWorkItemDto = _mapper.Map<WorkItem, WorkItemHistoryDto>(workItem);
             await _bus.Publish(new WorkItemCreated {
@@ -74,6 +82,19 @@ namespace Services
             });
 
             return _mapper.Map<WorkItem, WorkItemDto>(workItem);
+        }
+
+        public async Task AttachFilesToWorkItem(IEnumerable<FileDto> files, int workItemId)
+        {
+            var entity = new List<WorkItemFile>();
+            var filesId = files.Select(x => x.Id);
+
+            Parallel.ForEach(files, file =>
+            {
+                entity.Add(new WorkItemFile { FileId = file.Id, WorkItemId = workItemId });
+            });
+
+            await _workItemFileRepository.AddRange(entity);
         }
 
         public async Task<WorkItemDto> GetById(int workItemId)

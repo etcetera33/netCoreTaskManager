@@ -1,4 +1,5 @@
 import { User } from './user';
+import {File} from './file';
 export class WorkItem {
     Id: number;
     Title: string;
@@ -12,4 +13,5 @@ export class WorkItem {
     Priority: number;
     Progress: number;
     ItemType: string;
+    Files: File[];
 }

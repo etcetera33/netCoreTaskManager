@@ -24,14 +24,13 @@ namespace Data.Migrations
                 name: "WorkItemFiles",
                 columns: table => new
                 {
-                    WorkItemFileId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     WorkItemId = table.Column<int>(nullable: false),
-                    FileId = table.Column<int>(nullable: false)
+                    FileId = table.Column<int>(nullable: false),
+                    WorkItemFileId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkItemFiles", x => x.WorkItemFileId);
+                    table.PrimaryKey("PK_WorkItemFiles", x => new { x.FileId, x.WorkItemId });
                     table.ForeignKey(
                         name: "FK_WorkItemFiles_Files_FileId",
                         column: x => x.FileId,
@@ -45,11 +44,6 @@ namespace Data.Migrations
                         principalColumn: "WorkItemId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkItemFiles_FileId",
-                table: "WorkItemFiles",
-                column: "FileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkItemFiles_WorkItemId",

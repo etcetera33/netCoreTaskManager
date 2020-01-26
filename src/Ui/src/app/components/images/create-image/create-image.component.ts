@@ -11,6 +11,7 @@ import { NgForm } from '@angular/forms';
 })
 
 export class CreateImageComponent implements OnInit {
+  urls: any[];
   files: FormData;
   constructor(protected imageService: ImageService, private router: Router, private popupService: PopupService) {}
   onSelectFile(files) {

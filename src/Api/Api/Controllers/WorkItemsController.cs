@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Models.QueryParameters;
 using Services.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -12,10 +14,12 @@ namespace Api.Controllers
     public class WorkItemsController : ControllerBase
     {
         private readonly IWorkItemService _workItemService;
+        private readonly IFileService _fileService;
 
-        public WorkItemsController(IWorkItemService workItemService)
+        public WorkItemsController(IWorkItemService workItemService, IFileService fileService)
         {
             _workItemService = workItemService;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -39,10 +43,16 @@ namespace Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Post(WorkItemDto workItemDto)
+        public async Task<IActionResult> Post(WorkItemDto data)
         {
-            workItemDto.AuthorId = int.Parse(User.Identity.Name);
-            var workItem = await _workItemService.Create(workItemDto);
+            data.AuthorId = int.Parse(User.Identity.Name);
+
+            if (data.AuthorId == 0)
+            {
+                return NotFound("User not found");
+            }
+
+            var workItem = await _workItemService.Create(data);
 
             return new JsonResult(workItem) { StatusCode = 201 };
         }

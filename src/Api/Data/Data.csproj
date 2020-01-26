@@ -51,6 +51,10 @@
     <Compile Remove="Migrations\20191220093957_ProjectAddDescrAndOwner.Designer.cs" />
     <Compile Remove="Migrations\20191220094925_ProjectCreateOnDeleteAction.cs" />
     <Compile Remove="Migrations\20191220094925_ProjectCreateOnDeleteAction.Designer.cs" />
+    <Compile Remove="Migrations\20200124142820_FilesAdded.cs" />
+    <Compile Remove="Migrations\20200124142820_FilesAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200126131539_AddedRelationship.cs" />
+    <Compile Remove="Migrations\20200126131539_AddedRelationship.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

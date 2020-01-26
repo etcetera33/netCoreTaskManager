@@ -1,9 +1,12 @@
 ﻿using Core.Enums;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Models.DTOs
 {
-    public class WorkItemDto
+    public class CreateWorkItemDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -30,6 +33,6 @@ namespace Models.DTOs
         public ProjectDto Project { get; set; }
 
         public ICollection<CommentDto> Comments { get; set; }
-        public ICollection<FileDto> Files { get; set; }
+        public ICollection<IFormFile> Files { get; set; }
     }
 }
