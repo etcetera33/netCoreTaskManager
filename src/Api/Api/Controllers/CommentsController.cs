@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -23,11 +23,11 @@ namespace Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetComments(int workItemId)
         {
-            if (! await _workItemService.WorkItemExists(workItemId))
+            if (!await _workItemService.WorkItemExists(workItemId))
             {
                 return NotFound();
             }
-            
+
             var comments = await _commentService.GetWorkItemsComments(workItemId);
 
             return Ok(comments);
@@ -40,7 +40,7 @@ namespace Api.Controllers
             commentDto.AuthorId = int.Parse(User.Identity.Name);
             var comment = await _commentService.Create(commentDto);
 
-            return new JsonResult(comment) { StatusCode = 201};
+            return new JsonResult(comment) { StatusCode = 201 };
         }
 
         [HttpDelete("{id}")]

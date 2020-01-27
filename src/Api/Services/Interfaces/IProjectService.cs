@@ -1,7 +1,7 @@
 ﻿using Models.DTOs;
-using System.Threading.Tasks;
-using Models.QueryParameters;
 using Models.PaginatedResponse;
+using Models.QueryParameters;
+using System.Threading.Tasks;
 
 namespace Services.Interfaces
 {

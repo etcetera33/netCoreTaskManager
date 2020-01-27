@@ -1,6 +1,5 @@
 ﻿using Contracts;
 using Core.Adapters;
-using Core.Enums;
 using MassTransit;
 using Services.Interfaces;
 using System;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesObserver.Handlers
 {
-    public class WorkItemChangedHandler: IConsumer<WorkItemUpdated>
+    public class WorkItemChangedHandler : IConsumer<WorkItemUpdated>
     {
         private readonly IWorkItemService _workItemService;
         private readonly IUserService _userService;

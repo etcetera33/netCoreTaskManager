@@ -1,5 +1,4 @@
-﻿using Core.Enums;
-using Models.DTOs;
+﻿using Models.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

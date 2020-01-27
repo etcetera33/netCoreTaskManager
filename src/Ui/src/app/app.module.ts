@@ -10,6 +10,8 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { JwtModule } from '@auth0/angular-jwt';
+import {FileSelectDirective} from 'ng2-file-upload';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
@@ -32,6 +34,7 @@ import { ProjectSettingsComponent } from './components/project/project-settings/
 import { CreateWorkItemComponent } from './components/work-item/create-work-item/create-work-item.component';
 import { CommentsListComponent } from './components/comments/comments-list/comments-list.component';
 import { PopupComponent } from './components/popup/popup.component';
+import { MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, MatCardModule } from '@angular/material';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -65,6 +68,7 @@ const jwtConfig = {
   ],
   imports: [
     CommonModule,
+    FileUploadModule,
     BrowserModule,
     RouterModule.forRoot(
       appRoutes
@@ -74,7 +78,12 @@ const jwtConfig = {
     HttpClientModule,
     FormsModule,
     MatDialogModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatIconModule,
+    MatCardModule
   ],
   providers: [
     ProjectService,

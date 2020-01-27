@@ -1,5 +1,4 @@
-﻿using Data;
-using Data.Interfaces;
+﻿using Data.Interfaces;
 using FluentValidation;
 using Models.DTOs;
 

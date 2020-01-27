@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using NotificationService.Configs;
+using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
-using NotificationService.Configs;
 
 namespace NotificationService.Aggregates.MailAggregate
 {

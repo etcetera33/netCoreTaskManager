@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Core.Enums;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Core.Enums;
 
 namespace Data.Models
 {

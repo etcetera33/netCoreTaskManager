@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models.QueryParameters;
 using Models.DTOs;
+using Models.QueryParameters;
 using Services.Interfaces;
 using System.Threading.Tasks;
 
@@ -34,7 +34,7 @@ namespace Api.Controllers
             projectDto.OwnerId = int.Parse(User.Identity.Name);
             var createdProject = await _projectService.Create(projectDto);
 
-            return new JsonResult(createdProject) { StatusCode = 201} ;
+            return new JsonResult(createdProject) { StatusCode = 201 };
         }
 
         [HttpGet("{id}")]

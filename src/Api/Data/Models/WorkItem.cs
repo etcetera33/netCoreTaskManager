@@ -53,5 +53,6 @@ namespace Data.Models
         public Project Project { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<WorkItemFile> WorkItemFiles { get; set; }
     }
 }

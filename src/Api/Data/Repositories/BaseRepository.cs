@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    public abstract class BaseRepository<TEntity>: IBaseRepository<TEntity>
-        where TEntity: class
+    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
+        where TEntity : class
     {
         protected readonly ApplicationDbContext DbContext;
         public BaseRepository(ApplicationDbContext dbContext)
@@ -57,6 +57,14 @@ namespace Data.Repositories
         public virtual async Task<int> GetCountAsync()
         {
             return await DbContext.Set<TEntity>().CountAsync();
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> Create(IEnumerable<TEntity> entityList)
+        {
+            DbContext.Set<TEntity>().AddRange(entityList);
+            await DbContext.SaveChangesAsync();
+
+            return entityList;
         }
     }
 }

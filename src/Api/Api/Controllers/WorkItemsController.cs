@@ -1,7 +1,5 @@
-﻿using Api.Configs;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Models.DTOs;
 using Models.QueryParameters;
 using Services.Interfaces;
@@ -28,7 +26,7 @@ namespace Api.Controllers
             {
                 parameters.AssigneeId = int.Parse(User.Identity.Name);
             }
-            
+
             var workItem = await _workItemService.Paginate(projectId, parameters);
 
             if (workItem == null)
@@ -41,10 +39,16 @@ namespace Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Post(WorkItemDto workItemDto)
+        public async Task<IActionResult> Post(WorkItemDto data)
         {
-            workItemDto.AuthorId = int.Parse(User.Identity.Name);
-            var workItem = await _workItemService.Create(workItemDto);
+            data.AuthorId = int.Parse(User.Identity.Name);
+
+            if (data.AuthorId == 0)
+            {
+                return NotFound("User not found");
+            }
+
+            var workItem = await _workItemService.Create(data);
 
             return new JsonResult(workItem) { StatusCode = 201 };
         }
@@ -59,7 +63,7 @@ namespace Api.Controllers
             {
                 return NotFound();
             }
-            
+
             return Ok(workItem);
         }
 
@@ -101,5 +105,15 @@ namespace Api.Controllers
 
             return NoContent();
         }
+
+        [HttpGet]
+        [Route("{workItemId}/files")]
+        public async Task<IActionResult> GetFiles(int workItemId)
+        {
+            var list = await _workItemService.GetAttachedById(workItemId);
+
+            return Ok(list);
+        }
+
     }
 }

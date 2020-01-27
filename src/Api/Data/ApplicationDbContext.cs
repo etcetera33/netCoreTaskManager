@@ -4,15 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<WorkItem> WorkItems { get; set; }
         public DbSet<WorkItemAudit> WorkItemAudits { get; set; }
+        public DbSet<File> Files { get; set; }
+        public DbSet<WorkItemFile> WorkItemFiles { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,7 +38,8 @@ namespace Data
                 }
             );
 
-            modelBuilder.Entity<Project>(e => {
+            modelBuilder.Entity<Project>(e =>
+            {
                 e.HasOne(x => x.Owner).WithMany(x => x.Projects).HasForeignKey(x => x.OwnerId).OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -49,6 +53,17 @@ namespace Data
 
             modelBuilder.Entity<WorkItemAudit>()
                .HasIndex(u => u.WorkItemId);
+
+            modelBuilder.Entity<WorkItemFile>()
+                .HasKey(bc => new { bc.WorkItemFileId });
+            modelBuilder.Entity<WorkItemFile>()
+                .HasOne(bc => bc.File)
+                .WithMany(b => b.WorkItemFiles)
+                .HasForeignKey(bc => bc.FileId);
+            modelBuilder.Entity<WorkItemFile>()
+                .HasOne(bc => bc.WorkItem)
+                .WithMany(c => c.WorkItemFiles)
+                .HasForeignKey(bc => bc.WorkItemId);
         }
     }
 }

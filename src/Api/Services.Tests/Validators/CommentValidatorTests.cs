@@ -39,7 +39,7 @@ namespace Services.Tests.Validators
         public async Task Should_Fail_Body_Validation(string body)
         {
             _validator.ShouldHaveValidationErrorFor(x => x.Body, body);
-            
+
             await _workItemRepository.Received(1).GetById(Arg.Any<int>());
         }
 

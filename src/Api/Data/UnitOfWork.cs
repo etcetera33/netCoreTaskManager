@@ -3,7 +3,7 @@ using System;
 
 namespace Data
 {
-    public class UnitOfWork: IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly ProjectRepository _projectRepository;
@@ -46,6 +46,6 @@ namespace Data
             GC.SuppressFinalize(this);
         }
         #endregion
-        
+
     }
 }

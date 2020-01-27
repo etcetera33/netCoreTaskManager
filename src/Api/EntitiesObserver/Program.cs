@@ -1,23 +1,22 @@
-﻿using MassTransit;
+﻿using AutoMapper;
+using Core.Adapters;
+using Data;
+using Data.Interfaces;
+using Data.Repositories;
+using EntitiesObserver.Configs;
+using EntitiesObserver.Handlers;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using System;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using EntitiesObserver.Handlers;
-using Serilog;
-using Services.Interfaces;
+using Microsoft.Extensions.Options;
 using Services;
-using Data;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
+using Services.Interfaces;
 using Services.Mapper;
-using EntitiesObserver.Configs;
-using Data.Interfaces;
-using Data.Repositories;
-using Core.Adapters;
+using System;
+using System.Threading.Tasks;
 
 namespace EntitiesObserver
 {
@@ -73,9 +72,9 @@ namespace EntitiesObserver
                     logging.AddConsole();
                 });
 
-            
+
             await builder.RunConsoleAsync();
-            
+
 
         }
 

@@ -4,7 +4,6 @@ using MassTransit;
 using NotificationService.Aggregates.MailAggregate;
 using NotificationService.Handlers;
 using NSubstitute;
-using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -15,7 +14,7 @@ namespace NotificationService.Tests
         private readonly IMailer _mailer;
         private readonly EmailSendHandler _handler;
         private readonly ILoggerAdapter<EmailSendHandler> _logger;
-        private ConsumeContext<EmailSend> _consumeContext;
+        private readonly ConsumeContext<EmailSend> _consumeContext;
 
         public EmailSendHandlerTests()
         {

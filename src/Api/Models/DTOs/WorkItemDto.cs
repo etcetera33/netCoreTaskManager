@@ -30,5 +30,6 @@ namespace Models.DTOs
         public ProjectDto Project { get; set; }
 
         public ICollection<CommentDto> Comments { get; set; }
+        public ICollection<FileDto> Files { get; set; }
     }
 }

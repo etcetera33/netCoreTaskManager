@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using Models.DTOs;
-using Data.Models;
-using Services.Interfaces;
-using System.Threading.Tasks;
-using Services.Helpers;
-using System.Collections.Generic;
 using Core.Enums;
-using Microsoft.Extensions.Options;
-using Data.Repositories;
 using Data.Interfaces;
+using Data.Models;
+using Microsoft.Extensions.Options;
+using Models.DTOs;
+using Services.Helpers;
+using Services.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -31,7 +30,7 @@ namespace Services
                 _passwordHasher.Value.Salt,
                 _passwordHasher.Value.IterationCount,
                 _passwordHasher.Value.BytesRequested);
-            var user= _mapper.Map<UserDto, User>(userDto);
+            var user = _mapper.Map<UserDto, User>(userDto);
             var createdEntity = await _userRepository.Create(user);
 
             return _mapper.Map<User, UserDto>(createdEntity);
@@ -62,12 +61,6 @@ namespace Services
             var userDto = _mapper.Map<User, UserDto>(user);
 
             return userDto;
-        }
-
-        public async Task Update(int userId, UserDto userDto)
-        {
-            var user = _mapper.Map<UserDto, User>(userDto);
-            await _userRepository.Update(userId, user);
         }
 
         public async Task<IEnumerable<UserDictionaryDto>> GetUserList()

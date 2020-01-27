@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class ProjectRepository: BaseRepository<Project>, IProjectRepository
+    public class ProjectRepository : BaseRepository<Project>, IProjectRepository
     {
-        public ProjectRepository(ApplicationDbContext dbContext) : base(dbContext) {}
+        public ProjectRepository(ApplicationDbContext dbContext) : base(dbContext) { }
 
         public async Task<IEnumerable<Project>> PaginateFiltered(int offset, int itemsCount, string searchPhrase = "")
         {

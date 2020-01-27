@@ -27,7 +27,7 @@ namespace EntitiesObserver.Tests
             _bus = Substitute.For<IBus>();
             _context = Substitute.For<ConsumeContext<WorkItemCreated>>();
 
-            
+
             _userService.GetById(1).Returns(UserDto);
             _userService.GetById(2).Returns<UserDto>(value => null);
 
@@ -51,7 +51,7 @@ namespace EntitiesObserver.Tests
 
             await _workItemAuditService.Received(1).WICreated(workItemId, Arg.Is<WorkItemHistoryDto>(value => value == ValidNewWorkItem));
         }
-        
+
         [Theory]
         [InlineData(0, 1)]
         public async Task Should_Throw_And_Catch_WorkItem_Not_Found(int workItemId, int userId)
@@ -79,7 +79,7 @@ namespace EntitiesObserver.Tests
             await _userService.Received(1).GetById(userId);
 
             await _bus.DidNotReceive().Publish(Arg.Any<EmailSend>());
-            
+
             await _workItemAuditService.DidNotReceive().WICreated(Arg.Any<int>(), Arg.Any<WorkItemHistoryDto>());
         }
 

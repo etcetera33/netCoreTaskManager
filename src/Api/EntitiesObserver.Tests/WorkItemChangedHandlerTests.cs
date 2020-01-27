@@ -18,7 +18,7 @@ namespace EntitiesObserver.Tests
         private readonly ConsumeContext<WorkItemUpdated> _consumeContext;
         private readonly WorkItemChangedHandler _handler;
         private readonly ILoggerAdapter<WorkItemChangedHandler> _logger;
-        private IWorkItemAuditService _workItemAuditService;
+        private readonly IWorkItemAuditService _workItemAuditService;
 
         public WorkItemChangedHandlerTests()
         {
@@ -74,7 +74,7 @@ namespace EntitiesObserver.Tests
         [InlineData(1)]
         public async Task Should_Not_Publish_And_Update_Entity(int workItemId)
         {
-            _consumeContext.Message.Returns(new WorkItemUpdated { WorkItemId = workItemId, OldWorkItem = OldWorkItem, NewWorkItem = IdenticalNewWorkItem});
+            _consumeContext.Message.Returns(new WorkItemUpdated { WorkItemId = workItemId, OldWorkItem = OldWorkItem, NewWorkItem = IdenticalNewWorkItem });
 
             await _handler.Consume(_consumeContext);
 
@@ -153,7 +153,7 @@ namespace EntitiesObserver.Tests
         public WorkItemHistoryDto IdenticalNewWorkItem => new WorkItemHistoryDto { AssigneeId = 1, Description = "Create footer,Description=Footer must contain a contact information and a fotter menu", Priority = 1, Progress = 1, StatusId = 1, Title = "Title", WorkItemTypeId = 1, AuthorId = 1, ProjectId = 1 };
         public WorkItemHistoryDto NewWorkItemWithSameAssignee => new WorkItemHistoryDto { AssigneeId = 1, Description = "Create header", Priority = 2, Progress = 2, StatusId = 2, Title = "Title2", WorkItemTypeId = 1, AuthorId = 1, ProjectId = 1 };
         public WorkItemHistoryDto CompletelyNewWorkItem => new WorkItemHistoryDto { AssigneeId = 2, Description = "Create header", Priority = 2, Progress = 2, StatusId = 2, Title = "Title2", WorkItemTypeId = 1, AuthorId = 1, ProjectId = 1 };
-        public UserDto User => new UserDto { Id = 1, Email = "test@test.com", FullName = "Test Name", Login = "test.user", Position = "Test Position", RoleId = 1};
+        public UserDto User => new UserDto { Id = 1, Email = "test@test.com", FullName = "Test Name", Login = "test.user", Position = "Test Position", RoleId = 1 };
         public WorkItemUpdated WorkItemChanged => new WorkItemUpdated { WorkItemId = 1 };
         #endregion
     }

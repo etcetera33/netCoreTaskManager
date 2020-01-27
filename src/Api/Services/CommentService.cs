@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class CommentService: ICommentService
+    public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;

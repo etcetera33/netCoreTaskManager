@@ -1,6 +1,6 @@
 import { ApiService } from './api.service';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -57,5 +57,9 @@ export class WorkItemService {
 
   removeItem(workItemId: number) {
     return this.http.delete(this.getRootUrl() + workItemId);
+  }
+
+  getAttached(workItemId: number) {
+    return this.http.get(this.getRootUrl() + workItemId + '/files');
   }
 }
