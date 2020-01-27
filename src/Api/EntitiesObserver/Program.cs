@@ -25,7 +25,6 @@ namespace EntitiesObserver
         public static async Task Main(string[] args)
         {
             var builder = new HostBuilder()
-                //.UseSerilog()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("appsettings.json", optional: true);
