@@ -85,5 +85,13 @@ namespace Services.Helpers
                 _logger.Error(ex.Message);
             }
         }
+
+        public async Task DeleteFromAzureAsync(IEnumerable<FileDto> files)
+        {
+            foreach (var file in files)
+            {
+                await DeleteFromAzureAsync(file.Path);
+            }
+        }
     }
 }

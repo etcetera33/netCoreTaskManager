@@ -181,6 +181,9 @@ namespace Services
         {
             var oldWorkItem = await GetHistoryById(workItemId);
 
+            var filesToDelete = await GetAttachedById(workItemId);
+            await _fileUploader.DeleteFromAzureAsync(filesToDelete);
+
             await _workItemRepository.Delete(workItemId);
 
             await _bus.Publish(new WorkItemDeleted

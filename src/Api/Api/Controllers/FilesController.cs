@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Services.Interfaces;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var files = Request.Form.Files;
@@ -27,7 +29,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete]
-        [Route("")]
+        [Authorize]
         public async Task<IActionResult> Delete(IEnumerable<FileDto> files)
         {
             if (files is null)
@@ -35,13 +37,14 @@ namespace Api.Controllers
                 return NotFound("Files can not be found");
             }
 
-            await _fileService.DeleteRange(files);
+            await _fileService.Delete(files);
 
             return Ok();
         }
 
         [HttpDelete]
         [Route("{fileId}/{workItemId}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int fileId, int workItemId)
         {
             var file = await _fileService.GetById(fileId);

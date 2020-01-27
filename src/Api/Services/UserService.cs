@@ -63,12 +63,6 @@ namespace Services
             return userDto;
         }
 
-        public async Task Update(int userId, UserDto userDto)
-        {
-            var user = _mapper.Map<UserDto, User>(userDto);
-            await _userRepository.Update(userId, user);
-        }
-
         public async Task<IEnumerable<UserDictionaryDto>> GetUserList()
         {
             var userList = await _userRepository.GetAll();

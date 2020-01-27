@@ -17,18 +17,6 @@ export class ImageService {
     return this.http.post(this.rootUrl, data, HttpUploadOptions);
   }
 
-  getImages(page?: number, itemsPerPage = 10) {
-    const objectUrl: any = {};
-    if (page != null) {
-      objectUrl.page = page;
-    }
-    objectUrl.itemsPerPage = itemsPerPage;
-    const params = new HttpParams({
-      fromObject: objectUrl
-    });
-    return this.http.get<any>(this.rootUrl + '?', {params});
-  }
-
   attachToWorkItem(images: File[], workItemId: number) {
     const data: any = {};
     data.files = images;
@@ -44,7 +32,7 @@ export class ImageService {
     return this.http.delete(this.rootUrl + imageId + '/' + workItemId);
   }
 
-  remove(data) {;
+  remove(data) {
     return this.http.request('delete', this.rootUrl, {body: data});
   }
 }

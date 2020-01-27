@@ -8,7 +8,6 @@ import { WorkItem } from './../../../models/work-item.model';
 import { Component, OnInit } from '@angular/core';
 import { ImageService } from 'src/app/services/image.service';
 import { File as FileEntity } from 'src/app/models/file';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-create-work-item',
@@ -117,10 +116,6 @@ export class CreateWorkItemComponent implements OnInit {
         reader.readAsDataURL(file);
       }
     }
-    /*Array.from(files).forEach(file => {
-      const fileToUpload = file as File;
-      this.files.append('file', fileToUpload);
-    });*/
     this.saveFiles();
   }
   removeFiles() {

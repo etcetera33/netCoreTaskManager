@@ -57,5 +57,22 @@ namespace Data.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.WorkItemId == id);
         }
+
+        public override async Task Delete(int id)
+        {
+            var entity = await DbContext.WorkItems
+                .Include(x => x.WorkItemFiles)
+                .FirstOrDefaultAsync(i => i.WorkItemId == id);
+
+            foreach (var child in entity.WorkItemFiles)
+            {
+                DbContext.WorkItemFiles.Remove(child);
+                DbContext.Files.Remove(child.File);
+            }
+
+            DbContext.WorkItems.Remove(entity);
+
+            await DbContext.SaveChangesAsync();
+        }
     }
 }

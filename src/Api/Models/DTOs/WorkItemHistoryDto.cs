@@ -41,5 +41,15 @@
         {
             return !(obj1 == obj2);
         }
+
+        public override bool Equals(object obj)
+        {
+            return this == (obj as WorkItemHistoryDto);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

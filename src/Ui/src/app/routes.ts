@@ -10,7 +10,6 @@ import { ProjectListComponent } from './components/project/project-list/project-
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './guards/auth-guard';
 import { Routes } from '@angular/router';
-import { ImageListComponent } from './components/images/image-list/image-list.component';
 
 export const appRoutes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard]},

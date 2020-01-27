@@ -31,6 +31,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("current/work-items")]
+        [Authorize]
         public async Task<IActionResult> GetWorkItems()
         {
             var currentUserId = int.Parse(User.Identity.Name);

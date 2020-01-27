@@ -35,7 +35,6 @@ import { CreateWorkItemComponent } from './components/work-item/create-work-item
 import { CommentsListComponent } from './components/comments/comments-list/comments-list.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, MatCardModule } from '@angular/material';
-import { ImageListComponent } from './components/images/image-list/image-list.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -65,8 +64,7 @@ const jwtConfig = {
     ProjectSettingsComponent,
     CreateWorkItemComponent,
     CommentsListComponent,
-    PopupComponent,
-    ImageListComponent
+    PopupComponent
   ],
   imports: [
     CommonModule,

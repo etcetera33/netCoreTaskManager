@@ -9,7 +9,7 @@ namespace Services.Interfaces
     {
         Task<IEnumerable<FileDto>> Upload(IEnumerable<IFormFile> file);
         Task<FileDto> GetById(int fileId);
-        Task DeleteRange(IEnumerable<FileDto> file);
+        Task Delete(IEnumerable<FileDto> file);
         Task Delete(FileDto file, int workItemId);
     }
 }

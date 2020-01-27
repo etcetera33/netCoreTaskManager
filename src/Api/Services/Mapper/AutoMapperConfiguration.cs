@@ -34,15 +34,6 @@ namespace Services.Mapper
                     .ForMember(dst => dst.Status, opt => opt.Ignore())
                     .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())
                     .ReverseMap();
-                cfg.CreateMap<CreateWorkItemDto, WorkItem>()
-                    .ForMember(dst => dst.WorkItemId, src => src.MapFrom(e => e.Id))
-                    .ForMember(dst => dst.Assignee, opt => opt.Ignore())
-                    .ForMember(dst => dst.Author, opt => opt.Ignore())
-                    .ForMember(dst => dst.Comments, opt => opt.Ignore())
-                    .ForMember(dst => dst.Project, opt => opt.Ignore())
-                    .ForMember(dst => dst.Status, opt => opt.Ignore())
-                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())
-                    .ReverseMap();
                 cfg.CreateMap<WorkItemHistoryDto, WorkItem>()
                     .ReverseMap();
                 cfg.CreateMap<WorkItemHistoryDto, WorkItemDto>()
