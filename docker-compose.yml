@@ -16,6 +16,9 @@ services:
         RabbitMqConfig__Password: "${Rabbit_Password}"
         RabbitMqConfig__SSLActive: "${Rabbit_SSLActive}"
         RabbitMqConfig__Endpoint: "api-endpoint"
+        Redis__ConnectionString: "${Redis_ConnectionString}"
+        AzureConfig__ConnectionString: "${Azure_ConnectionString}"
+        AzureConfig__ContainerName: "${Azure_Container_Name}"
     depends_on:
       - db
       - rabbit
