@@ -1,19 +1,3 @@
-#FROM node:11.6.0-alpine AS builder
-#COPY . ./app
-#WORKDIR /app
-#RUN npm i
-#RUN $(npm bin)/ng build --prod
-#
-#FROM nginx:1.15.8-alpine
-#COPY --from=builder /app/dist/app/ /usr/share/nginx/html
-
-#FROM nginx:1.13.3-alpine
-### Remove default nginx website
-#RUN rm -rf /usr/share/nginx/html/*
-### From 'builder' stage copy over the artifacts in dist folder to default nginx public folder
-#COPY /dist /usr/share/nginx/html
-#CMD ["nginx", "-g", "daemon off;"]
-
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
 FROM tiangolo/node-frontend:10 as build-stage
 WORKDIR /app

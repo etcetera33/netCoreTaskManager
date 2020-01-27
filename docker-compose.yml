@@ -95,7 +95,7 @@ services:
       - entities_observer
       - rabbit
   front:
-    image: angular_app:latest
+    image: "dapracticepoliit.azurecr.io/front:latest"
     ports:
       - "4200:80"
     networks:
