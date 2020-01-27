@@ -38,7 +38,7 @@ namespace EntitiesObserver.Handlers
 
                 _logger.Information($"Successfully logged work item deletion. WorkItemAuditId: {createdEnitty.Id}");
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 _logger.Error(exception.Message);
                 return;

@@ -1,15 +1,15 @@
-﻿using Models.DTOs;
-using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
-using System.Threading.Tasks;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System;
-using Core.Configs;
-using System.Net;
-using Microsoft.Extensions.Options;
+﻿using Core.Configs;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Models.DTOs;
+using Services.Interfaces;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -33,7 +33,7 @@ namespace Api.Controllers
             var userDto = await _userService.RegisterUserAsync(user);
             return new JsonResult(userDto)
             {
-                StatusCode = (int) HttpStatusCode.Created
+                StatusCode = (int)HttpStatusCode.Created
             };
         }
 

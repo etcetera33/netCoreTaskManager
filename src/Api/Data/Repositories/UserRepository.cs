@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class UserRepository: BaseRepository<User>, IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        public UserRepository(ApplicationDbContext dbContext): base(dbContext) {}
+        public UserRepository(ApplicationDbContext dbContext) : base(dbContext) { }
 
         public async Task<User> FindUserByLoginAsync(string login)
         {

@@ -1,8 +1,8 @@
-﻿using Models.QueryParameters;
-using Models.DTOs;
+﻿using Models.DTOs;
+using Models.PaginatedResponse;
+using Models.QueryParameters;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Models.PaginatedResponse;
 
 namespace Services.Interfaces
 {
@@ -16,6 +16,7 @@ namespace Services.Interfaces
         IEnumerable<object> GetWorkItemTypes();
         IEnumerable<object> GetWorkItemStatuses();
         Task<IEnumerable<WorkItemDto>> GetTopFivePriorityItems(int assigneeId);
+        Task<IEnumerable<FileDto>> GetAttachedById(int workItemId);
         Task Delete(int workItemId);
     }
 }

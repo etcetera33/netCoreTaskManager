@@ -53,7 +53,7 @@ namespace EntitiesObserver.Handlers
 
                 _logger.Information($"Successfully logged work item creation. WorkItemAuditId: {createdEntity.Id}");
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 _logger.Error(exception.Message);
                 return;

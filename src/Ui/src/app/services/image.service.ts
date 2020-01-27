@@ -41,6 +41,10 @@ export class ImageService {
   }
 
   removeFromAttachedToWorkItem(imageId: number, workItemId: number) {
-    return this.http.delete(this.rootUrl + imageId + '/work-items/' + workItemId);
+    return this.http.delete(this.rootUrl + imageId + '/' + workItemId);
+  }
+
+  remove(data) {;
+    return this.http.request('delete', this.rootUrl, {body: data});
   }
 }

@@ -1,4 +1,3 @@
-import { CreateImageComponent } from './components/images/create-image/create-image.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { LoginComponent } from './components/auth/login/login.component';

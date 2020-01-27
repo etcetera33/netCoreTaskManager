@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NotificationService.Aggregates.MailAggregate
 {
-    public class SmtpClientProxy: ISmtpClientProxy
+    public class SmtpClientProxy : ISmtpClientProxy
     {
         private readonly SmtpClient _client;
 

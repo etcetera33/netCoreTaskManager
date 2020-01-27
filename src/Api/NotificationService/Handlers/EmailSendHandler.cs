@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Contracts;
+﻿using Contracts;
+using Core.Adapters;
 using MassTransit;
 using NotificationService.Aggregates.MailAggregate;
-using Core.Adapters;
+using System;
+using System.Threading.Tasks;
 
 namespace NotificationService.Handlers
 {

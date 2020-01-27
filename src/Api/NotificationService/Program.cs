@@ -1,17 +1,17 @@
-﻿using MassTransit;
+﻿using Core.Adapters;
+using MassTransit;
 using Microsoft.AspNetCore.Html;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NotificationService.Aggregates.MailAggregate;
 using NotificationService.Configs;
 using NotificationService.Handlers;
+using Serilog;
 using System;
 using System.Threading.Tasks;
-using Core.Adapters;
-using Serilog;
 
 namespace NotificationService
 {

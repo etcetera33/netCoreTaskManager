@@ -1,8 +1,11 @@
-using Core.Configs;
 using Api.Bus;
 using Api.Middleware;
 using AutoMapper;
+using Core.Adapters;
+using Core.Configs;
 using Data;
+using Data.Interfaces;
+using Data.Repositories;
 using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,9 +23,6 @@ using Services.Helpers;
 using Services.Interfaces;
 using Services.Mapper;
 using Services.Validators;
-using Data.Interfaces;
-using Data.Repositories;
-using Core.Adapters;
 
 namespace Api
 {
@@ -87,7 +87,7 @@ namespace Api
             services.AddSingleton<IBus>(provider => provider.GetRequiredService<IBusControl>());
 
             services.AddTransient<IFileUploader, FileUploader>();
-            
+
             services.AddSingleton<IHostedService, BusService>();
             // End of the service Bus
 

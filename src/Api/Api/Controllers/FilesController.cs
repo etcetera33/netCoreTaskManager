@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
-using Models.QueryParameters;
 using Services.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -24,32 +22,43 @@ namespace Api.Controllers
         {
             var files = Request.Form.Files;
             var entity = await _fileService.Upload(files);
-            
+
             return new JsonResult(entity);
         }
 
         [HttpDelete]
-        [Route("{fileId}")]
-        public async Task<IActionResult> Get(int fileId)
+        [Route("")]
+        public async Task<IActionResult> Delete(IEnumerable<FileDto> files)
         {
-            var exists = await _fileService.Exists(fileId);
-
-            if (!exists)
+            if (files is null)
             {
-                return NotFound();
+                return NotFound("Files can not be found");
             }
 
-            await _fileService.Delete(fileId);
+            await _fileService.DeleteRange(files);
 
             return Ok();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] BaseQueryParameters parameters)
+        [HttpDelete]
+        [Route("{fileId}/{workItemId}")]
+        public async Task<IActionResult> Delete(int fileId, int workItemId)
         {
-            var response = await _fileService.GetImages(parameters);
+            var file = await _fileService.GetById(fileId);
 
-            return Ok(response);
+            if (file == null)
+            {
+                return NotFound("File not found");
+            }
+
+            if (workItemId == 0)
+            {
+                return NotFound("work item not found");
+            }
+
+            await _fileService.Delete(file, workItemId);
+
+            return Ok();
         }
     }
 }

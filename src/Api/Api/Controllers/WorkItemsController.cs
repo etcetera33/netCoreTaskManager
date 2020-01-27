@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.DTOs;
 using Models.QueryParameters;
 using Services.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Api.Controllers
@@ -14,12 +12,10 @@ namespace Api.Controllers
     public class WorkItemsController : ControllerBase
     {
         private readonly IWorkItemService _workItemService;
-        private readonly IFileService _fileService;
 
-        public WorkItemsController(IWorkItemService workItemService, IFileService fileService)
+        public WorkItemsController(IWorkItemService workItemService)
         {
             _workItemService = workItemService;
-            _fileService = fileService;
         }
 
         [HttpGet]
@@ -30,7 +26,7 @@ namespace Api.Controllers
             {
                 parameters.AssigneeId = int.Parse(User.Identity.Name);
             }
-            
+
             var workItem = await _workItemService.Paginate(projectId, parameters);
 
             if (workItem == null)
@@ -67,7 +63,7 @@ namespace Api.Controllers
             {
                 return NotFound();
             }
-            
+
             return Ok(workItem);
         }
 
@@ -109,5 +105,15 @@ namespace Api.Controllers
 
             return NoContent();
         }
+
+        [HttpGet]
+        [Route("{workItemId}/files")]
+        public async Task<IActionResult> GetFiles(int workItemId)
+        {
+            var list = await _workItemService.GetAttachedById(workItemId);
+
+            return Ok(list);
+        }
+
     }
 }

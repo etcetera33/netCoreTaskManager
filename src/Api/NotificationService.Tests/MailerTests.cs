@@ -3,10 +3,10 @@ using NotificationService.Aggregates.MailAggregate;
 using NotificationService.Configs;
 using NSubstitute;
 using System;
+using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Xunit;
-using System.Linq;
 
 namespace NotificationService.Tests
 {

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
-    public class ApplicationDbContext: DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<User> Users { get; set; }
@@ -38,7 +38,8 @@ namespace Data
                 }
             );
 
-            modelBuilder.Entity<Project>(e => {
+            modelBuilder.Entity<Project>(e =>
+            {
                 e.HasOne(x => x.Owner).WithMany(x => x.Projects).HasForeignKey(x => x.OwnerId).OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -54,7 +55,7 @@ namespace Data
                .HasIndex(u => u.WorkItemId);
 
             modelBuilder.Entity<WorkItemFile>()
-                .HasKey(bc => new { bc.FileId, bc.WorkItemId });
+                .HasKey(bc => new { bc.WorkItemFileId });
             modelBuilder.Entity<WorkItemFile>()
                 .HasOne(bc => bc.File)
                 .WithMany(b => b.WorkItemFiles)

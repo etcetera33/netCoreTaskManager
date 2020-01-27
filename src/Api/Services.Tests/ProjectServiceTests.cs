@@ -1,16 +1,16 @@
-﻿using NSubstitute;
-using Xunit;
+﻿using AutoMapper;
 using Data.Interfaces;
 using Data.Models;
-using System.Collections.Generic;
 using Models.DTOs;
-using System.Threading.Tasks;
-using AutoMapper;
-using Services.Mapper;
-using Newtonsoft.Json;
-using Models.QueryParameters;
 using Models.PaginatedResponse;
+using Models.QueryParameters;
+using Newtonsoft.Json;
+using NSubstitute;
 using Services.Interfaces;
+using Services.Mapper;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Services.Tests
 {
@@ -41,12 +41,12 @@ namespace Services.Tests
         public async Task Create_Should_Successfully_Map_Created_Project()
         {
             var actual = await _projectService.Create(new ProjectDto
-                {
-                    Description = "Descr",
-                    Name = "Person1",
-                    Owner = null,
-                    OwnerId = 1
-                });
+            {
+                Description = "Descr",
+                Name = "Person1",
+                Owner = null,
+                OwnerId = 1
+            });
 
             var expected = new ProjectDto
             {

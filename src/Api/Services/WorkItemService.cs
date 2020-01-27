@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
+using Contracts;
 using Core.Enums;
+using Data.Interfaces;
 using Data.Models;
-using Models.QueryParameters;
+using MassTransit;
 using Models.DTOs;
+using Models.PaginatedResponse;
+using Models.QueryParameters;
+using Services.Helpers;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Services.Helpers;
-using MassTransit;
-using Contracts;
-using Data.Interfaces;
-using Models.PaginatedResponse;
-using System.Linq;
 
 namespace Services
 {
@@ -76,7 +76,8 @@ namespace Services
             await AttachFilesToWorkItem(workItemDto.Files, workItemEntity.WorkItemId);
 
             var newWorkItemDto = _mapper.Map<WorkItem, WorkItemHistoryDto>(workItem);
-            await _bus.Publish(new WorkItemCreated {
+            await _bus.Publish(new WorkItemCreated
+            {
                 WorkItemId = workItem.WorkItemId,
                 NewWorkItem = newWorkItemDto
             });
@@ -121,6 +122,8 @@ namespace Services
 
             var newWorkItem = await GetHistoryById(workItemId);
 
+            await AttachFilesToWorkItem(workItemDto.Files, workItemId);
+
             await _bus.Publish(new WorkItemUpdated
             {
                 WorkItemId = workItemId,
@@ -137,7 +140,7 @@ namespace Services
         public IEnumerable<object> GetWorkItemTypes()
         {
             var enumTypes = new List<object>();
-            
+
             foreach (var item in Enum.GetValues(typeof(WorkItemTypes)))
             {
                 enumTypes.Add(new
@@ -183,8 +186,15 @@ namespace Services
             await _bus.Publish(new WorkItemDeleted
             {
                 WorkItemId = workItemId,
-                OldWorkItem = oldWorkItem 
+                OldWorkItem = oldWorkItem
             });
+        }
+
+        public async Task<IEnumerable<FileDto>> GetAttachedById(int workItemId)
+        {
+            var entities = await _workItemFileRepository.GetByWorkItemId(workItemId);
+
+            return _mapper.Map<IEnumerable<WorkItemFile>, IEnumerable<FileDto>>(entities);
         }
     }
 }

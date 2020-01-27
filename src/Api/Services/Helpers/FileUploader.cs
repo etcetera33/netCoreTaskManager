@@ -40,26 +40,26 @@ namespace Services.Helpers
 
                 Stream fileStream;
                 foreach (var file in files)
-                using (fileStream = file.OpenReadStream())
-                {
-                        
-                    fileStream = file.OpenReadStream();
-
-                    CloudBlockBlob blockBlob;
-
-                    do
+                    using (fileStream = file.OpenReadStream())
                     {
-                        blockBlob = container.GetBlockBlobReference(Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
-                    } while (await blockBlob.ExistsAsync() != false);
 
-                    await blockBlob.UploadFromStreamAsync(fileStream);
+                        fileStream = file.OpenReadStream();
 
-                    filesListDto.Add(new FileDto
-                    {
-                        Name = file.FileName,
-                        Path = blockBlob.Uri.ToString()
-                    });
-                }
+                        CloudBlockBlob blockBlob;
+
+                        do
+                        {
+                            blockBlob = container.GetBlockBlobReference(Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
+                        } while (await blockBlob.ExistsAsync() != false);
+
+                        await blockBlob.UploadFromStreamAsync(fileStream);
+
+                        filesListDto.Add(new FileDto
+                        {
+                            Name = file.FileName,
+                            Path = blockBlob.Uri.ToString()
+                        });
+                    }
 
                 return filesListDto;
             }
@@ -72,11 +72,18 @@ namespace Services.Helpers
 
         public async Task DeleteFromAzureAsync(string filePath)
         {
-            var container = ConnectToContainer();
+            try
+            {
+                var container = ConnectToContainer();
 
-            var blockBlob = container.GetBlockBlobReference(filePath);
+                var blockBlob = container.GetBlockBlobReference(filePath);
 
-            await blockBlob.DeleteIfExistsAsync();
+                await blockBlob.DeleteIfExistsAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+            }
         }
     }
 }

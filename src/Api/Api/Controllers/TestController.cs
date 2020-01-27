@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models.QueryParameters;
 using Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace Api.Controllers
 {

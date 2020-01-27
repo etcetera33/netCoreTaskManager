@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EntitiesObserver
 {
-    public class BusService: IHostedService
+    public class BusService : IHostedService
     {
         private readonly IBusControl _bus;
 

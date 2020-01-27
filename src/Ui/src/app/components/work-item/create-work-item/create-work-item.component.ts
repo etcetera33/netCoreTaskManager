@@ -22,7 +22,7 @@ export class CreateWorkItemComponent implements OnInit {
   workItemTypes: any[];
   workItemStatuses: any[];
   role: string;
-  urls: any[];
+  urls = new Array<string>();
   files: FormData;
   filesEntity: FileEntity[];
   constructor(
@@ -44,7 +44,7 @@ export class CreateWorkItemComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    var data = JSON.stringify(form.value);
+    const data = JSON.stringify(form.value);
     this.workItemService.createEntity(data).subscribe(
       res => {
         this.router.navigate(['/projects/' + this.projectId]);
@@ -103,15 +103,36 @@ export class CreateWorkItemComponent implements OnInit {
     if (files.length === 0) {
       return;
     }
-    Array.from(files).forEach(file => {
-      const fileToUpload = file as File; 
+    if (this.workItem.Files !== undefined && this.workItem.Files.length > 0) {
+      this.removeFiles();
+    }
+    if (files) {
+      for (const file of files) {
+        const fileToUpload = file as File;
+        this.files.append('file', fileToUpload);
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.urls.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    /*Array.from(files).forEach(file => {
+      const fileToUpload = file as File;
       this.files.append('file', fileToUpload);
-    });
+    });*/
     this.saveFiles();
   }
-
+  removeFiles() {
+    const data = JSON.stringify(this.workItem.Files);
+    this.imageService.remove(data).subscribe(
+      () => {},
+      err => {
+        this.popupService.openModal('error', err);
+      }
+    );
+  }
   saveFiles() {
-    console.log('saveChanges');
     this.imageService.createImage(this.files).subscribe(
     res => {
       this.workItem.Files = res as FileEntity[];

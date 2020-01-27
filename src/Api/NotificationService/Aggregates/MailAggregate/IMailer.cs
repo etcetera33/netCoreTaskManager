@@ -1,5 +1,4 @@
-﻿using Models.DTOs;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace NotificationService.Aggregates.MailAggregate
 {

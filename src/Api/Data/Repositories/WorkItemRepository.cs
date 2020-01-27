@@ -1,22 +1,22 @@
-﻿using System;
+﻿using Data.Interfaces;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Data.Interfaces;
 
 namespace Data.Repositories
 {
     public class WorkItemRepository : BaseRepository<WorkItem>, IWorkItemRepository
     {
-        public WorkItemRepository(ApplicationDbContext dbContext) : base (dbContext)
+        public WorkItemRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
 
         }
 
-        public async override Task<WorkItem> GetById(int id)
+        public override async Task<WorkItem> GetById(int id)
         {
             return await DbContext.WorkItems
                 .Include(x => x.Assignee)

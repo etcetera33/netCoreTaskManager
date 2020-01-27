@@ -12,7 +12,7 @@
         public int AuthorId { get; set; }
         public int ProjectId { get; set; }
 
-        public static bool operator == (WorkItemHistoryDto obj1, WorkItemHistoryDto obj2)
+        public static bool operator ==(WorkItemHistoryDto obj1, WorkItemHistoryDto obj2)
         {
             if (obj1 is null)
             {
@@ -37,7 +37,7 @@
             );
         }
 
-        public static bool operator != (WorkItemHistoryDto obj1, WorkItemHistoryDto obj2)
+        public static bool operator !=(WorkItemHistoryDto obj1, WorkItemHistoryDto obj2)
         {
             return !(obj1 == obj2);
         }

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Data.Interfaces;
 using Data.Models;
 using Microsoft.AspNetCore.Http;
 using Models.DTOs;
-using Models.PaginatedResponse;
-using Models.QueryParameters;
 using Services.Helpers;
 using Services.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Services
 {
@@ -60,30 +57,16 @@ namespace Services
             {
                 entity.Add(new WorkItemFile { FileId = file.Id, WorkItemId = workItemId });
             });
-            
+
             await _workItemFileRepository.AddRange(entity);
         }
 
-        
+
         public async Task<IEnumerable<FileDto>> GetByWorkItemId(int workItemId)
         {
             var entities = await _workItemFileRepository.GetByWorkItemId(workItemId);
 
             return _mapper.Map<IEnumerable<WorkItemFile>, IEnumerable<FileDto>>(entities);
-        }
-
-        public async Task<BasePaginatedResponse<FileDto>> GetImages(BaseQueryParameters parameters)
-        {
-            var projectList = await _fileRepository.Paginate(
-                   offset: (parameters.Page - 1) * parameters.ItemsPerPage,
-                   itemsCount: parameters.ItemsPerPage
-                   );
-
-            var pagesCount = (int)Math.Ceiling((decimal)await _fileRepository.CountAsync() / parameters.ItemsPerPage);
-
-            var projectDtoList = _mapper.Map<IEnumerable<File>, IEnumerable<FileDto>>(projectList);
-
-            return new BasePaginatedResponse<FileDto> { EntityList = projectDtoList, PagesCount = pagesCount };
         }
 
         public async Task<bool> RemoveAttachedFileToWorkItem(int fileId, int workItemid)
@@ -96,7 +79,7 @@ namespace Services
             }
 
             await _workItemFileRepository.Delete(entity.WorkItemFileId);
-            
+
             return true;
         }
 
@@ -119,11 +102,30 @@ namespace Services
             return _mapper.Map<File, FileDto>(entity);
         }
 
-        public async Task Delete(FileDto file)
+        public async Task DeleteRange(IEnumerable<FileDto> files)
         {
-            await _fileUploader.DeleteFromAzureAsync(file.Path);
-            await _workItemFileRepository.Delete(file.Id);
+            var filesEntity = _mapper.Map<IEnumerable<FileDto>, IEnumerable<File>>(files);
+            await _fileRepository.DeleteRange(filesEntity);
+
+            foreach (var file in files)
+            {
+                await _fileUploader.DeleteFromAzureAsync(file.Path);
+            }
+        }
+
+        public async Task Delete(FileDto file, int workItemId)
+        {
+            /// TODO wrap into transaction
+
+            var workItemFileEntity = await _workItemFileRepository.GetByFileNWorkItemId(file.Id, workItemId);
+
+            if (workItemFileEntity != null)
+            {
+                await _workItemFileRepository.Delete(workItemFileEntity.WorkItemFileId);
+            }
+
             await _fileRepository.Delete(file.Id);
+            await _fileUploader.DeleteFromAzureAsync(file.Path);
         }
     }
 }

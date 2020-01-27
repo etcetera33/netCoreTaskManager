@@ -47,24 +47,6 @@ namespace Data.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Data.Models.File", b =>
-                {
-                    b.Property<int>("FileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("FileId");
-
-                    b.ToTable("Files");
-                });
-
             modelBuilder.Entity("Data.Models.Project", b =>
                 {
                     b.Property<int>("ProjectId")
@@ -206,24 +188,6 @@ namespace Data.Migrations
                     b.ToTable("WorkItemAudits");
                 });
 
-            modelBuilder.Entity("Data.Models.WorkItemFile", b =>
-                {
-                    b.Property<int>("FileId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkItemFileId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FileId", "WorkItemId");
-
-                    b.HasIndex("WorkItemId");
-
-                    b.ToTable("WorkItemFiles");
-                });
-
             modelBuilder.Entity("Data.Models.Comment", b =>
                 {
                     b.HasOne("Data.Models.User", "Author")
@@ -265,21 +229,6 @@ namespace Data.Migrations
                     b.HasOne("Data.Models.Project", "Project")
                         .WithMany("WorkItems")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Data.Models.WorkItemFile", b =>
-                {
-                    b.HasOne("Data.Models.File", "File")
-                        .WithMany("WorkItemFiles")
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Models.WorkItem", "WorkItem")
-                        .WithMany("WorkItemFiles")
-                        .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

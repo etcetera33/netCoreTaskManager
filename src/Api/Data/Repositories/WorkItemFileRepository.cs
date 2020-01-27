@@ -9,13 +9,14 @@ namespace Data.Repositories
 {
     public class WorkItemFileRepository : BaseRepository<WorkItemFile>, IWorkItemFileRepository
     {
-        public WorkItemFileRepository(ApplicationDbContext context) : base (context)
+        public WorkItemFileRepository(ApplicationDbContext context) : base(context)
         {
 
         }
 
         public async Task AddRange(IEnumerable<WorkItemFile> entityList)
         {
+
             DbContext.WorkItemFiles.AddRange(entityList);
             await DbContext.SaveChangesAsync();
         }

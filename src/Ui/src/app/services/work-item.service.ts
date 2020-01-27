@@ -58,4 +58,8 @@ export class WorkItemService {
   removeItem(workItemId: number) {
     return this.http.delete(this.getRootUrl() + workItemId);
   }
+
+  getAttached(workItemId: number) {
+    return this.http.get(this.getRootUrl() + workItemId + '/files');
+  }
 }

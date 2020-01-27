@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories
 {
-    public abstract class BaseRepository<TEntity>: IBaseRepository<TEntity>
-        where TEntity: class
+    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
+        where TEntity : class
     {
         protected readonly ApplicationDbContext DbContext;
         public BaseRepository(ApplicationDbContext dbContext)

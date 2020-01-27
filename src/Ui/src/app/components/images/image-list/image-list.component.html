@@ -13,23 +13,3 @@
 </div>
 <button class="btn btn-danger" (click)="removeFromAttachedToWorkItem()">Remove from attached</button>
 <hr>
-<h3>Free to attach</h3>
-<div class="row">
-  <div *ngFor="let image of images"
-  height="150"
-      width="150"
-  [style.background-color]="isSelected(image.Id) ? 'green': ''" class="col-md-3">
-      <img [src]="image.Path" [alt]="image.Name" (click)="onClick(image)">
-  </div>
-  <hr>
-</div>
-<div class="row" *ngIf="pagesCount > 1">
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item" *ngFor="let item of [].constructor(pagesCount); let i = index" [attr.data-index]="pagesCount">
-              <div class="page-link" (click)="paginate(i+1)">{{i + 1}}</div>
-            </li>
-        </ul>
-      </nav>
-</div>
-<button class="btn btn-success" (click)="attachToWorkItem()">Attach</button>

@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
+using Data.Interfaces;
 using Data.Models;
-using Models.QueryParameters;
 using Models.DTOs;
+using Models.PaginatedResponse;
+using Models.QueryParameters;
 using Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Data.Interfaces;
-using Models.PaginatedResponse;
 
 namespace Services
 {
-    public class ProjectService: IProjectService
+    public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IRedisService _redisService;
@@ -43,7 +43,7 @@ namespace Services
 
             var project = await _projectRepository.GetById(projectId);
             var projectDto = _mapper.Map<Project, ProjectDto>(project);
-            
+
             return projectDto;
         }
 
@@ -96,7 +96,7 @@ namespace Services
                     await _redisService.SetItemAsync("projects.contents_valid_cache", true, 3600);
                 }
             }
-            
+
             return projectsPaginated;
         }
     }

@@ -11,7 +11,7 @@ namespace Services
     public class RedisService : IRedisService
     {
         private ConnectionMultiplexer _redis;
-        private IOptions<RedisConfig> _options;
+        private readonly IOptions<RedisConfig> _options;
 
         public RedisService(IOptions<RedisConfig> options)
         {

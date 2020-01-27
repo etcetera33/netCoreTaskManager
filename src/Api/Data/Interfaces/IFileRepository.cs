@@ -6,7 +6,6 @@ namespace Data.Interfaces
 {
     public interface IFileRepository : IBaseRepository<File>
     {
-        Task<IEnumerable<File>> Paginate(int offset, int itemsCount);
-        Task<int> CountAsync();
+        Task DeleteRange(IEnumerable<File> files);
     }
 }

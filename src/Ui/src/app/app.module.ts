@@ -34,7 +34,6 @@ import { ProjectSettingsComponent } from './components/project/project-settings/
 import { CreateWorkItemComponent } from './components/work-item/create-work-item/create-work-item.component';
 import { CommentsListComponent } from './components/comments/comments-list/comments-list.component';
 import { PopupComponent } from './components/popup/popup.component';
-import { CreateImageComponent } from './components/images/create-image/create-image.component';
 import { MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, MatCardModule } from '@angular/material';
 import { ImageListComponent } from './components/images/image-list/image-list.component';
 
@@ -67,7 +66,6 @@ const jwtConfig = {
     CreateWorkItemComponent,
     CommentsListComponent,
     PopupComponent,
-    CreateImageComponent,
     ImageListComponent
   ],
   imports: [

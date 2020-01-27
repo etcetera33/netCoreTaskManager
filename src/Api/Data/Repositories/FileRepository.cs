@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Data.Interfaces;
+﻿using Data.Interfaces;
 using Data.Models;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
@@ -14,19 +12,10 @@ namespace Data.Repositories
 
         }
 
-        public async Task<IEnumerable<File>> Paginate(int offset, int itemsCount)
+        public async Task DeleteRange(IEnumerable<File> files)
         {
-            return await DbContext.Files
-                .OrderBy(x => x.FileId)
-                .Skip(offset)
-                .Take(itemsCount)
-                .ToListAsync();
-        }
-
-        public async Task<int> CountAsync()
-        {
-            return await DbContext.Files
-                .CountAsync();
+            DbContext.Files.RemoveRange(files);
+            await DbContext.SaveChangesAsync();
         }
     }
 }

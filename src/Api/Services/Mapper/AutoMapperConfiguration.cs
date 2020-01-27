@@ -9,7 +9,8 @@ namespace Services.Mapper
     {
         public static MapperConfiguration Configure()
         {
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.CreateMap<UserDictionaryDto, User>()
                     .ForMember(dst => dst.UserId, src => src.MapFrom(e => e.Id))
                     .ReverseMap();
@@ -74,7 +75,7 @@ namespace Services.Mapper
                     .ForMember(dst => dst.FileName, src => src.MapFrom(e => e.Name))
                     .ForMember(dst => dst.FilePath, src => src.MapFrom(e => e.Path))
                     .ReverseMap();
-                cfg.CreateMap<FileDto, WorkItemFile> ()
+                cfg.CreateMap<FileDto, WorkItemFile>()
                     .ForMember(dst => dst.FileId, src => src.MapFrom(e => e.Id))
                     .ForPath(dst => dst.File.FileName, src => src.MapFrom(e => e.Name))
                     .ForPath(dst => dst.File.FilePath, src => src.MapFrom(e => e.Path))
