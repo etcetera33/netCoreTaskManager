@@ -73,7 +73,10 @@ namespace Services
 
             var workItem = await _workItemRepository.Create(workItemEntity);
 
-            await AttachFilesToWorkItem(workItemDto.Files, workItemEntity.WorkItemId);
+            if (workItemDto.Files != null)
+            {
+                await AttachFilesToWorkItem(workItemDto.Files, workItemEntity.WorkItemId);
+            }
 
             var newWorkItemDto = _mapper.Map<WorkItem, WorkItemHistoryDto>(workItem);
             await _bus.Publish(new WorkItemCreated

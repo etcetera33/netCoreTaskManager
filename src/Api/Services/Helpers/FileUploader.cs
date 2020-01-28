@@ -45,12 +45,7 @@ namespace Services.Helpers
 
                         fileStream = file.OpenReadStream();
 
-                        CloudBlockBlob blockBlob;
-
-                        do
-                        {
-                            blockBlob = container.GetBlockBlobReference(Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
-                        } while (await blockBlob.ExistsAsync() != false);
+                        var blockBlob = container.GetBlockBlobReference(Guid.NewGuid().ToString() + Path.GetExtension(file.FileName));
 
                         await blockBlob.UploadFromStreamAsync(fileStream);
 
