@@ -11,10 +11,8 @@ COPY ["Core/Core.csproj", "Core/"]
 COPY ["Services/Services.csproj", "Services/"]
 COPY ["Contracts/Contracts.csproj", "Contracts/"]
 COPY ["Data/Data.csproj", "Data/"]
-
 RUN dotnet restore "Api/Api.csproj"
-
-COPY . ./
+COPY . .
 WORKDIR "/src/Api"
 RUN dotnet build "Api.csproj" -c Release -o /app/build
 
@@ -25,4 +23,3 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Api.dll"]
-

@@ -27,7 +27,6 @@ namespace Data.Repositories
         {
             var res = DbContext.WorkItems
                 .Where(expression)
-                .Include(x => x.WorkItemFiles)
                 .Skip(offset)
                 .Take(itemsCount);
 

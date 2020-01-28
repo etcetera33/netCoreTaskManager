@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-    image: "dapracticepoliit.azurecr.io/api:latest"
+    image: "api"
     ports:
         - "8037:80"
         - "9098:8080"
@@ -51,7 +51,7 @@ services:
       - /srv/docker/redis:/var/lib/redis
     restart: always
   entities_observer:
-    image: "dapracticepoliit.azurecr.io/entity-observer-service:latest"
+    image: "entities-observer"
     environment:
         ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
         AppConfig__Host: rabbitmq://rabbit
@@ -64,7 +64,7 @@ services:
       - api
       - rabbit
   notification_service:
-    image: "dapracticepoliit.azurecr.io/notification-service:latest"
+    image: "notification-service"
     environment:
         MailConfig__From: "${Mail_From}"
         MailConfig__Password: "${Mail_Password}"

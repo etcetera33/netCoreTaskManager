@@ -128,7 +128,7 @@ namespace Api
             }
 
             app.UseCors(
-                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
+                options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
             );
 
             app.UseHttpsRedirection();
@@ -145,7 +145,7 @@ namespace Api
 
             app.UseMiddleware<RequestResponseLogMiddleware>();
 
-            app.UseMiddleware<ErrorLoggingMiddleware>();
+            //app.UseMiddleware<ErrorLoggingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

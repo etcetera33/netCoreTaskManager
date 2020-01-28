@@ -1,4 +1,5 @@
 ﻿using Core.Configs;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Services.Interfaces;
@@ -10,12 +11,14 @@ namespace Services
 {
     public class RedisService : IRedisService
     {
+        private readonly string _redisHost;
+        private readonly int _redisPort;
         private ConnectionMultiplexer _redis;
-        private readonly IOptions<RedisConfig> _options;
 
-        public RedisService(IOptions<RedisConfig> options)
+        public RedisService(IConfiguration config)
         {
-            _options = options;
+            _redisHost = config["Redis:Host"];
+            _redisPort = Convert.ToInt32(config["Redis:Port"]);
         }
 
         public async Task SetItemAsync<T>(string key, T value, int expirySeconds)
@@ -41,7 +44,8 @@ namespace Services
         {
             try
             {
-                _redis = ConnectionMultiplexer.Connect(_options.Value.ConnectionString);
+                var configString = $"{_redisHost}:{_redisPort},connectRetry=5";
+                _redis = ConnectionMultiplexer.Connect(configString);
             }
             catch (RedisConnectionException err)
             {
