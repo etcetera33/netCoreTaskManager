@@ -145,7 +145,7 @@ namespace Api
 
             app.UseMiddleware<RequestResponseLogMiddleware>();
 
-            //app.UseMiddleware<ErrorLoggingMiddleware>();
+            app.UseMiddleware<ErrorLoggingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
