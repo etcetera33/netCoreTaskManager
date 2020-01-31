@@ -19,7 +19,10 @@ export class LoginComponent implements OnInit {
     private userService: UserService, private popupService: PopupService
     ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('inside login method1');
+    this.authService.login();
+  }
 
   login(form: NgForm) {
     const credentials = JSON.stringify(form.value);

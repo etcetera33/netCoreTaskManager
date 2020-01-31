@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer.Controllers
 {
-    [Route("test/")]
+    [Route("auth/")]
     public class AuthController : ControllerBase
     {
 
@@ -22,6 +22,12 @@ namespace IdentityServer.Controllers
         public IActionResult Test()
         {
             return Ok(User.Identity);
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
         }
         /// <summary>
         /// Handle postback from username/password login
