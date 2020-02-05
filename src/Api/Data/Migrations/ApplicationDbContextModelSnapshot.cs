@@ -98,13 +98,10 @@ namespace Data.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Login")
+                    b.Property<string>("ExternalId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Position")
@@ -118,13 +115,11 @@ namespace Data.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
+                    b.HasIndex("Email");
 
-                    b.HasIndex("Login")
+                    b.HasIndex("ExternalId")
                         .IsUnique()
-                        .HasFilter("[Login] IS NOT NULL");
+                        .HasFilter("[ExternalId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });

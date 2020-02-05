@@ -8,8 +8,8 @@ namespace Models.DTOs
         public string FullName { get; set; }
         public string Position { get; set; }
         public string Email { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
+        public string ExternalId { get; set; }
+
         public int RoleId { get; set; }
         public string Role
         {

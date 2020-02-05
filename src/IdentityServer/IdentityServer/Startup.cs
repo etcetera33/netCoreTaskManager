@@ -10,6 +10,9 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using IdentityServer4.Stores;
 using IdentityServer4;
 using Microsoft.IdentityModel.Tokens;
+using IdentityServer.Config;
+using IdentityServer4.Configuration;
+using System;
 
 namespace IdentityServer
 {
@@ -33,12 +36,16 @@ namespace IdentityServer
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(SetUpIdentityServer)
                 .AddInMemoryCaching()
-                .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddAspNetIdentity<IdentityUser>()
                 .AddClientStore<InMemoryClientStore>()
-                .AddResourceStore<InMemoryResourcesStore>();
+                .AddResourceStore<InMemoryResourcesStore>()
+                .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
+                .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
+                .AddInMemoryClients(IdentityServerConfig.GetClients())
+                .AddDeveloperSigningCredential()
+                ;
 
             services.AddAuthentication()
             .AddOpenIdConnect("Google", "Google",
@@ -138,6 +145,11 @@ namespace IdentityServer
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+
+        private void SetUpIdentityServer(IdentityServerOptions options)
+        {
+            options.UserInteraction.LoginUrl = "/Api/Auth/Login";
         }
     }
 }

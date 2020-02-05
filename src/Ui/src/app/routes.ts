@@ -1,3 +1,4 @@
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { LoginComponent } from './components/auth/login/login.component';
@@ -21,5 +22,6 @@ export const appRoutes: Routes = [
     { path: 'projects/:projectId/work-items/:id', component: WorkItemDetailComponent, canActivate: [AuthGuard]},
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
+    { path: 'auth-callback', component: AuthCallbackComponent},
     { path: '**', component: NotFoundComponent}
 ];

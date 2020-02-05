@@ -43,23 +43,29 @@ namespace Data
                 e.HasOne(x => x.Owner).WithMany(x => x.Projects).HasForeignKey(x => x.OwnerId).OnDelete(DeleteBehavior.NoAction);
             });
 
-            modelBuilder.Entity<User>()
+            /*modelBuilder.Entity<User>()
                 .HasIndex(u => u.Login)
-                .IsUnique();
+                .IsUnique();*/
 
             modelBuilder.Entity<User>()
                .HasIndex(u => u.Email)
-               .IsUnique();
+               .IsUnique(false);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.ExternalId)
+                .IsUnique();
 
             modelBuilder.Entity<WorkItemAudit>()
                .HasIndex(u => u.WorkItemId);
 
             modelBuilder.Entity<WorkItemFile>()
                 .HasKey(bc => new { bc.WorkItemFileId });
+
             modelBuilder.Entity<WorkItemFile>()
                 .HasOne(bc => bc.File)
                 .WithMany(b => b.WorkItemFiles)
                 .HasForeignKey(bc => bc.FileId);
+
             modelBuilder.Entity<WorkItemFile>()
                 .HasOne(bc => bc.WorkItem)
                 .WithMany(c => c.WorkItemFiles)

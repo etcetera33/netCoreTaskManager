@@ -13,7 +13,14 @@ namespace Data.Repositories
         public async Task<User> FindUserByLoginAsync(string login)
         {
             return await DbContext.Users
-                .Where(user => user.Login == login)
+                //.Where(user => user.Login == login)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> GetByExternalId(string externalId)
+        {
+            return await DbContext.Users
+                .Where(user => user.ExternalId == externalId)
                 .FirstOrDefaultAsync();
         }
 

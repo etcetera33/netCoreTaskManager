@@ -58,13 +58,15 @@ namespace Api
             .AddJwtBearer(x =>
             {
                 x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+                x.Authority = Configuration.GetSection("IdentityServer").GetSection("Host").Value;
+                x.Audience = "api1";
+                /*x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = AuthConfig.GetKey(Configuration.GetSection("AuthConfig").GetSection("SecretKey").Value),
                     ValidateIssuer = false,
                     ValidateAudience = false
-                };
+                };*/
             });
 
             // Start of the service Bus1

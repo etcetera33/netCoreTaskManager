@@ -86,7 +86,7 @@ namespace EntitiesObserver.Tests
         #region Helpers
         public WorkItemHistoryDto ValidNewWorkItem => new WorkItemHistoryDto { AssigneeId = 1, Description = "Create footer,Description=Footer must contain a contact information and a fotter menu", Priority = 1, Progress = 1, StatusId = 1, Title = "Title", WorkItemTypeId = 1, AuthorId = 1, ProjectId = 1 };
         public WorkItemHistoryDto InvalidNewWorkItemWithRightAssignee => new WorkItemHistoryDto { AssigneeId = 2, };
-        public UserDto UserDto => new UserDto { Id = 1, Email = "test@gmail.com", FullName = "Test FullName", Login = "test.login", Password = "111111", Position = "Developer", RoleId = 1 };
+        public UserDto UserDto => new UserDto { Id = 1, Email = "test@gmail.com", FullName = "Test FullName", Position = "Developer", RoleId = 1 };
         public WorkItemAuditDto WorkItemAuditDto => new WorkItemAuditDto { Id = 1, NewWorkItem = null, OldWorkItem = null, StatusId = 1, WorkItemId = 1 };
         #endregion
     }

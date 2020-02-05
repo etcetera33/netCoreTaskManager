@@ -10,8 +10,9 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { JwtModule } from '@auth0/angular-jwt';
-import {FileSelectDirective} from 'ng2-file-upload';
 import { FileUploadModule } from 'ng2-file-upload';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
@@ -35,6 +36,7 @@ import { CreateWorkItemComponent } from './components/work-item/create-work-item
 import { CommentsListComponent } from './components/comments/comments-list/comments-list.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, MatCardModule } from '@angular/material';
+import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -64,7 +66,8 @@ const jwtConfig = {
     ProjectSettingsComponent,
     CreateWorkItemComponent,
     CommentsListComponent,
-    PopupComponent
+    PopupComponent,
+    AuthCallbackComponent
   ],
   imports: [
     CommonModule,
@@ -75,6 +78,7 @@ const jwtConfig = {
     ),
     JwtModule.forRoot(jwtConfig),
     AppRoutingModule,
+    OAuthModule.forRoot(),
     HttpClientModule,
     FormsModule,
     MatDialogModule,
@@ -83,7 +87,8 @@ const jwtConfig = {
     MatInputModule,
     MatSelectModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    NgxSpinnerModule,
   ],
   providers: [
     ProjectService,

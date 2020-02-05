@@ -26,17 +26,13 @@ namespace Services
 
         public async Task<UserDto> RegisterUserAsync(UserDto userDto)
         {
-            userDto.Password = PasswordHasher.Hash(userDto.Password,
-                _passwordHasher.Value.Salt,
-                _passwordHasher.Value.IterationCount,
-                _passwordHasher.Value.BytesRequested);
             var user = _mapper.Map<UserDto, User>(userDto);
             var createdEntity = await _userRepository.Create(user);
 
             return _mapper.Map<User, UserDto>(createdEntity);
         }
 
-        public async Task<UserDto> GetUserByLoginAsync(UserDto userDto)
+        /*public async Task<UserDto> GetUserByLoginAsync(UserDto userDto)
         {
             var user = await _userRepository.FindUserByLoginAsync(userDto.Login);
 
@@ -53,7 +49,7 @@ namespace Services
             }
 
             return _mapper.Map<User, UserDto>(user);
-        }
+        }*/
 
         public async Task<UserDto> GetById(int userId)
         {
@@ -85,6 +81,13 @@ namespace Services
             }
 
             return enumRoles;
+        }
+
+        public async Task<UserDto> GetByExternalId(string externalId)
+        {
+            var user = await _userRepository.GetByExternalId(externalId);
+
+            return _mapper.Map<User, UserDto>(user);
         }
     }
 }

@@ -7,5 +7,6 @@ namespace Data.Interfaces
     {
         Task<User> FindUserByLoginAsync(string login);
         Task<bool> UserWithEmailExists(string email);
+        Task<User> GetByExternalId(string externalId);
     }
 }

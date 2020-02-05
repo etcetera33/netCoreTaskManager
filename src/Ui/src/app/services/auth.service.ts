@@ -1,25 +1,40 @@
 import { ApiService } from './api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserManager, UserManagerSettings } from 'oidc-client';
+import { UserManager, UserManagerSettings, User } from 'oidc-client';
+import { BehaviorSubject } from 'rxjs';
+import { OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  // Observable navItem source
+  private authNavStatusSource = new BehaviorSubject<boolean>(false);
+  // Observable navItem stream
+  authNavStatus$ = this.authNavStatusSource.asObservable();
   private rootUrl = this.apiService.rootUrl + 'auth/';
   private userManager = new UserManager(this.getUserManagerSettngs());
-  constructor(private http: HttpClient, private apiService: ApiService) { }
+  private user: User | null;
+  constructor(private http: HttpClient, private apiService: ApiService, private oauthService: OAuthService) { }
 
   loginWithCredentials(credentials) {
     return this.http.post<any>(this.rootUrl + 'authorize', credentials);
   }
 
   login() {
-    console.log('inside login method2');
-    return this.userManager.signinRedirect();
+    this.oauthService.initLoginFlow();
   }
+
+  public get name() {
+    const claims = this.oauthService.getIdentityClaims();
+    if (!claims) {
+      return null;
+    }
+
+    return claims;
+}
 
   authorize(token: string) {
     localStorage.setItem('jwt', token);
@@ -30,6 +45,7 @@ export class AuthService {
   }
 
   logOut() {
+    this.oauthService.logOut();
     localStorage.removeItem('jwt');
   }
 
@@ -56,7 +72,7 @@ export class AuthService {
   }
 
   public getIdFormToken() {
-    return this.parseToken(localStorage.getItem('jwt')).unique_name;
+    return this.parseToken(localStorage.getItem('jwt')).id;
   }
 
   private urlBase64Decode(str: string) {
@@ -77,6 +93,10 @@ export class AuthService {
     return decodeURIComponent((<any>window).escape(window.atob(output)));
   }
 
+  refreshToken() {
+    this.oauthService.refreshToken();
+  }
+
   getUserManagerSettngs(): UserManagerSettings {
     return {
       authority: 'https://localhost:44306',
@@ -92,4 +112,12 @@ export class AuthService {
     };
   }
 
+  async completeAuthentication() {
+    this.user = await this.userManager.signinRedirectCallback();
+    this.authNavStatusSource.next(this.isAuthenticated());
+  }
+
+  isAuthenticated(): boolean {
+    return this.user != null && !this.user.expired;
+  }
 }

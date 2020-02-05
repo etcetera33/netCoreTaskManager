@@ -37,11 +37,46 @@ namespace Api.Controllers
             };
         }
 
-        [Route("Authorize")]
+        /*[Route("Authorize")]
         [HttpPost()]
         public async Task<IActionResult> Authorize([CustomizeValidator(Properties = "Login, Password")] UserDto userDto)
         {
             var user = await _userService.GetUserByLoginAsync(userDto);
+
+            if (user == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(_config.Value.MinutesLifetime),
+                SigningCredentials = new SigningCredentials(
+                    AuthConfig.GetKey(_config.Value.SecretKey),
+                    SecurityAlgorithms.HmacSha256Signature
+                )
+            };
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+
+            var jwtToken = tokenHandler.WriteToken(securityToken);
+
+            return new JsonResult(new
+            {
+                token = jwtToken
+            });
+        }*/
+
+        [Route("Authorize")]
+        [HttpPost("{externalId}")]
+        public async Task<IActionResult> Authorize(string externalId)
+        {
+            var user = await _userService.GetByExternalId(externalId);
 
             if (user == null)
             {

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from './../../../services/auth.service';
 import { NgForm } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -16,12 +17,16 @@ export class LoginComponent implements OnInit {
   Password: string;
   constructor(
     private authService: AuthService, private router: Router,
-    private userService: UserService, private popupService: PopupService
+    private userService: UserService, private popupService: PopupService,
+    private spinner: NgxSpinnerService
     ) { }
 
   ngOnInit() {
-    console.log('inside login method1');
-    this.authService.login();
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+      this.authService.login();
+    }, 1000);
   }
 
   login(form: NgForm) {
