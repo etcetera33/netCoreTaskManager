@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { PopupService } from './../../services/popup.service';
 import { UserService } from './../../services/user.service';
 import { WorkItem } from './../../models/work-item.model';
@@ -11,7 +12,7 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
 
   workItems: WorkItem[];
-  constructor(private userService: UserService, private popupService: PopupService) { }
+  constructor(private userService: UserService, private popupService: PopupService, private authService: AuthService) { }
 
   ngOnInit() {
     this.userService.getCurrentUserTasks().subscribe(

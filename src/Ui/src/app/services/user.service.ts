@@ -1,8 +1,9 @@
+import { NgForm } from '@angular/forms';
 import { PopupService } from './popup.service';
 import { WorkItem } from './../models/work-item.model';
 import { ApiService } from './api.service';
 import { User } from './../models/user';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -29,7 +30,7 @@ export class UserService {
   }
 
   loadUser() {
-    this.http.get<User>(this.rootUrl).subscribe(
+    this.http.get<User>(this.rootUrl + 'current').subscribe(
       res => {
         this.currentUser = res;
       },
@@ -39,11 +40,33 @@ export class UserService {
     );
   }
 
+  getAll(page?: number, searchPhrase?: string) {
+    const objectUrl: any = {};
+    if (page != null) {
+      objectUrl.page = page;
+    }
+    if (searchPhrase != null && searchPhrase.length > 0) {
+      objectUrl.search = searchPhrase;
+    }
+    const params = new HttpParams({
+      fromObject: objectUrl
+    });
+    return this.http.get<any>(this.rootUrl + '?', {params});
+  }
+
   getCurrentUserTasks() {
     return this.http.get<WorkItem[]>(this.rootUrl + 'current/work-items');
   }
 
   getCurrentRole() {
     return localStorage.getItem('role');
+  }
+
+  getById(id: number) {
+    return this.http.get(this.rootUrl + id);
+  }
+
+  moderate(data, id: number) {
+    return this.http.put(this.rootUrl + id, data);
   }
 }

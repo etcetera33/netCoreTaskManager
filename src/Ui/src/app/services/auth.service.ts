@@ -68,7 +68,7 @@ export class AuthService {
   }
 
   public putRoleToLocalStorage(token: string = '') {
-    this.setRole(this.parseToken(token).role);
+    this.setRole(this.parseToken(token).Role);
   }
 
   public getIdFormToken() {

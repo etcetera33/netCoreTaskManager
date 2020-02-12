@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using IdentityServer4.Stores;
-using IdentityServer.Config;
+using IdentityServer.Configs;
 using IdentityServer4;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -19,6 +19,11 @@ using AutoMapper;
 using Services.Mapper;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using System.Security.Cryptography;
+using System.Text;
+using System;
+using IdentityServer.Extensions;
 
 namespace IdentityServer
 {
@@ -44,7 +49,9 @@ namespace IdentityServer
             .AddResourceStore<InMemoryResourcesStore>()
             .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
             .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
-            .AddInMemoryClients(IdentityServerConfig.GetClients())
+            //.AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
+            //.AddInMemoryClients(IdentityServerConfig.GetClients())
+            .AddInMemoryClients(IIdentityServerHelper.AddInMemoryClientsWithClamis(Configuration.GetSection("IdentityServer:Clients")))
             .AddDeveloperSigningCredential()
             ;
 
@@ -53,7 +60,7 @@ namespace IdentityServer
                 options.DefaultSignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 options.DefaultSignOutScheme = IdentityServerConstants.SignoutScheme;
             })
-           .AddGoogle("Google", "Google",
+           /*.AddGoogle("Google", "Google",
                 options =>
                 {
                     IConfigurationSection googleConfig = Configuration.GetSection("Authentication:Google");
@@ -64,13 +71,8 @@ namespace IdentityServer
                     //options.ResponseType = OpenIdConnectResponseType.Code;
                     options.CallbackPath = "/signin-google";
                     options.SaveTokens = true;
-                    /*options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = "name",
-                        RoleClaimType = "role",
-                    };*/
-                })
-            /*.AddOpenIdConnect("Google", "Google",
+                })*/
+            .AddOpenIdConnect("Google", "Google",
                 options =>
                 {
                     IConfigurationSection googleConfig = Configuration.GetSection("Authentication:Google");
@@ -86,7 +88,7 @@ namespace IdentityServer
                         NameClaimType = "name",
                         RoleClaimType = "role",
                     };
-                })*/
+                })
             .AddOpenIdConnect("Azure", "Azure AD", options =>
             {
                 IConfigurationSection azureConfig = Configuration.GetSection("Authentication:AzureAd");

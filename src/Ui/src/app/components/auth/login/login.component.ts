@@ -28,21 +28,4 @@ export class LoginComponent implements OnInit {
       this.authService.login();
     }, 1000);
   }
-
-  login(form: NgForm) {
-    const credentials = JSON.stringify(form.value);
-    this.authService.loginWithCredentials(credentials).toPromise().then(
-      response => {
-      const token = response.token;
-      this.authService.authorize(token);
-      this.userService.loadUser();
-      this.authService.putRoleToLocalStorage(token);
-      this.router.navigate(['/']);
-    },
-    err => {
-      this.popupService.openModal('error', err);
-    });
-  }
-
-
 }

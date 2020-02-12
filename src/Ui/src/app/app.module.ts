@@ -4,6 +4,7 @@ import { PopupService } from './services/popup.service';
 import { UserService } from './services/user.service';
 import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { AuthGuard } from './guards/auth-guard';
+import { AdminGuard } from './guards/admin-guard';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
@@ -13,6 +14,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { FileUploadModule } from 'ng2-file-upload';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { MatTableModule } from '@angular/material/table';
 
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
@@ -37,6 +39,9 @@ import { CommentsListComponent } from './components/comments/comments-list/comme
 import { PopupComponent } from './components/popup/popup.component';
 import { MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, MatCardModule } from '@angular/material';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
+import { AdminHomeComponent } from './components/admin/admin-home/admin-home.component';
+import { AdminUsersListComponent } from './components/admin/admin-users/admin-users-list/admin-users-list.component';
+import { AdminUsersDetailComponent } from './components/admin/admin-users/admin-users-detail/admin-users-detail.component';
 
 export function tokenGetter() {
   return localStorage.getItem('jwt');
@@ -67,7 +72,10 @@ const jwtConfig = {
     CreateWorkItemComponent,
     CommentsListComponent,
     PopupComponent,
-    AuthCallbackComponent
+    AuthCallbackComponent,
+    AdminHomeComponent,
+    AdminUsersListComponent,
+    AdminUsersDetailComponent
   ],
   imports: [
     CommonModule,
@@ -89,11 +97,13 @@ const jwtConfig = {
     MatIconModule,
     MatCardModule,
     NgxSpinnerModule,
+    MatTableModule
   ],
   providers: [
     ProjectService,
     WorkItemService,
     AuthGuard,
+    AdminGuard,
     UserService,
     PopupService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

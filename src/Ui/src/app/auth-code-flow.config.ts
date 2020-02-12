@@ -11,6 +11,7 @@ export const authCodeFlowConfig: AuthConfig = {
   // clientId: 'server.code',
   clientId: 'angular_spa',
 
+  dummyClientSecret: 'jwt_client',
   // Just needed if your auth server demands a secret. In general, this
   // is a sign that the auth server is not configured with SPAs in mind
   // and it might not enforce further best practices vital for security

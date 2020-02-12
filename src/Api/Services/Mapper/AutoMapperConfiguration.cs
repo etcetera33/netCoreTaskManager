@@ -20,6 +20,17 @@ namespace Services.Mapper
                     .ForMember(dst => dst.AssignedTo, opt => opt.Ignore())
                     .ForMember(dst => dst.CreatedWorkItems, opt => opt.Ignore())
                     .ReverseMap();
+                cfg.CreateMap<ModerateUserDto, UserDto>()
+                    .ForMember(dst => dst.Email, opt => opt.Ignore())
+                    .ForMember(dst => dst.ExternalId, opt => opt.Ignore())
+                    .ForMember(dst => dst.FullName, opt => opt.Ignore())
+                    .ReverseMap();
+                cfg.CreateMap<ModerateUserDto, User>()
+                    .ForMember(dst => dst.UserId, src => src.MapFrom(e => e.Id))
+                    .ForMember(dst => dst.Comments, opt => opt.Ignore())
+                    .ForMember(dst => dst.AssignedTo, opt => opt.Ignore())
+                    .ForMember(dst => dst.CreatedWorkItems, opt => opt.Ignore())
+                    .ReverseMap();
                 cfg.CreateMap<ProjectDto, Project>()
                     .ForMember(dst => dst.WorkItems, opt => opt.Ignore())
                     .ForMember(dst => dst.ProjectId, src => src.MapFrom(e => e.Id))

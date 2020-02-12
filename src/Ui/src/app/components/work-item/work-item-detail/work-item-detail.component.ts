@@ -48,9 +48,6 @@ export class WorkItemDetailComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     const data = JSON.stringify(form.value);
-    console.log(data);
-    console.log(this.workItem);
-    console.log(form.value);
     this.workItemService.updateEntity(data, this.workItem.Id).subscribe(
       res => {
         this.router.navigate(['/projects/' + this.workItem.ProjectId]);

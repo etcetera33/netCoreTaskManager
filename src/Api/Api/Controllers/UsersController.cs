@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models.DTOs;
+using Models.QueryParameters;
 using Services.Interfaces;
 using System.Threading.Tasks;
 
@@ -17,8 +19,41 @@ namespace Api.Controllers
             _workItemService = workItemService;
         }
 
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Get([FromQuery] BaseQueryParameters queryParameters)
+        {
+            var user = await _userService.Paginate(queryParameters);
+
+            return Ok(user);
+        }
+
         [Authorize]
-        public async Task<IActionResult> Get()
+        [Route("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var user = await _userService.GetById(id);
+
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Put(int id, ModerateUserDto userDto)
+        {
+            await _userService.Update(id, userDto);
+
+            return NoContent();
+        }
+
+        [Authorize]
+        [Route("current")]
+        public async Task<IActionResult> GetCurrent()
         {
             var user = await _userService.GetById(int.Parse(User.Identity.Name));
 

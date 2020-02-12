@@ -1,5 +1,6 @@
 ﻿using Core.Adapters;
 using MassTransit;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Html;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +51,8 @@ namespace NotificationService
                     services.AddSingleton<IMailer, Mailer>();
 
                     services.AddSingleton(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
+
+                    services.AddRazorPages(options => options.RootDirectory = "/Views");
                 })
                 .ConfigureLogging((hostingContext, logging) =>
                 {

@@ -237,3 +237,6 @@ _Pvt_Extensions
 
 # Log files
 log.txt
+
+*.idea
+*.rsa

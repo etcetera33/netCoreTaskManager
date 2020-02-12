@@ -1,3 +1,7 @@
+import { AdminGuard } from './guards/admin-guard';
+import { AdminUsersDetailComponent } from './components/admin/admin-users/admin-users-detail/admin-users-detail.component';
+import { AdminUsersListComponent } from './components/admin/admin-users/admin-users-list/admin-users-list.component';
+import { AdminHomeComponent } from './components/admin/admin-home/admin-home.component';
 import { AuthCallbackComponent } from './components/auth-callback/auth-callback.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { RegisterComponent } from './components/auth/register/register.component';
@@ -20,6 +24,9 @@ export const appRoutes: Routes = [
     { path: 'projects/:id/work-item/create', component: CreateWorkItemComponent, canActivate: [AuthGuard]},
     { path: 'projects/:id/settings', component: ProjectSettingsComponent, canActivate: [AuthGuard]},
     { path: 'projects/:projectId/work-items/:id', component: WorkItemDetailComponent, canActivate: [AuthGuard]},
+    { path: 'admin', component: AdminHomeComponent, canActivate: [AdminGuard]},
+    { path: 'admin/users', component: AdminUsersListComponent, canActivate: [AdminGuard]},
+    { path: 'admin/users/:id', component: AdminUsersDetailComponent, canActivate: [AdminGuard]},
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'auth-callback', component: AuthCallbackComponent},

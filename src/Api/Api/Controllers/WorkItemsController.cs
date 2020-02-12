@@ -68,7 +68,6 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Developer,Owner")]
         public async Task<IActionResult> Put(int id, WorkItemDto workItemDto)
         {
             await _workItemService.Update(id, workItemDto);

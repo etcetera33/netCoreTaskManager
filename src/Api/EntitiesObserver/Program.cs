@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Services;
+using Services.Helpers;
 using Services.Interfaces;
 using Services.Mapper;
 using System;
@@ -50,11 +51,14 @@ namespace EntitiesObserver
                         cfg.AddBus(ConfigureBus);
                     });
 
+                    services.AddTransient<IFileUploader, FileUploader>();
+
                     services.AddSingleton<IHostedService, BusService>();
 
                     services.AddTransient<IUserRepository, UserRepository>();
                     services.AddTransient<IWorkItemRepository, WorkItemRepository>();
                     services.AddTransient<IWorkItemAuditRepository, WorkItemAuditRepository>();
+                    services.AddTransient<IWorkItemFileRepository, WorkItemFileRepository>();
 
                     services.AddTransient<IUserService, UserService>();
                     services.AddTransient<IWorkItemService, WorkItemService>();

@@ -32,25 +32,23 @@ namespace NotificationService.Handlers
                     throw new ArgumentNullException("No email address provided");
                 }
 
-                if (context.Message.Body == null)
-                {
-                    throw new ArgumentNullException("Message body is not provided");
-                }
-
                 if (context.Message.Subject == null)
                 {
                     throw new ArgumentNullException("Message subject is not provided");
                 }
 
-                await _mailer.SendMessageAsync(context.Message.To, context.Message.Body, context.Message.Subject);
+                var message = context.Message;
 
-                _logger.Information($"Email sent to: {context.Message.To}, with body: {context.Message.Body}");
+                await _mailer.SendMessageAsync(message.To, message.Body, message.Subject);
+
+                _logger.Information($"Email sent to: {context.Message.To}");
             }
             catch (Exception exception)
             {
                 _logger.Error(exception.Message);
                 return;
             }
+
         }
     }
 }

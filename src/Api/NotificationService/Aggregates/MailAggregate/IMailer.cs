@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using NotificationService.Models;
+using System.Threading.Tasks;
 
 namespace NotificationService.Aggregates.MailAggregate
 {

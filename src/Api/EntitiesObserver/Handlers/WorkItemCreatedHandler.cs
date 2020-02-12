@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Core.Adapters;
 using MassTransit;
+using Models.DTOs;
 using Services.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ namespace EntitiesObserver.Handlers
                 {
                     To = userData.Email,
                     Subject = "New work item assignee",
-                    Body = $"Dear, {userData.FullName}! You are the new assignee for the work item #{context.Message.WorkItemId}"
+                    Body = $"You are the new assignee for the work item # {context.Message.WorkItemId}"
                 });
 
                 _logger.Information($"Bus published EmailSend contract with email: {userData.Email}. WorkItemId: {context.Message.WorkItemId}");

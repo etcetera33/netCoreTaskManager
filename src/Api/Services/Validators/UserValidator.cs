@@ -12,7 +12,7 @@ namespace Services.Validators
             RuleFor(x => x.Email).MustAsync(async (email, cancelletion) =>
             {
                 return !(await userRepository.UserWithEmailExists(email));
-            }).NotEmpty().Length(1, 30);
+            }).NotEmpty().Length(1, 50);
             RuleFor(x => x.Position).NotNull().Length(1, 40);
         }
     }

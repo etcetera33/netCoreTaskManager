@@ -25,7 +25,8 @@ namespace NotificationService.Aggregates.MailAggregate
             {
                 From = new MailAddress(_mailConfig.Value.From),
                 Subject = subject,
-                Body = body
+                Body = body,
+                IsBodyHtml = true
             };
             message.To.Add(to);
 

@@ -3,6 +3,7 @@ using Api.Middleware;
 using AutoMapper;
 using Core.Adapters;
 using Core.Configs;
+using Core.Security;
 using Data;
 using Data.Interfaces;
 using Data.Repositories;
@@ -60,13 +61,11 @@ namespace Api
                 x.SaveToken = true;
                 x.Authority = Configuration.GetSection("IdentityServer").GetSection("Host").Value;
                 x.Audience = "api1";
-                /*x.TokenValidationParameters = new TokenValidationParameters
+                x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = AuthConfig.GetKey(Configuration.GetSection("AuthConfig").GetSection("SecretKey").Value),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };*/
+                    NameClaimType = TaskManagerClaims.Name,
+                    RoleClaimType = TaskManagerClaims.Role
+                };
             });
 
             // Start of the service Bus1

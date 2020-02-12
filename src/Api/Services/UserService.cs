@@ -4,8 +4,11 @@ using Data.Interfaces;
 using Data.Models;
 using Microsoft.Extensions.Options;
 using Models.DTOs;
+using Models.PaginatedResponse;
+using Models.QueryParameters;
 using Services.Helpers;
 using Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,25 +34,6 @@ namespace Services
 
             return _mapper.Map<User, UserDto>(createdEntity);
         }
-
-        /*public async Task<UserDto> GetUserByLoginAsync(UserDto userDto)
-        {
-            var user = await _userRepository.FindUserByLoginAsync(userDto.Login);
-
-            if (user == null)
-            {
-                return null;
-            }
-
-            var isPasswordMatch = PasswordHasher.PasswordHashValid(userDto.Password, user.Password, _passwordHasher.Value.Salt, _passwordHasher.Value.IterationCount, _passwordHasher.Value.BytesRequested);
-
-            if (!isPasswordMatch)
-            {
-                return null;
-            }
-
-            return _mapper.Map<User, UserDto>(user);
-        }*/
 
         public async Task<UserDto> GetById(int userId)
         {
@@ -88,6 +72,31 @@ namespace Services
             var user = await _userRepository.GetByExternalId(externalId);
 
             return _mapper.Map<User, UserDto>(user);
+        }
+
+        public async Task<BasePaginatedResponse<UserDto>> Paginate(BaseQueryParameters parameters)
+        {
+            var userList = await _userRepository.Paginate(
+            offset: (parameters.Page - 1) * parameters.ItemsPerPage,
+            itemsCount: parameters.ItemsPerPage,
+            search: parameters.Search
+            );
+
+            var userDtoList = _mapper.Map<IEnumerable<User>, IEnumerable<UserDto>>(userList);
+            var rowsCount = await _userRepository.GetFilteredDataCountAsync(parameters.Search);
+
+            var pagesCount = (int)Math.Ceiling((decimal)rowsCount / parameters.ItemsPerPage);
+
+            return new BasePaginatedResponse<UserDto>
+            {
+                EntityList = userDtoList,
+                PagesCount = pagesCount
+            };
+        }
+
+        public async Task Update(int id, ModerateUserDto userDto)
+        {
+            await _userRepository.Patch(id, userDto);
         }
     }
 }
