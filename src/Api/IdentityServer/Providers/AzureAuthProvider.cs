@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace IdentityServer.Providers
 {
-    public class AzureAuthProvider : IAuthProvider
+    public class AzureAuthProvider : BaseAuthProvider
     {
         private readonly AuthenticateResult _result;
 
@@ -12,12 +12,12 @@ namespace IdentityServer.Providers
             _result = result;
         }
 
-        public string GetEmail()
+        public override string GetEmail()
         {
             return _result.Principal.Claims.Where(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name").FirstOrDefault().Value;
         }
 
-        public string GetSubject()
+        public override string GetSubject()
         {
             return _result.Principal.Claims.Where(x => x.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier").FirstOrDefault()?.Value;
         }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,12 +16,6 @@ using Data.Repositories;
 using Data;
 using AutoMapper;
 using Services.Mapper;
-using IdentityModel;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using System.Security.Cryptography;
-using System.Text;
-using System;
 using IdentityServer.Extensions;
 
 namespace IdentityServer
@@ -36,7 +29,6 @@ namespace IdentityServer
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(
@@ -49,9 +41,7 @@ namespace IdentityServer
             .AddResourceStore<InMemoryResourcesStore>()
             .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
             .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
-            //.AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
-            //.AddInMemoryClients(IdentityServerConfig.GetClients())
-            .AddInMemoryClients(IIdentityServerHelper.AddInMemoryClientsWithClamis(Configuration.GetSection("IdentityServer:Clients")))
+            .AddInMemoryClients(IIdentityServerExtensions.AddInMemoryClientsWithClamis(Configuration.GetSection("IdentityServer:Clients")))
             .AddDeveloperSigningCredential()
             ;
 
@@ -60,18 +50,6 @@ namespace IdentityServer
                 options.DefaultSignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                 options.DefaultSignOutScheme = IdentityServerConstants.SignoutScheme;
             })
-           /*.AddGoogle("Google", "Google",
-                options =>
-                {
-                    IConfigurationSection googleConfig = Configuration.GetSection("Authentication:Google");
-
-                    options.ClientId = googleConfig["ClientId"];
-                    options.ClientSecret = googleConfig["ClientSecret"];
-                    //options.Authority = "https://accounts.google.com";
-                    //options.ResponseType = OpenIdConnectResponseType.Code;
-                    options.CallbackPath = "/signin-google";
-                    options.SaveTokens = true;
-                })*/
             .AddOpenIdConnect("Google", "Google",
                 options =>
                 {
@@ -83,6 +61,7 @@ namespace IdentityServer
                     options.ResponseType = OpenIdConnectResponseType.Code;
                     options.CallbackPath = "/signin-google";
                     options.SaveTokens = true;
+                    options.Scope.Add("email");
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = "name",
@@ -99,6 +78,9 @@ namespace IdentityServer
                 options.CallbackPath = "/signin-oidc";
                 options.ResponseType = OpenIdConnectResponseType.Code;
                 options.SaveTokens = true;
+                options.Scope.Add("email");
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = "name",
@@ -142,7 +124,6 @@ namespace IdentityServer
             services.AddTransient<IUserService, UserService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

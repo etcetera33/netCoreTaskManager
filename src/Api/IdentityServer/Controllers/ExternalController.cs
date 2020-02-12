@@ -33,7 +33,6 @@ namespace IdentityServer.Controllers
         private readonly IEventService _events;
         private readonly ILogger<ExternalController> _logger;
         private readonly IUserService _userService;
-        private IAuthProvider _provider;
 
         public ExternalController(
             IIdentityServerInteractionService interaction,
@@ -105,19 +104,9 @@ namespace IdentityServer.Controllers
                 _logger.LogDebug("External claims: {@claims}", externalClaims);
             }
 
-            _provider = (result.Properties.Items["scheme"]) switch
-            {
-                /// TODO provider factory
-                "Google" => new GoogleAuthProvider(result),
+            BaseAuthProvider authProvider = ProviderFactory.CreateProvider(result);
 
-                "Azure" => new AzureAuthProvider(result),
-
-                "Okta" => new OktaAuthProvider(result),
-
-                _ => null,
-            };
-
-            var subject = _provider.GetSubject();
+            var subject = authProvider.GetSubject();
             if (string.IsNullOrEmpty(subject))
             {
                 throw new Exception("External authentication error");
@@ -127,7 +116,7 @@ namespace IdentityServer.Controllers
             var (user, provider, providerUserId, claims) = await FindUserFromExternalProvider(result, subject);
             if (user == null)
             {
-                string email = _provider.GetEmail();
+                string email = authProvider.GetEmail();
                 var fullName = result.Principal.Identity.Name;
 
                 user = await _userService.RegisterUserAsync(new UserDto
@@ -215,7 +204,7 @@ namespace IdentityServer.Controllers
                 }
 
                 await HttpContext.SignInAsync(
-                    IdentityServer4.IdentityServerConstants.ExternalCookieAuthenticationScheme,
+                    IdentityServerConstants.ExternalCookieAuthenticationScheme,
                     new ClaimsPrincipal(id),
                     props);
                 return Redirect(props.RedirectUri);

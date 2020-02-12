@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace IdentityServer.Extensions
 {
-    public static class IIdentityServerHelper
+    public static class IIdentityServerExtensions
     {
         internal static IEnumerable<Client> AddInMemoryClientsWithClamis(IConfigurationSection configurationSection)
         {

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace IdentityServer.Providers
 {
-    public class OktaAuthProvider : IAuthProvider
+    public class OktaAuthProvider : BaseAuthProvider
     {
         private readonly AuthenticateResult _result;
 
@@ -12,12 +12,12 @@ namespace IdentityServer.Providers
             _result = result;
         }
 
-        public string GetEmail()
+        public override string GetEmail()
         {
             return _result.Principal.Claims.Where(x => x.Type == "preferred_username").FirstOrDefault()?.Value;
         }
 
-        public string GetSubject()
+        public override string GetSubject()
         {
             return _result.Principal.Claims.Where(x => x.Type == "preferred_username").FirstOrDefault()?.Value;
         }

@@ -1,9 +1,5 @@
-﻿using IdentityModel;
-using IdentityModel.Client;
-using IdentityServer4;
-using IdentityServer4.Models;
+﻿using IdentityServer4.Models;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Security.Claims;
 
 namespace IdentityServer.Configs
@@ -12,18 +8,11 @@ namespace IdentityServer.Configs
     {
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
-            var customIdentityResource = new IdentityResource
-            {
-                Name = "custom.profile",
-                DisplayName = "Custom profile",
-                UserClaims = new[] { "name", "email", "status" }
-            };
             return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Email(),
                 new IdentityResources.Profile(),
-                customIdentityResource
             };
         }
 
