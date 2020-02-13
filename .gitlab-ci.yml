@@ -40,7 +40,7 @@ build_api:
     services:
         - docker:18-dind
     before_script:
-        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+        - docker login dapoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
         - docker build -f ./src/Api/Api/Dockerfile -t ${AZURE_REGISTRY}/api:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/api:latest
@@ -56,7 +56,7 @@ build_entity_observer_service:
     services:
         - docker:18-dind
     before_script:
-        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+        - docker login dapoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
         - docker build -f ./src/Api/EntitiesObserver/Dockerfile -t ${AZURE_REGISTRY}/entity-observer-service:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/entity-observer-service:latest
@@ -72,7 +72,7 @@ build_notification_service:
     services:
         - docker:18-dind
     before_script:
-        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+        - docker login dapoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
         - docker build -f ./src/Api/NotificationService/Dockerfile -t ${AZURE_REGISTRY}/notification-service:latest ./src/Api
         - docker push ${AZURE_REGISTRY}/notification-service:latest
@@ -89,7 +89,7 @@ build_front:
         - docker info
         - docker:18-dind
     before_script:
-        - docker login dapracticepoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+        - docker login dapoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
     script:
         - docker build -f ./src/Ui/Dockerfile -t ${AZURE_REGISTRY}/front:latest ./src/Ui
         - docker push ${AZURE_REGISTRY}/front:latest

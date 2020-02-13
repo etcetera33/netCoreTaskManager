@@ -51,7 +51,7 @@ namespace EntitiesObserver.Tests
             await _bus.Received(1).Publish(Arg.Is<EmailSend>(
                x => x.To == User.Email
                    && x.Subject == "New work item assignee"
-                   && x.Body == $"Dear, {User.FullName}! You are the new assignee for the work item #{workItemId}"
+                   && x.Body == $"You are the new assignee for the work item # {workItemId}"
                ));
 
             await _workItemAuditService.Received(1).WIUpdated(workItemId, Arg.Any<WorkItemHistoryDto>(), Arg.Any<WorkItemHistoryDto>());

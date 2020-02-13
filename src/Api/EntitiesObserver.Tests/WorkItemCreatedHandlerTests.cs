@@ -47,7 +47,10 @@ namespace EntitiesObserver.Tests
 
             await _userService.Received(1).GetById(userId);
 
-            await _bus.Received(1).Publish(Arg.Is<EmailSend>(x => x.Body == $"Dear, {UserDto.FullName}! You are the new assignee for the work item #{workItemId}" && x.To == UserDto.Email && x.Subject == "New work item assignee"));
+            await _bus.Received(1).Publish(Arg.Is<EmailSend>(x =>
+            x.Body == $"You are the new assignee for the work item # {workItemId}"
+            && x.To == UserDto.Email
+            && x.Subject == "New work item assignee"));
 
             await _workItemAuditService.Received(1).WICreated(workItemId, Arg.Is<WorkItemHistoryDto>(value => value == ValidNewWorkItem));
         }

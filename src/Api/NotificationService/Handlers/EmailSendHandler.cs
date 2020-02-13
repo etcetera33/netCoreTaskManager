@@ -37,6 +37,11 @@ namespace NotificationService.Handlers
                     throw new ArgumentNullException("Message subject is not provided");
                 }
 
+                if (context.Message.Body == null)
+                {
+                    throw new ArgumentNullException("Body subject is not provided");
+                }
+
                 var message = context.Message;
 
                 await _mailer.SendMessageAsync(message.To, message.Body, message.Subject);
