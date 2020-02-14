@@ -99,7 +99,7 @@ export class AuthService {
 
   getUserManagerSettngs(): UserManagerSettings {
     return {
-      authority: 'https://localhost:44306',
+      authority: 'http://localhost:9000',
       client_id: 'angular_spa',
       redirect_uri: 'http://localhost:4200/auth-callback',
       post_logout_redirect_uri: 'http://localhost:4200/',

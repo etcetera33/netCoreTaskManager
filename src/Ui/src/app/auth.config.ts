@@ -11,7 +11,7 @@ export const authConfig: AuthConfig = {
 
 
   // Url of the Identity Provider
-  issuer: 'https://localhost:44306',
+  issuer: 'http://localhost:9000',
 
   // URL of the SPA to redirect the user to after login
   redirectUri: 'http://localhost:4200/auth-callback',
