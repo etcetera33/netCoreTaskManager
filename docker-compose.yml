@@ -2,7 +2,7 @@ version: '3'
 
 services:
   api:
-    image: "dapracticepoliit.azurecr.io/api:latest"
+    image: "dapoliit.azurecr.io/api:latest"
     ports:
         - "8037:80"
         - "9098:8080"
@@ -13,6 +13,7 @@ services:
         ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
         Redis__Host: redis
         Redis__Port: "${Redis_Port}"
+        IdentityServer__Host: identity_server
         RabbitMqConfig__Host: rabbit
         RabbitMqConfig__VirtualHost: "${Rabbit_VirtualHost}"
         RabbitMqConfig__Username: "${Rabbit_Username}"
@@ -26,6 +27,7 @@ services:
       - db
       - rabbit
       - redis
+      - identity_server
   db:
     image: "mcr.microsoft.com/mssql/server"
     environment:
@@ -61,7 +63,7 @@ services:
       - ../data/redis:/data
     restart: always
   entities_observer:
-    image: "dapracticepoliit.azurecr.io/entity-observer-service:latest"
+    image: "dapoliit.azurecr.io/entity-observer-service:latest"
     networks:
       - backend
     environment:
@@ -76,7 +78,7 @@ services:
       - api
       - rabbit
   notification_service:
-    image: "dapracticepoliit.azurecr.io/notification-service:latest"
+    image: "dapoliit.azurecr.io/notification-service:latest"
     networks:
       - backend
     environment:
@@ -94,8 +96,28 @@ services:
     depends_on:
       - entities_observer
       - rabbit
+  identity_server:
+    image: "dapoliit.azurecr.io/identity-server:latest"
+    ports:
+      - "8038:80"
+    networks:
+      - backend
+      - frontend
+    environment:
+        ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
+        Authentication__Google__SecretKey: "${Google_SecretKey}"
+        Authentication__Google__ClientId: "${Google_ClientId}"
+        Authentication__Google__ClientSecret: "${Google_ClientSecret}"
+        Authentication__AzureAd__ClientId: "${Azure_ClientId}"
+        Authentication__AzureAd__ClientSecret: "${Azure_ClientSecret}"
+        Authentication__Okta__ClientId: "${Okta_ClientId}"
+        Authentication__Okta__ClientSecret: "${Okta_ClientSecret}"
+        Authentication__Okta__Authority: "${Okta_Authority}"
+        Authentication__Okta__PostLogoutRedirectUri: "${Okta_PostLogoutRedirectUri}"
+    depends_on:
+      - db
   front:
-    image: "dapracticepoliit.azurecr.io/front:latest"
+    image: "dapoliit.azurecr.io/front:latest"
     ports:
       - "4200:80"
     networks:

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: identity-server
+spec:
+    type: LoadBalancer
+    ports:
+      - port: 80
+        targetPort: 9377
+    selector:
+        app: identity-server

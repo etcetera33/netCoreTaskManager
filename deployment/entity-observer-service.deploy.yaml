@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+    name: entity-observer-service
+spec:
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: entity-observer-service
+        spec:
+            containers:
+              - name: entities-observer
+                image: dapoliit.azurecr.io/entity-observer-service:latest
+                envFrom:
+                    - secretRef:
+                        name: dev-config
+            imagePullSecrets:
+                - name: azure-ad-secret

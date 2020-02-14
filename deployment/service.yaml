@@ -1,0 +1,57 @@
+#apiVersion: v1
+#kind: Service
+#metadata:
+#    name: front
+#spec:
+#    type: LoadBalancer
+#    ports:
+#      - port: 80
+#        targetPort: 4200
+#    selector:
+#        app: front
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#    name: api
+#spec:
+#    type: LoadBalancer
+#    ports:
+#      - port: 80
+#        targetPort: 9376
+#    selector:
+#        app: front
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#    name: api
+#spec:
+#    type: LoadBalancer
+#    ports:
+#        - port: 80
+#    selector:
+#        app: notification-service
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#    name: api
+#spec:
+#    type: LoadBalancer
+#    ports:
+#        - port: 80
+#    selector:
+#        app: entity-observer-service
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#    name: api
+#spec:
+#    type: LoadBalancer
+#    ports:
+#      - port: 80
+#        targetPort: 9377
+#    selector:
+#        app: entity-observer-service

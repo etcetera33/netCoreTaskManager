@@ -47,6 +47,22 @@ build_api:
     after_script:
         - docker logout ${AZURE_REGISTRY}
 
+build_identity_server:
+    stage: build
+    only:
+        - master
+        - web
+    image: docker:18-git
+    services:
+        - docker:18-dind
+    before_script:
+        - docker login dapoliit.azurecr.io -u ${AZURE_REGISTRY_USER} -p ${AZURE_REGISTRY_PASSWORD}
+    script:
+        - docker build -f ./src/Api/IdentityServer/Dockerfile -t ${AZURE_REGISTRY}/identity-server:latest ./src/Api
+        - docker push ${AZURE_REGISTRY}/api:latest
+    after_script:
+        - docker logout ${AZURE_REGISTRY}
+
 build_entity_observer_service:
     stage: build
     only:

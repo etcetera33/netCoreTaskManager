@@ -1,0 +1,100 @@
+#apiVersion: apps/v1beta1
+#kind: Deployment
+#metadata:
+#    name: front
+#spec:
+#    replicas: 2
+#    template:
+#        metadata:
+#            labels:
+#                app: front
+#        spec:
+#            containers:
+#              - name: front
+#                image: dapoliit.azurecr.io/front:latest
+#                ports:
+#                    - containerPort: 80
+#            imagePullSecrets:
+#                - name: azure-ad-secret
+#---
+#apiVersion: apps/v1beta1
+#kind: Deployment
+#metadata:
+#    name: api
+#spec:
+#    replicas: 2
+#    template:
+#        metadata:
+#            labels:
+#                app: api
+#        spec:
+#            containers:
+#              - name: api
+#                image: dapoliit.azurecr.io/api:latest
+#                ports:
+#                    - containerPort: 80
+#                envFrom:
+#                    - secretRef:
+#                        name: dev-config
+#            imagePullSecrets:
+#                - name: azure-ad-secret
+#---
+#apiVersion: apps/v1beta1
+#kind: Deployment
+#metadata:
+#    name: notification-service
+#spec:
+#    replicas: 1
+#    template:
+#        metadata:
+#            labels:
+#                app: notification-service
+#        spec:
+#            containers:
+#              - name: notification-service
+#                image: dapoliit.azurecr.io/notification-service:latest
+#                envFrom:
+#                    - secretRef:
+#                        name: dev-config
+#            imagePullSecrets:
+#                - name: azure-ad-secret
+#---
+#apiVersion: apps/v1beta1
+#kind: Deployment
+#metadata:
+#    name: entity-observer-service
+#spec:
+#    replicas: 1
+#    template:
+#        metadata:
+#            labels:
+#                app: entity-observer-service
+#        spec:
+#            containers:
+#              - name: entities-observer
+#                image: dapoliit.azurecr.io/entity-observer-service:latest
+#                envFrom:
+#                    - secretRef:
+#                        name: dev-config
+#            imagePullSecrets:
+#                - name: azure-ad-secret
+#---
+#apiVersion: apps/v1beta1
+#kind: Deployment
+#metadata:
+#    name: identity-server
+#spec:
+#    replicas: 1
+#    template:
+#        metadata:
+#            labels:
+#                app: identity-server
+#        spec:
+#            containers:
+#              - name: identity-server
+#                image: dapoliit.azurecr.io/identity-server:latest
+#                envFrom:
+#                    - secretRef:
+#                        name: dev-config
+#            imagePullSecrets:
+#                - name: azure-ad-secret

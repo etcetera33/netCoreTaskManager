@@ -1,0 +1,18 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+    name: front
+spec:
+    replicas: 2
+    template:
+        metadata:
+            labels:
+                app: front
+        spec:
+            containers:
+              - name: front
+                image: dapoliit.azurecr.io/front:latest
+                ports:
+                    - containerPort: 80
+            imagePullSecrets:
+                - name: azure-ad-secret

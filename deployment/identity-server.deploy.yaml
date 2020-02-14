@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+    name: identity-server
+spec:
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: identity-server
+        spec:
+            containers:
+              - name: identity-server
+                image: dapoliit.azurecr.io/identity-server:latest
+                envFrom:
+                    - secretRef:
+                        name: dev-config
+            imagePullSecrets:
+                - name: azure-ad-secret
