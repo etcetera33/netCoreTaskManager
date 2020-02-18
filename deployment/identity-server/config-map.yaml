@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identity-server-configmap
+data:
+  appsettings.json: |-
+    {
+    "ConnectionStrings": {
+        "DefaultConnection": "Server=mssql;Database=master;User=sa;Password=Pass@word;MultipleActiveResultSets=true"
+    },
+    "Logging": {
+        "LogLevel": {
+        "Default": "Information",
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information"
+        }
+    },
+    "AllowedHosts": "*",
+    "Authentication": {
+        "Google": {
+            "SecretKey": "AIzaSyCfMDrin2Gros3Mh5vr15JjXAR5ZeaTDFY",
+            "ClientId": "692866410332-j6n3coet29q01h12qdhvfnsfq8g4634i.apps.googleusercontent.com",
+            "ClientSecret": "qwdBhQUHD0-uAdIRp31JSLNu"
+        },
+        "AzureAd": {
+            "ClientId": "d9a4553f-71bb-49d8-98f4-4c697faf6ce1",
+            "ClientSecret": "?3/=01=sXGudSFw5LEXL.7==/S@..8D3"
+        },
+        "Okta": {
+            "ClientId": "0oa168wvbP8flxXmN4x6",
+            "ClientSecret": "U7F14WSzjhOuMkCU8bcbDcQZFAVeAWAYg257UsFL",
+            "Authority": "https://dev-743020.okta.com/oauth2/default",
+            "PostLogoutRedirectUri": "https://localhost:5001/"
+        }
+    },
+    "IdentityServer": {
+        "Clients": [
+        {
+            "Enabled": true,
+            "ClientId": "angular_spa",
+            "ClientName": "Local Development",
+            "ClientSecrets": [ { "Value": "PznGtuDf/unCRPClTHjz4xsd0noG3g9xmokuZP02VeI=" } ],
+            "AllowedGrantTypes": [ "implicit" ],
+            "AllowedScopes": [ "openid", "api1", "profile", "api.read" ],
+            "RedirectUris": [ "http://localhost:4200/auth-callback" ],
+            "AllowedCorsOrigins": [ "http://localhost:4200" ],
+            "RequireConsent": false,
+            "AllowAccessTokensViaBrowser": true,
+            "AccessTokenLifetime":  3600
+        },
+        {
+            "Enabled": true,
+            "ClientId": "jwt_client",
+            "ClientName": "Jwt Client",
+            "ClientSecrets": [
+            { "Value": "lzqB+SL/OVkwtU4gygDfc+NbUeblE1ahBVRXtlMV1BA=" }
+            ],
+            "AllowedGrantTypes": [ "client_credentials" ],
+            "AllowedScopes": [ "api1", "api.read" ],
+            "Claims": [
+            {
+                "Type": "Id",
+                "Value": "1"
+            },
+            {
+                "Type": "Name",
+                "value": "Spectator"
+            }
+            ],
+            "AccessTokenLifetime": 3600
+        }
+        ]
+        }
+    }

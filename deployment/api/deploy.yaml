@@ -22,10 +22,10 @@ spec:
                 - name: Azure__ConnectionString
                   value: DefaultEndpointsProtocol=https;AccountName=dapracticepoliit;AccountKey=qIoJiU+a+EYHFZz40qQf12Tlh33w3yHTgikosOYh1EKzaWy5FDwrYzG6JuhdgPwKnWG5HbkTLpxnwGL+Q8DXng==;EndpointSuffix=core.windows.net
                 #- name: RABBITMQ_DEFAULT_PASS
-              #valueFrom:
-              #  secretKeyRef:
-              #    name: {{ .Chart.Name }}
-              #    key: rabbitmq-password
+                #valueFrom:
+                #  secretKeyRef:
+                #    name: {{ .Chart.Name }}
+                #    key: rabbitmq-password
 
                 - name: Redis__ConnectionString
                   value: redis-master:6379,connectRetry=5
@@ -40,5 +40,7 @@ spec:
                   value: "false"
                 - name: ACCEPT_EULA
                   value: "Y"
+                - name: IdentityServer__Host
+                  value: http://localhost:9000/
             imagePullSecrets:
                 - name: azure-ad-secret

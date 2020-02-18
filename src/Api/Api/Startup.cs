@@ -24,6 +24,7 @@ using Services.Helpers;
 using Services.Interfaces;
 using Services.Mapper;
 using Services.Validators;
+using System;
 
 namespace Api
 {
@@ -61,6 +62,7 @@ namespace Api
                 x.SaveToken = true;
                 x.Authority = Configuration.GetSection("IdentityServer").GetSection("Host").Value;
                 x.Audience = "api1";
+                x.RequireHttpsMetadata = false;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = TaskManagerClaims.Name,
@@ -73,10 +75,18 @@ namespace Api
 
             services.AddSingleton(provider => MassTransit.Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                var host = cfg.Host(
+                var host = cfg.Host(new Uri(Configuration.GetSection("RabbitMqConfig").GetSection("Host").Value), h =>
+                {
+                    h.Username(Configuration.GetSection("RabbitMqConfig").GetSection("Username").Value);
+                    h.Password(Configuration.GetSection("RabbitMqConfig").GetSection("Password").Value);
+                });
+
+                //cfg.ConfigureEndpoints(provider);
+
+                /*var host = cfg.Host(
                     host: Configuration.GetSection("RabbitMqConfig").GetSection("Host").Value,
                     virtualHost: Configuration.GetSection("RabbitMqConfig").GetSection("VirtualHost").Value,
-                    h => { });
+                    h => { });*/
 
                 cfg.ReceiveEndpoint(
                     Configuration.GetSection("RabbitMqConfig").GetSection("Endpoint").Value,
