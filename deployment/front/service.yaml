@@ -6,6 +6,6 @@ spec:
     selector:
         app: front
     ports:
-      - port: 80
-        targetPort: 4200
+      - port: 4200
+        targetPort: 80
     type: LoadBalancer

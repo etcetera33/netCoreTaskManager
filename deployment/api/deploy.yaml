@@ -1,0 +1,28 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+    name: api
+spec:
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: api
+        spec:
+            containers:
+              - name: api
+                image: dapoliit.azurecr.io/api:latest
+                ports:
+                    - containerPort: 80
+                env:
+                - name: ConnectionStrings__DefaultConnection
+                  value: Server=mssql;Database=master;User=sa;Password=Password;MultipleActiveResultSets=true
+                #- name: MSSQL_SA_PASSWORD
+                #  value: Password
+                #- name: ACCEPT_EULA
+                #  value: "Y"
+                #envFrom:
+                #    - secretRef:
+                #        name: dev-config
+            imagePullSecrets:
+                - name: azure-ad-secret

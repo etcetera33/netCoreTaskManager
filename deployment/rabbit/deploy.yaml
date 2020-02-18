@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  labels:
+    app: rabbit-mq
+  name: rabbit-mq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbit-mq
+  template:
+    metadata:
+      labels:
+         app: rabbit-mq
+    spec:
+      containers:
+      - image: rabbitmq:3.6.1-management
+        name: rabbit-mq
+        envFrom:
+          - secretRef:
+              name: dev-config
+        ports:
+        - containerPort: 15671
+        - containerPort: 5671
+        volumeMounts:
+        - name: rabbit-mq-data
+          mountPath: /etc/rabbitmq
+          readOnly: false  
+      volumes:
+        - name: rabbit-mq-data
+          hostPath:
+            path: /etc/rabbitmq
+            type: DirectoryOrCreate

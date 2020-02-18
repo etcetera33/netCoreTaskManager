@@ -23,7 +23,7 @@ export const authCodeFlowConfig: AuthConfig = {
   disableAtHashCheck: true,
 
   // set the scope for the permissions the client should request
-  // The first four are defined by OIDC. 
+  // The first four are defined by OIDC.
   // Important: Request offline_access to get a refresh token
   // The api scope is a usecase specific one
   scope: 'openid profile email offline_access api',
@@ -31,4 +31,4 @@ export const authCodeFlowConfig: AuthConfig = {
   showDebugInformation: true,
 
   // disablePKCI: true,
-}
+};

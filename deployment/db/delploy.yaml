@@ -1,0 +1,107 @@
+#apiVersion: extensions/v1beta1
+#kind: ReplicaSet
+#metadata:
+#  name: mssql
+#  labels:
+#    app: mssql
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: mssql
+#  template:
+#    metadata:
+#      labels:
+#        app: mssql
+#    spec:
+#      containers:
+#      - name: mssql
+#        image: mcr.microsoft.com/mssql/server
+#        env:
+#          - name: ACCEPT_EULA
+#            value: "Y"
+#          - name: SA_PASSWORD
+#            value: "My_Secure_Password"
+#        envFrom:
+#          - secretRef:
+#              name: dev-config
+#        ports:
+#        - containerPort: 1433
+#        volumeMounts:
+#        - name: mssqldb
+#          mountPath: /var/opt/mssql
+#      volumes:
+#        - name: mssqldb
+#          persistentVolumeClaim:
+#            claimName: mssql-data
+#---
+
+#apiVersion: extensions/v1beta1
+#kind: ReplicaSet
+#metadata:
+#  name: mssql
+#  labels:
+#    app: mssql
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: mssql
+#  template:
+#    metadata:
+#      labels:
+#        app: mssql
+#    spec:
+#      containers:
+#      - name: mssql
+#        image: mcr.microsoft.com/mssql/server
+#        env:
+#        - name: SA_PASSWORD
+#          value: Password
+#        - name: MSSQL_SA_PASSWORD
+#          value: Password
+#        - name: ACCEPT_EULA
+#          value: "Y"
+#        ports:
+#        - containerPort: 1433
+#        volumeMounts:
+#        - name: mssqldb
+#          mountPath: /var/opt/mssql
+#      volumes:
+#        - name: mssqldb
+#          persistentVolumeClaim:
+#            claimName: mssql-data
+
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mssql
+  labels:
+    app: mssql
+spec:
+  template:
+    metadata:
+      labels:
+        app: mssql
+    spec:
+      containers:
+        - name: mssql
+          image: mcr.microsoft.com/mssql/server
+          env:
+            - name: SA_PASSWORD
+              value: Password
+            - name: MSSQL_SA_PASSWORD
+              value: Password
+            - name: ACCEPT_EULA
+              value: "Y"
+          ports:
+            - name: mssql
+              containerPort: 1433
+          volumeMounts:
+            - name: mssqldb
+              mountPath: /var/opt/mssql
+      volumes:
+        - name: mssqldb
+          persistentVolumeClaim:
+            claimName: mssql-data

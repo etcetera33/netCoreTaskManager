@@ -1,9 +1,9 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: rabbitmq-internal
+  name: rabbit-mq
   labels:
-    app: rabbitmq
+    app: rabbit-mq
 spec:
   clusterIP: None
   ports:
@@ -14,4 +14,4 @@ spec:
      protocol: TCP
      port: 5672
   selector:
-    app: rabbitmq
+    app: rabbit-mq
