@@ -29,12 +29,9 @@ namespace Api
 {
     public class Startup
     {
-        private readonly ILoggerAdapter<Startup> _logger;
-
-        public Startup(IConfiguration configuration, ILoggerAdapter<Startup> logger)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _logger = logger;
         }
 
         public IConfiguration Configuration { get; }
@@ -53,8 +50,6 @@ namespace Api
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
-            _logger.Information("Connection string:" + Configuration.GetConnectionString("DefaultConnection"));
-            //_logger.Information("Connection string:" + Configuration.GetConnectionString("DefaultConnection"));
 
             services.AddAuthentication(x =>
             {

@@ -90,9 +90,9 @@ spec:
           image: mcr.microsoft.com/mssql/server
           env:
             - name: SA_PASSWORD
-              value: Password
+              value: "Password"
             - name: MSSQL_SA_PASSWORD
-              value: Password
+              value: "Password"
             - name: ACCEPT_EULA
               value: "Y"
           ports:
@@ -105,3 +105,48 @@ spec:
         - name: mssqldb
           persistentVolumeClaim:
             claimName: mssql-data
+  
+#apiVersion: apps/v1beta1
+#kind: Deployment
+#metadata:
+#  name: mssql-deployment
+#spec:
+#  replicas: 1
+#  template:
+#    metadata:
+#      labels:
+#        app: mssql
+#    spec:
+#      terminationGracePeriodSeconds: 10
+#      containers:
+#      - name: mssql
+#        image: mcr.microsoft.com/mssql/server
+#        ports:
+#        - containerPort: 1433
+#        env:
+#        - name: MSSQL_PID
+#          value: "Developer"
+#        - name: ACCEPT_EULA
+#          value: "Y"
+#        - name: MSSQL_SA_PASSWORD
+#          value: "MyP@ssword"
+#        volumeMounts:
+#        - name: mssqldb
+#          mountPath: /var/opt/mssql
+#      volumes:
+#      - name: mssqldb
+#        persistentVolumeClaim:
+#          claimName: mssql-data
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: mssql-deployment
+#spec:
+#  selector:
+#    app: mssql
+#  ports:
+#    - protocol: TCP
+#      port: 1433
+#      targetPort: 1433
+#  type: LoadBalancer
