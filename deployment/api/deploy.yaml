@@ -15,14 +15,30 @@ spec:
                 ports:
                     - containerPort: 80
                 env:
+
                 - name: ConnectionStrings__DefaultConnection
-                  value: Server=mssql;Database=master;User=sa;Password=Password;MultipleActiveResultSets=true
-                #- name: MSSQL_SA_PASSWORD
-                #  value: Password
-                #- name: ACCEPT_EULA
-                #  value: "Y"
-                #envFrom:
-                #    - secretRef:
-                #        name: dev-config
+                  value: Server=mssql;Database=master;User=sa;Password=Pass@word;MultipleActiveResultSets=true
+
+                - name: Azure__ConnectionString
+                  value: DefaultEndpointsProtocol=https;AccountName=dapracticepoliit;AccountKey=qIoJiU+a+EYHFZz40qQf12Tlh33w3yHTgikosOYh1EKzaWy5FDwrYzG6JuhdgPwKnWG5HbkTLpxnwGL+Q8DXng==;EndpointSuffix=core.windows.net
+                #- name: RABBITMQ_DEFAULT_PASS
+              #valueFrom:
+              #  secretKeyRef:
+              #    name: {{ .Chart.Name }}
+              #    key: rabbitmq-password
+
+                - name: Redis__ConnectionString
+                  value: redis-master:6379,connectRetry=5
+                
+                - name: RabbitMqConfig__Host
+                  value: "rabbitmq"
+                - name: RabbitMqConfig__Username
+                  value: "usr"
+                - name: RabbitMqConfig__Password
+                  value: "pass"
+                - name: RabbitMqConfig__SSLActive
+                  value: "false"
+                - name: ACCEPT_EULA
+                  value: "Y"
             imagePullSecrets:
                 - name: azure-ad-secret

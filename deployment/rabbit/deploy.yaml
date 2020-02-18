@@ -1,25 +1,73 @@
-apiVersion: apps/v1beta2
+#apiVersion: apps/v1beta2
+#kind: Deployment
+#metadata:
+#  labels:
+#    app: rabbitmq
+#  name: rabbitmq
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: rabbitmq
+#  template:
+#    metadata:
+#      labels:
+#         app: rabbitmq
+#    spec:
+#      containers:
+#      - image: rabbitmq:3.6.1-management
+#        name: rabbitmq
+#        envFrom:
+#          - secretRef:
+#              name: dev-config
+#        ports:
+#        - containerPort: 15671
+#        - containerPort: 5671
+#        volumeMounts:
+#        - name: rabbit-mq-data
+#          mountPath: /etc/rabbitmq
+#          readOnly: false  
+#      volumes:
+#        - name: rabbit-mq-data
+#          hostPath:
+#            path: /etc/rabbitmq
+#            type: DirectoryOrCreate
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: rabbit-mq
-  name: rabbit-mq
+    app: rabbitmq
+  name: rabbitmq
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rabbit-mq
+      app: rabbitmq
   template:
     metadata:
       labels:
-         app: rabbit-mq
+          app: rabbitmq
     spec:
       containers:
       - image: rabbitmq:3.6.1-management
-        name: rabbit-mq
-        envFrom:
-          - secretRef:
-              name: dev-config
+        name: rabbitmq
+        env:
+          - name: HOSTNAME
+            value: rabbitmq
+          #- name: NAMESPACE
+          #  value: namespace1
+          #- name: RABBITMQ_USE_LONGNAME
+          #  value: "true"
+          #- name: K8S_SERVICE_NAME
+          #  value: "rabbitmq-internal"
+          #- name: RABBITMQ_DEFAULT_USER
+          #  value: guest
+          #- name: RABBITMQ_DEFAULT_PASS
+          #  value: guest
+          #- name: RABBITMQ_ERLANG_COOKIE
+          #  value: secret_cookie
+          #- name: NODE_NAME
+          #  value: rabbitmq
         ports:
         - containerPort: 15671
         - containerPort: 5671
@@ -32,3 +80,5 @@ spec:
           hostPath:
             path: /etc/rabbitmq
             type: DirectoryOrCreate
+
+
