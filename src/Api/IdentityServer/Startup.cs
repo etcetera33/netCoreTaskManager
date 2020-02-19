@@ -35,7 +35,9 @@ namespace IdentityServer
                        options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                     );
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(options => {
+                options.IssuerUri = Configuration.GetSection("Authorization").GetSection("Issuer").Value;
+            })
             .AddInMemoryCaching()
             .AddClientStore<InMemoryClientStore>()
             .AddResourceStore<InMemoryResourcesStore>()

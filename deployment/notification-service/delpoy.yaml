@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
     name: notification-service
 spec:
-    replicas: 1
     template:
         metadata:
             labels:
@@ -12,8 +11,14 @@ spec:
             containers:
               - name: notification-service
                 image: dapoliit.azurecr.io/notification-service:latest
-                envFrom:
-                    - secretRef:
-                        name: dev-config
+                env:
+                    - name: RabbitmqConfig__Host
+                      value: rabbitmq://rabbitmq
+                    - name: RabbitmqConfig__Username
+                      value: "usr"
+                    - name: RabbitmqConfig__Password
+                      value: "pass"
+                    - name: RabbitmqConfig__SSLActive
+                      value: "false"
             imagePullSecrets:
                 - name: azure-ad-secret

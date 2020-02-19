@@ -31,6 +31,8 @@ spec:
                       value: "false"
                     - name: ACCEPT_EULA
                       value: "Y"
+                    - name: Authorization__Issuer
+                      value: "http://identity-server:9000"
                     # - name: Google__SecretKey
                     #   value: QUl6YVN5Q2ZNRHJpbjJHcm9zM01oNXZyMTVKalhBUjVaZWFUREZZIA0K
                     # - name: Google__ClientId

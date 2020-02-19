@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
     name: entity-observer-service
 spec:
-    replicas: 1
     template:
         metadata:
             labels:
@@ -12,8 +11,18 @@ spec:
             containers:
               - name: entities-observer
                 image: dapoliit.azurecr.io/entity-observer-service:latest
-                envFrom:
-                    - secretRef:
-                        name: dev-config
+                env:
+                    - name: ConnectionStrings__DefaultConnection
+                      value: Server=mssql;Database=master;User=sa;Password=Pass@word;MultipleActiveResultSets=true
+                    - name: Redis__ConnectionString
+                      value: redis-master:6379,connectRetry=5
+                    - name: AppConfig__Host
+                      value: rabbitmq://rabbitmq
+                    - name: AppConfig__Username
+                      value: "usr"
+                    - name: AppConfig__Password
+                      value: "pass"
+                    - name: AppConfig__SSLActive
+                      value: "false"
             imagePullSecrets:
                 - name: azure-ad-secret
