@@ -16,9 +16,10 @@ spec:
                     - containerPort: 80
                 env:
                     - name: ConnectionStrings__DefaultConnection
-                      value: Server=mssql;Database=master;User=sa;Password=Pass@word;MultipleActiveResultSets=true
-                    - name: Azure__ConnectionString
-                      value: DefaultEndpointsProtocol=https;AccountName=dapracticepoliit;AccountKey=qIoJiU+a+EYHFZz40qQf12Tlh33w3yHTgikosOYh1EKzaWy5FDwrYzG6JuhdgPwKnWG5HbkTLpxnwGL+Q8DXng==;EndpointSuffix=core.windows.net
+                      valueFrom:
+                        secretKeyRef:
+                          name: dev-config
+                          key: ConnectionStrings__DefaultConnection
                     - name: Redis__ConnectionString
                       value: redis-master:6379,connectRetry=5
                     - name: RabbitMqConfig__Host
@@ -26,30 +27,25 @@ spec:
                     - name: RabbitMqConfig__Username
                       value: "usr"
                     - name: RabbitMqConfig__Password
-                      value: "pass"
+                      valueFrom:
+                        secretKeyRef:
+                          name: dev-config
+                          key: RabbitMqConfig__Password
                     - name: RabbitMqConfig__SSLActive
                       value: "false"
-                    - name: ACCEPT_EULA
-                      value: "Y"
                     - name: Authorization__Issuer
                       value: "http://identity-server:9000"
-                    # - name: Google__SecretKey
-                    #   value: QUl6YVN5Q2ZNRHJpbjJHcm9zM01oNXZyMTVKalhBUjVaZWFUREZZIA0K
-                    # - name: Google__ClientId
-                    #   value: NjkyODY2NDEwMzMyLWo2bjNjb2V0MjlxMDFoMTJxZGh2Zm5zZnE4ZzQ2MzRpLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIA0K
-                    # - name: Google__ClientSecret
-                    #   value: cXdkQmhRVUhEMC11QWRJUnAzMUpTTE51IA0K
-                    # - name: Azure__ClientId
-                    #   value: ZDlhNDU1M2YtNzFiYi00OWQ4LTk4ZjQtNGM2OTdmYWY2Y2UxIA0K
-                    # - name: Azure__ClientSecret
-                    #   value: PzMvPTAxPXNYR3VkU0Z3NUxFWEwuNz09L1NALi44RDMgDQo=
-                    # - name: Okta__ClientId
-                    #   value: MG9hMTY4d3ZiUDhmbHhYbU40eDYgDQo=
-                    # - name: Okta__ClientSecret
-                    #   value: VTdGMTRXU3pqaE91TWtDVThiY2JEY1FaRkFWZUFXQVlnMjU3VXNGTCANCg==
-                    # - name: Okta__Authority
-                    #   value: aHR0cHM6Ly9kZXYtNzQzMDIwLm9rdGEuY29tL29hdXRoMi9kZWZhdWx0IA0K
-                    # - name: Okta__PostLogoutRedirectUri
-                    #   value: aHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMS8gDQo=
+                    #- name: Authentication
+                    #  valueFrom:
+                    #    configMapKeyRef:
+                    #      name: identity-server-configmap
+                    #      key: config.json
+                volumeMounts:
+                  - name: identity-server-configmap
+                    mountPath: /app/config
+            volumes:
+              - name: identity-server-configmap
+                configMap:
+                  name: identity-server-configmap
             imagePullSecrets:
                 - name: azure-ad-secret

@@ -17,6 +17,8 @@ using Data;
 using AutoMapper;
 using Services.Mapper;
 using IdentityServer.Extensions;
+using System.Collections.Generic;
+using Microsoft.IdentityModel.Logging;
 
 namespace IdentityServer
 {
@@ -31,6 +33,8 @@ namespace IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             services.AddDbContext<ApplicationDbContext>(
                        options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                     );
@@ -49,10 +53,12 @@ namespace IdentityServer
 
             services.AddAuthentication(options =>
             {
-                options.DefaultSignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                options.DefaultSignOutScheme = IdentityServerConstants.SignoutScheme;
+                 options.DefaultSignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                 options.DefaultSignOutScheme = IdentityServerConstants.SignoutScheme;
             })
-            .AddOpenIdConnect("Google", "Google",
+            .AddOpenIdConnects(Configuration.GetSection("Authentication"));
+
+            /*.AddOpenIdConnect("Google", "Google",
                 options =>
                 {
                     IConfigurationSection googleConfig = Configuration.GetSection("Authentication:Google");
@@ -110,8 +116,8 @@ namespace IdentityServer
                     NameClaimType = "name",
                     RoleClaimType = "role",
                 };
-            });
-
+            });*/
+            
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader()));

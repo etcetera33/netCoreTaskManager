@@ -9,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
   styles: []
 })
 export class ProfileHeaderComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) { }
+  role: string;
+  constructor(private authService: AuthService, private router: Router, private userService: UserService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.role = this.userService.getCurrentRole();
+  }
 
   logout() {
     this.authService.logOut();

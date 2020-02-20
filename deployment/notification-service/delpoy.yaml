@@ -17,7 +17,10 @@ spec:
                     - name: RabbitmqConfig__Username
                       value: "usr"
                     - name: RabbitmqConfig__Password
-                      value: "pass"
+                      valueFrom:
+                        secretKeyRef:
+                          name: dev-config
+                          key: RabbitMqConfig__Password
                     - name: RabbitmqConfig__SSLActive
                       value: "false"
             imagePullSecrets:

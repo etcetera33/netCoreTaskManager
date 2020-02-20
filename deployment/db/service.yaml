@@ -11,4 +11,3 @@ spec:
     targetPort: 1433
   selector:
     app: mssql
-  type: LoadBalancer
