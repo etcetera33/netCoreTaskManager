@@ -11,11 +11,11 @@ export const authConfig: AuthConfig = {
 
   strictDiscoveryDocumentValidation: false,
   // Url of the Identity Provider
-  issuer: 'http://localhost:9000',
+  issuer: 'http://da-taskmanager.poliit.rocks/identity-server',
   skipIssuerCheck: true,
   requireHttps: false,
   // URL of the SPA to redirect the user to after login
-  redirectUri: 'http://localhost:4200/auth-callback',
+  redirectUri: 'http://da-taskmanager.poliit.rocks/auth-callback',
 
   // The SPA's id. The SPA is registerd with this id at the auth-server
   // clientId: 'server.code',

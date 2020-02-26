@@ -1,9 +1,12 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: api
 spec:
     replicas: 1
+    selector:
+      matchLabels:
+        app: api
     template:
         metadata:
             labels:
@@ -38,6 +41,6 @@ spec:
                 - name: ACCEPT_EULA
                   value: "Y"
                 - name: IdentityServer__Host
-                  value: "http://identity-server:9000"
+                  value: "http://da-taskmanager.poliit.rocks/identity-server/"
             imagePullSecrets:
                 - name: azure-ad-secret

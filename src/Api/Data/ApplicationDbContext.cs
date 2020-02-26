@@ -43,10 +43,6 @@ namespace Data
                 e.HasOne(x => x.Owner).WithMany(x => x.Projects).HasForeignKey(x => x.OwnerId).OnDelete(DeleteBehavior.NoAction);
             });
 
-            /*modelBuilder.Entity<User>()
-                .HasIndex(u => u.Login)
-                .IsUnique();*/
-
             modelBuilder.Entity<User>()
                .HasIndex(u => u.Email)
                .IsUnique(false);

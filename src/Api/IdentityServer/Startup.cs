@@ -7,8 +7,6 @@ using Microsoft.Extensions.Hosting;
 using IdentityServer4.Stores;
 using IdentityServer.Configs;
 using IdentityServer4;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
 using Services.Interfaces;
 using Services;
 using Data.Interfaces;
@@ -17,7 +15,6 @@ using Data;
 using AutoMapper;
 using Services.Mapper;
 using IdentityServer.Extensions;
-using System.Collections.Generic;
 using Microsoft.IdentityModel.Logging;
 
 namespace IdentityServer
@@ -41,6 +38,7 @@ namespace IdentityServer
 
             services.AddIdentityServer(options => {
                 options.IssuerUri = Configuration.GetSection("Authorization").GetSection("Issuer").Value;
+                options.PublicOrigin = Configuration.GetSection("Authorization").GetSection("Issuer").Value;
             })
             .AddInMemoryCaching()
             .AddClientStore<InMemoryClientStore>()
@@ -58,71 +56,14 @@ namespace IdentityServer
             })
             .AddOpenIdConnects(Configuration.GetSection("Authentication"));
 
-            /*.AddOpenIdConnect("Google", "Google",
-                options =>
-                {
-                    IConfigurationSection googleConfig = Configuration.GetSection("Authentication:Google");
-
-                    options.ClientId = googleConfig["ClientId"];
-                    options.ClientSecret = googleConfig["ClientSecret"];
-                    options.Authority = "https://accounts.google.com";
-                    options.ResponseType = OpenIdConnectResponseType.Code;
-                    options.CallbackPath = "/signin-google";
-                    options.SaveTokens = true;
-                    options.Scope.Add("email");
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = "name",
-                        RoleClaimType = "role",
-                    };
-                })
-            .AddOpenIdConnect("Azure", "Azure AD", options =>
-            {
-                IConfigurationSection azureConfig = Configuration.GetSection("Authentication:AzureAd");
-
-                options.Authority = "https://login.microsoftonline.com/common";
-                options.ClientId = azureConfig["ClientId"];
-                options.ClientSecret = azureConfig["ClientSecret"];
-                options.CallbackPath = "/signin-oidc";
-                options.ResponseType = OpenIdConnectResponseType.Code;
-                options.SaveTokens = true;
-                options.Scope.Add("email");
-                options.Scope.Add("openid");
-                options.Scope.Add("profile");
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = "name",
-                    RoleClaimType = "role",
-                    ValidateIssuer = false
-                };
-            })
-            .AddOpenIdConnect("Okta", "Okta", options => {
-                IConfigurationSection oktaConfig = Configuration.GetSection("Authentication:Okta");
-
-                options.CallbackPath = "/signin-okta";
-                options.Authority = oktaConfig["Authority"];
-                options.RequireHttpsMetadata = true;
-                options.ClientId = oktaConfig["ClientId"];
-                options.ClientSecret = oktaConfig["ClientSecret"];
-                options.ResponseType = OpenIdConnectResponseType.Code;
-                options.SaveTokens = true;
-                options.GetClaimsFromUserInfoEndpoint = true;
-                options.Scope.Add("openid");
-                options.Scope.Add("profile");
-                options.SaveTokens = true;
-
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = "name",
-                    RoleClaimType = "role",
-                };
-            });*/
-            
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader()));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(o =>
+            {
+                o.EnableEndpointRouting = false;
+            });
             services.AddRazorPages();
 
             services.AddAutoMapper(typeof(Program));
@@ -143,25 +84,27 @@ namespace IdentityServer
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
+            }    
+            
+            var basePath = Configuration.GetSection("Server").GetSection("BasePath").Value;
+            if (!string.IsNullOrEmpty(basePath))
+            {
+                app.UsePathBase(basePath);
             }
-            app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
-
+        
             app.UseIdentityServer();
+
             app.UseAuthentication();
+
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

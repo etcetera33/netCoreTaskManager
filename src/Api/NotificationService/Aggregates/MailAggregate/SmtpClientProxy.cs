@@ -18,7 +18,7 @@ namespace NotificationService.Aggregates.MailAggregate
                 EnableSsl = config.Value.EnableSsl,
                 Host = config.Value.Host,
                 Port = config.Value.Port,
-                UseDefaultCredentials = true,
+                UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(config.Value.From, config.Value.Password)
             };
         }

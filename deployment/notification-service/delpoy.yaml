@@ -1,8 +1,11 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: notification-service
 spec:
+    selector:
+      matchLabels:
+        app: notification-service
     template:
         metadata:
             labels:
@@ -23,5 +26,7 @@ spec:
                           key: RabbitMqConfig__Password
                     - name: RabbitmqConfig__SSLActive
                       value: "false"
+                    - name: MailConfig__Password
+                      value: qblluofnxosdexrt
             imagePullSecrets:
                 - name: azure-ad-secret

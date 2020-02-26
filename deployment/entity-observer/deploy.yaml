@@ -1,8 +1,11 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: entity-observer-service
 spec:
+    selector:
+      matchLabels:
+        app: entity-observer-service
     template:
         metadata:
             labels:

@@ -44,7 +44,7 @@ data:
                 "ClientSecret": "U7F14WSzjhOuMkCU8bcbDcQZFAVeAWAYg257UsFL",
                 "ResponseType": "code",
                 "Authority": "https://dev-743020.okta.com/oauth2/default",
-                "PostLogoutRedirectUri": "https://localhost:9001/",
+                "PostLogoutRedirectUri": "http://da-taskmanager.poliit.rocks/signout-callback-oidc",
                 "CallbackPath": "/signin-okta",
                 "SaveTokens": true,
                 "Scope": [
@@ -63,8 +63,8 @@ data:
                 "ClientSecrets": [ { "Value": "PznGtuDf/unCRPClTHjz4xsd0noG3g9xmokuZP02VeI=" } ],
                 "AllowedGrantTypes": [ "implicit" ],
                 "AllowedScopes": [ "openid", "api1", "profile", "api.read" ],
-                "RedirectUris": [ "http://localhost:4200/auth-callback" ],
-                "AllowedCorsOrigins": [ "http://localhost:4200" ],
+                "RedirectUris": [ "http://da-taskmanager.poliit.rocks/auth-callback" ],
+                "AllowedCorsOrigins": [ "http://da-taskmanager.poliit.rocks" ],
                 "RequireConsent": false,
                 "AllowAccessTokensViaBrowser": true,
                 "AccessTokenLifetime": 3600

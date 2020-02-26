@@ -1,9 +1,12 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: identity-server
 spec:
     replicas: 1
+    selector:
+      matchLabels:
+        app: identity-server
     template:
         metadata:
             labels:
@@ -34,12 +37,11 @@ spec:
                     - name: RabbitMqConfig__SSLActive
                       value: "false"
                     - name: Authorization__Issuer
-                      value: "http://identity-server:9000"
-                    #- name: Authentication
-                    #  valueFrom:
-                    #    configMapKeyRef:
-                    #      name: identity-server-configmap
-                    #      key: config.json
+                      value: "http://da-taskmanager.poliit.rocks"
+                    - name: Server__Host
+                      value: "da-taskmanager.poliit.rocks"
+                    - name: Server__BasePath
+                      value: "/identity-server"
                 volumeMounts:
                   - name: identity-server-configmap
                     mountPath: /app/config

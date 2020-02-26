@@ -99,16 +99,16 @@ export class AuthService {
 
   getUserManagerSettngs(): UserManagerSettings {
     return {
-      authority: 'http://localhost:9000',
+      authority: 'http://da-taskmanager.poliit.rocks/identity-server',
       client_id: 'angular_spa',
-      redirect_uri: 'http://localhost:4200/auth-callback',
-      post_logout_redirect_uri: 'http://localhost:4200/',
+      redirect_uri: 'http://da-taskmanager.poliit.rocks/auth-callback',
+      post_logout_redirect_uri: 'http://da-taskmanager.poliit.rocks/',
       response_type: 'id_token token',
       scope: 'openid profile email api.read',
       filterProtocolClaims: true,
       loadUserInfo: true,
       automaticSilentRenew: true,
-      silent_redirect_uri: 'http://localhost:4200/silent-refresh.html'
+      silent_redirect_uri: 'http://da-taskmanager.poliit.rocks/silent-refresh.html'
     };
   }
 
