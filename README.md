@@ -25,20 +25,31 @@ Authorization via implicit flow is implemented as follows
 ## Technologies
 1.  .Net Core Web API
     1. Authorization w JWT and Roles
-    2. Layered architecture, DAL, Repository pattern o Unit of Work
+    2. Layered architecture
+       1. DAL, Repository pattern
+       2. Service Layer
+       3. Unit of Work pattern
     3. Entity Framework
     4. SSO (implicit and credentials grant flow)
-    5. Unit Tests
+    5. Middleware
+       1. Request-Response logging middleware
+       2. Global error handling middleware
+    6. Unit Tests
 2. Containerization
    1. Docker
    2. Docker-compose
    3. CI/CD
    4. Building images and pushing to Azure Container Registry via Gitlab Pipelines
-3.  Service Oriented Architecture
-4.  Caching - Redis
-5.  MassTransit
-6.  Kubernetes
-7.  Azure
+3.  Architecture
+    1.  Service Oriented Architecture
+    2.  RabbitMq
+    3.  MassTransit
+4.  Kubernetes
+5.  Azure
     1.  Azure blob storage
     2.  Azure container registry
-8.  Frontend - SPA Angular application v8
+6. Other
+   1. Caching (Redis)
+   2. Automapper
+   3. FluentValidator
+   4. Frontend - SPA Angular application v8
