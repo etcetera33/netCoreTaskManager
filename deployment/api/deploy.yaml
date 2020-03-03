@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: api
+spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: api
+    template:
+        metadata:
+            labels:
+                app: api
+        spec:
+            containers:
+              - name: api
+                image: dapoliit.azurecr.io/api:latest
+                ports:
+                    - containerPort: 80
+                env:
+                - name: Azure__ConnectionString
+                  value: DefaultEndpointsProtocol=https;AccountName=dapracticepoliit;AccountKey=qIoJiU+a+EYHFZz40qQf12Tlh33w3yHTgikosOYh1EKzaWy5FDwrYzG6JuhdgPwKnWG5HbkTLpxnwGL+Q8DXng==;EndpointSuffix=core.windows.net
+                - name: ConnectionStrings__DefaultConnection
+                  valueFrom:
+                    secretKeyRef:
+                      name: dev-config
+                      key: ConnectionStrings__DefaultConnection
+                - name: Redis__ConnectionString
+                  value: redis-master:6379,connectRetry=5
+                - name: RabbitMqConfig__Host
+                  value: rabbitmq
+                - name: RabbitMqConfig__Username
+                  value: "usr"
+                - name: RabbitMqConfig__Password
+                  valueFrom:
+                    secretKeyRef:
+                      name: dev-config
+                      key: RabbitMqConfig__Password
+                - name: RabbitMqConfig__SSLActive
+                  value: "false"
+                - name: ACCEPT_EULA
+                  value: "Y"
+                - name: IdentityServer__Host
+                  value: "http://da-taskmanager.poliit.rocks/identity-server/"
+            imagePullSecrets:
+                - name: azure-ad-secret

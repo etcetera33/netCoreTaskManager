@@ -1,20 +1,26 @@
-﻿using Data.Models;
-using System;
+﻿using Data.Interfaces;
+using Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Data.Repositories
 {
-    public class CommentRepository: BaseRepository<Comment>
+    public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
         public CommentRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
 
         }
-        public IEnumerable<Comment> GetCommentsByWorkItemId(int workItemId)
+
+        public async Task<IEnumerable<Comment>> GetCommentsByWorkItemIdAsync(int workItemId)
         {
-            return _dbContext.Comments.Where(x => x.WorkItemId == workItemId).ToList();
+            return await DbContext.Comments
+                .Where(x => x.WorkItemId == workItemId)
+                .Include(x => x.Author)
+                .OrderByDescending(x => x.CommentId)
+                .ToListAsync();
         }
     }
 }

@@ -1,0 +1,34 @@
+<form #form="ngForm" class="user ng-untouched ng-pristine ng-valid col-md-10 mb-4" (submit)="submit(form)" class="user" autocomplete="off" ngNativeValidate>
+  <input type="hidden" name="WorkItemId" [ngModel]="workItemId" value="{{workItemId}}"/>
+  <div class="form-group">
+    <input name="Body" #Body="ngModel" [ngModel]="comment?.Body" type="text" class="form-control form-control-user col-md-5" placeholder="Your message goes here ..." required>
+  </div>
+  <input type="submit" class="btn btn-primary" value="Send"/>
+</form>
+
+<div class="row mb-4">
+  <div *ngFor="let comment of commentList" class="col-xl-10 col-md-10 mb-4">
+      <div class="card shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{ comment.Author.FullName }}</div>
+              <div class="row no-gutters align-items-center">
+                <div class="col-auto">
+                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{comment.Body}}</div>
+                </div>
+              </div>
+              <div class="row no-gutters align-items-center mb-3">
+                <div class="col-auto">
+                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{comment.SentAt | date: 'dd/MM/yyyy h:m'}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-auto" *ngIf="comment.AuthorId == userId">
+              <button (click)="remove(comment.Id)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

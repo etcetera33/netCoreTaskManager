@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  serviceName: rabbitmq
+  replicas: 1
+  volumeClaimTemplates: []
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+        labels:
+          app: rabbitmq
+    spec:
+      terminationGracePeriodSeconds: 10
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.6.1-management
+        ports:
+          - name: http
+            protocol: TCP
+            containerPort: 15672
+          - name: amqp
+            protocol: TCP
+            containerPort: 5672
+        imagePullPolicy: Always
+        env:
+        - name: HOSTNAME
+          value: rabbitmq
+        - name: RABBITMQ_NODENAME
+          value: rabbit@localhost
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: RABBITMQ_DEFAULT_USER
+          value: usr
+        - name: RABBITMQ_DEFAULT_PASS
+          value: pass

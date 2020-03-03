@@ -1,0 +1,50 @@
+<!-- Main Content -->
+<div id="content">
+  
+    <app-profile-header></app-profile-header>
+  
+        <!-- Begin Page Content -->
+  <div class="container-fluid">
+
+      <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Projects</h1>
+      <a routerLink="/projects/create" *ngIf="role != 'Spectator'" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-file-alt fa-sm text-white-50"></i> Create Project</a>
+    </div>
+    <div class="form-group">
+      <input placeholder="Search" name="Search" [(ngModel)]="searchPhrase" value="{{searchPhrase}}" class="form-control form-control-user">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-sm btn-primary" (click)="search()" >Find</button>
+    </div>
+    <!-- Content Row -->
+    <div class="row">
+
+      <!-- Items go here-->
+      <div *ngFor="let list of projectList" class="col-md-8 ">
+        <!-- Illustrations -->
+        <div class="col-sd-8 card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">{{ list.Name}}</h6>
+          </div>
+          <div class="card-body">
+            <a routerLink="/projects/{{ list.Id }}" class="nav-link" rel="nofollow"  routerLinkActive="active">Browse Project &rarr;</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- End of the items output-->
+    </div>
+
+    <div class="row" *ngIf="pagesCount > 1">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item" *ngFor="let item of [].constructor(pagesCount); let i = index" [attr.data-index]="pagesCount">
+                  <div class="page-link" (click)="paginate(i+1)">{{i + 1}}</div>
+                </li>
+            </ul>
+          </nav>
+    </div>
+</div>
+<!-- /.container-fluid -->
+

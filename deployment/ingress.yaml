@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
+    nginx.ingress.kubernetes.io/proxy-body-size: 8M
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 1M
+spec:
+    rules:
+        - host: da-taskmanager.poliit.rocks
+          http:
+            paths:
+              - path: /
+                backend:
+                  serviceName: front
+                  servicePort: 4200
+              - path: /api
+                backend:
+                  serviceName: api
+                  servicePort: 80
+              - path: /identity-server
+                backend:
+                  serviceName: identity-server
+                  servicePort: 80
+              

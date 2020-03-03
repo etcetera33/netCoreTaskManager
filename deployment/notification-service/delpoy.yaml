@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: notification-service
+spec:
+    selector:
+      matchLabels:
+        app: notification-service
+    template:
+        metadata:
+            labels:
+                app: notification-service
+        spec:
+            containers:
+              - name: notification-service
+                image: dapoliit.azurecr.io/notification-service:latest
+                env:
+                    - name: RabbitmqConfig__Host
+                      value: rabbitmq://rabbitmq
+                    - name: RabbitmqConfig__Username
+                      value: "usr"
+                    - name: RabbitmqConfig__Password
+                      valueFrom:
+                        secretKeyRef:
+                          name: dev-config
+                          key: RabbitMqConfig__Password
+                    - name: RabbitmqConfig__SSLActive
+                      value: "false"
+                    - name: MailConfig__Password
+                      value: qblluofnxosdexrt
+            imagePullSecrets:
+                - name: azure-ad-secret

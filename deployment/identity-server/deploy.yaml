@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: identity-server
+spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: identity-server
+    template:
+        metadata:
+            labels:
+                app: identity-server
+        spec:
+            containers:
+              - name: identity-server
+                image: dapoliit.azurecr.io/identity-server:latest
+                ports:
+                    - containerPort: 80
+                env:
+                    - name: ConnectionStrings__DefaultConnection
+                      valueFrom:
+                        secretKeyRef:
+                          name: dev-config
+                          key: ConnectionStrings__DefaultConnection
+                    - name: Redis__ConnectionString
+                      value: redis-master:6379,connectRetry=5
+                    - name: RabbitMqConfig__Host
+                      value: "rabbitmq"
+                    - name: RabbitMqConfig__Username
+                      value: "usr"
+                    - name: RabbitMqConfig__Password
+                      valueFrom:
+                        secretKeyRef:
+                          name: dev-config
+                          key: RabbitMqConfig__Password
+                    - name: RabbitMqConfig__SSLActive
+                      value: "false"
+                    - name: Authorization__Issuer
+                      value: "http://da-taskmanager.poliit.rocks"
+                    - name: Server__Host
+                      value: "da-taskmanager.poliit.rocks"
+                    - name: Server__BasePath
+                      value: "/identity-server"
+                volumeMounts:
+                  - name: identity-server-configmap
+                    mountPath: /app/config
+            volumes:
+              - name: identity-server-configmap
+                configMap:
+                  name: identity-server-configmap
+            imagePullSecrets:
+                - name: azure-ad-secret

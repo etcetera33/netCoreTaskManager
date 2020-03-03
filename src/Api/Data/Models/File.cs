@@ -1,0 +1,14 @@
+﻿using System.Collections.Generic;
+
+namespace Data.Models
+{
+    public class File
+    {
+        public int FileId { get; set; }
+        public string FileName { get; set; }
+        public string FilePath { get; set; }
+
+        public ICollection<WorkItemFile> WorkItemFiles { get; set; }
+
+    }
+}

@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identity-server-configmap
+data:
+  additional.json: |-
+      {
+        "Authentication": [
+            {
+                "AuthenticationScheme": "Google",
+                "DisplayName": "Google",
+                "SecretKey": "AIzaSyCfMDrin2Gros3Mh5vr15JjXAR5ZeaTDFY",
+                "ClientId": "692866410332-j6n3coet29q01h12qdhvfnsfq8g4634i.apps.googleusercontent.com",
+                "ClientSecret": "qwdBhQUHD0-uAdIRp31JSLNu",
+                "ResponseType": "code",
+                "Authority": "https://accounts.google.com",
+                "CallbackPath": "/signin-google",
+                "SaveTokens": true,
+                "Scope": [
+                    "email"
+                ],
+                "NameClaimType": "name",
+                "RoleClaimType": "role"
+            },
+            {
+                "AuthenticationScheme": "Azure",
+                "DisplayName": "Azure AD",
+                "ClientId": "d9a4553f-71bb-49d8-98f4-4c697faf6ce1",
+                "ClientSecret": "?3/=01=sXGudSFw5LEXL.7==/S@..8D3",
+                "ResponseType": "code",
+                "Authority": "https://login.microsoftonline.com/common",
+                "CallbackPath": "/signin-oidc",
+                "SaveTokens": true,
+                "Scope": [
+                    "email"
+                ],
+                "NameClaimType": "name",
+                "RoleClaimType": "role"
+            },
+            {
+                "AuthenticationScheme": "Okta",
+                "DisplayName": "Okta",
+                "ClientId": "0oa168wvbP8flxXmN4x6",
+                "ClientSecret": "U7F14WSzjhOuMkCU8bcbDcQZFAVeAWAYg257UsFL",
+                "ResponseType": "code",
+                "Authority": "https://dev-743020.okta.com/oauth2/default",
+                "PostLogoutRedirectUri": "http://da-taskmanager.poliit.rocks/signout-callback-oidc",
+                "CallbackPath": "/signin-okta",
+                "SaveTokens": true,
+                "Scope": [
+                    "email"
+                ],
+                "NameClaimType": "name",
+                "RoleClaimType": "role"
+            }
+        ],
+        "IdentityServer": {
+            "Clients": [
+              {
+                "Enabled": true,
+                "ClientId": "angular_spa",
+                "ClientName": "Local Development",
+                "ClientSecrets": [ { "Value": "PznGtuDf/unCRPClTHjz4xsd0noG3g9xmokuZP02VeI=" } ],
+                "AllowedGrantTypes": [ "implicit" ],
+                "AllowedScopes": [ "openid", "api1", "profile", "api.read" ],
+                "RedirectUris": [ "http://da-taskmanager.poliit.rocks/auth-callback" ],
+                "AllowedCorsOrigins": [ "http://da-taskmanager.poliit.rocks" ],
+                "RequireConsent": false,
+                "AllowAccessTokensViaBrowser": true,
+                "AccessTokenLifetime": 3600
+              },
+              {
+                "Enabled": true,
+                "ClientId": "jwt_client",
+                "ClientName": "Jwt Client",
+                "ClientSecrets": [
+                  { "Value": "lzqB+SL/OVkwtU4gygDfc+NbUeblE1ahBVRXtlMV1BA=" }
+                ],
+                "AllowedGrantTypes": [ "client_credentials" ],
+                "AllowedScopes": [ "api1", "api.read" ],
+                "Claims": [
+                  {
+                    "Type": "Id",
+                    "Value": "1"
+                  },
+                  {
+                    "Type": "Name",
+                    "value": "Spectator"
+                  }
+                ],
+                "AccessTokenLifetime": 3600
+              }
+            ]
+          }
+      }

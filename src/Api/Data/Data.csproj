@@ -19,9 +19,47 @@
     <Compile Remove="Migrations\20191205134428_Initial.Designer.cs" />
     <Compile Remove="Migrations\20191206094143_Initial.cs" />
     <Compile Remove="Migrations\20191206094143_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191209093146_Initial.cs" />
+    <Compile Remove="Migrations\20191209093146_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191210091449_Initial.cs" />
+    <Compile Remove="Migrations\20191210091449_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191210102402_Initial.cs" />
+    <Compile Remove="Migrations\20191210102402_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191210102859_Initial.cs" />
+    <Compile Remove="Migrations\20191210102859_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191212124602_Initial.cs" />
+    <Compile Remove="Migrations\20191212124602_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191212125813_Initial.cs" />
+    <Compile Remove="Migrations\20191212125813_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191212130034_Initial.cs" />
+    <Compile Remove="Migrations\20191212130034_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191212130147_Initial.cs" />
+    <Compile Remove="Migrations\20191212130147_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191216121425_Initial.cs" />
+    <Compile Remove="Migrations\20191216121425_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191216132236_Initial.cs" />
+    <Compile Remove="Migrations\20191216132236_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191216132839_Initial.cs" />
+    <Compile Remove="Migrations\20191216132839_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191216133909_Initial.cs" />
+    <Compile Remove="Migrations\20191216133909_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191216160018_Initial.cs" />
+    <Compile Remove="Migrations\20191216160018_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191217141416_Initial.cs" />
+    <Compile Remove="Migrations\20191217141416_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20191220093957_ProjectAddDescrAndOwner.cs" />
+    <Compile Remove="Migrations\20191220093957_ProjectAddDescrAndOwner.Designer.cs" />
+    <Compile Remove="Migrations\20191220094925_ProjectCreateOnDeleteAction.cs" />
+    <Compile Remove="Migrations\20191220094925_ProjectCreateOnDeleteAction.Designer.cs" />
+    <Compile Remove="Migrations\20200124142820_FilesAdded.cs" />
+    <Compile Remove="Migrations\20200124142820_FilesAdded.Designer.cs" />
+    <Compile Remove="Migrations\20200126131539_AddedRelationship.cs" />
+    <Compile Remove="Migrations\20200126131539_AddedRelationship.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0">
       <PrivateAssets>all</PrivateAssets>
@@ -36,7 +74,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Seeds\" />
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -47,6 +47,24 @@ namespace Data.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("Data.Models.File", b =>
+                {
+                    b.Property<int>("FileId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FileId");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("Data.Models.Project", b =>
                 {
                     b.Property<int>("ProjectId")
@@ -54,107 +72,20 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ProjectName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Slug")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("ProjectId");
 
-                    b.HasIndex("Slug")
-                        .IsUnique()
-                        .HasFilter("[Slug] IS NOT NULL");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Projects");
-
-                    b.HasData(
-                        new
-                        {
-                            ProjectId = 1,
-                            ProjectName = "Apple",
-                            Slug = "apple"
-                        },
-                        new
-                        {
-                            ProjectId = 2,
-                            ProjectName = "Facebook",
-                            Slug = "facebook"
-                        });
-                });
-
-            modelBuilder.Entity("Data.Models.Role", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("RoleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            RoleName = "Spectator"
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            RoleName = "Developer"
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            RoleName = "Owner"
-                        });
-                });
-
-            modelBuilder.Entity("Data.Models.Status", b =>
-                {
-                    b.Property<int>("StatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("StatusId");
-
-                    b.ToTable("Statuses");
-
-                    b.HasData(
-                        new
-                        {
-                            StatusId = 1,
-                            StatusName = "To do"
-                        },
-                        new
-                        {
-                            StatusId = 2,
-                            StatusName = "Doing"
-                        },
-                        new
-                        {
-                            StatusId = 3,
-                            StatusName = "To test"
-                        },
-                        new
-                        {
-                            StatusId = 4,
-                            StatusName = "Testing"
-                        },
-                        new
-                        {
-                            StatusId = 5,
-                            StatusName = "Done"
-                        });
                 });
 
             modelBuilder.Entity("Data.Models.User", b =>
@@ -164,43 +95,33 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Login")
+                    b.Property<string>("Email")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("ExternalId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
 
-                    b.HasIndex("Login")
+                    b.HasIndex("Email");
+
+                    b.HasIndex("ExternalId")
                         .IsUnique()
-                        .HasFilter("[Login] IS NOT NULL");
+                        .HasFilter("[ExternalId] IS NOT NULL");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            FullName = "Dmytro Poliit",
-                            Login = "dmyto.poliit",
-                            Password = "111",
-                            Position = "Junior Developer"
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            FullName = "John Doe",
-                            Login = "john.doe",
-                            Password = "111",
-                            Position = "Junior PM"
-                        });
                 });
 
             modelBuilder.Entity("Data.Models.WorkItem", b =>
@@ -219,7 +140,16 @@ namespace Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<int>("StatusId")
@@ -242,23 +172,55 @@ namespace Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("WorkItems");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            WorkItemId = 1,
-                            AssigneeId = 1,
-                            AuthorId = 2,
-                            Description = "Deploy the project",
-                            ProjectId = 1,
-                            StatusId = 1,
-                            Title = "Deploy project",
-                            WorkItemType = 0,
-                            WorkItemTypeId = 0
-                        });
+            modelBuilder.Entity("Data.Models.WorkItemAudit", b =>
+                {
+                    b.Property<int>("WorkItemAuditId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("NewWorkItem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldWorkItem")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WorkItemAuditId");
+
+                    b.HasIndex("WorkItemId");
+
+                    b.ToTable("WorkItemAudits");
+                });
+
+            modelBuilder.Entity("Data.Models.WorkItemFile", b =>
+                {
+                    b.Property<int>("WorkItemFileId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WorkItemFileId");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex("WorkItemId");
+
+                    b.ToTable("WorkItemFiles");
                 });
 
             modelBuilder.Entity("Data.Models.Comment", b =>
@@ -273,6 +235,15 @@ namespace Data.Migrations
                         .WithMany("Comments")
                         .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Models.Project", b =>
+                {
+                    b.HasOne("Data.Models.User", "Owner")
+                        .WithMany("Projects")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
@@ -295,10 +266,19 @@ namespace Data.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
-                    b.HasOne("Data.Models.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
+            modelBuilder.Entity("Data.Models.WorkItemFile", b =>
+                {
+                    b.HasOne("Data.Models.File", "File")
+                        .WithMany("WorkItemFiles")
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Models.WorkItem", "WorkItem")
+                        .WithMany("WorkItemFiles")
+                        .HasForeignKey("WorkItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -1,0 +1,131 @@
+version: '3'
+
+services:
+  api:
+    image: "dapoliit.azurecr.io/api:latest"
+    ports:
+        - "8037:80"
+        - "9098:8080"
+    networks: 
+        - frontend
+        - backend
+    environment:
+        ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
+        Redis__Host: redis
+        Redis__Port: "${Redis_Port}"
+        IdentityServer__Host: identity_server
+        RabbitMqConfig__Host: rabbit
+        RabbitMqConfig__VirtualHost: "${Rabbit_VirtualHost}"
+        RabbitMqConfig__Username: "${Rabbit_Username}"
+        RabbitMqConfig__Password: "${Rabbit_Password}"
+        RabbitMqConfig__SSLActive: "${Rabbit_SSLActive}"
+        RabbitMqConfig__Endpoint: "api-endpoint"
+        Redis__ConnectionString: "${Redis_ConnectionString}"
+        AzureConfig__ConnectionString: "${Azure_ConnectionString}"
+        AzureConfig__ContainerName: "${Azure_Container_Name}"
+    depends_on:
+      - db
+      - rabbit
+      - redis
+      - identity_server
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+        SA_PASSWORD: ${Database_Password}
+        ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - backend
+    volumes:
+      - mssqldata:/var/opt/mssql
+    hostname: ${Database_Server}
+  rabbit:
+    image: rabbitmq
+    networks:
+      - backend
+    volumes:
+      - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    expose:
+      - 15672
+      - 5672
+  redis:
+    hostname: redis
+    image: redis
+    networks:
+      - backend
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../data/redis:/data
+    restart: always
+  entities_observer:
+    image: "dapoliit.azurecr.io/entity-observer-service:latest"
+    networks:
+      - backend
+    environment:
+        ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
+        AppConfig__Host: rabbitmq://rabbit
+        AppConfig__VirtualHost: "${Rabbit_VirtualHost}"
+        AppConfig__Username: "${Rabbit_Username}"
+        AppConfig__Password: "${Rabbit_Password}"
+        AppConfig__SSLActive: "${Rabbit_SSLActive}"
+        AppConfig__Endpoint: "entities-observer-endpoint"
+    depends_on:
+      - api
+      - rabbit
+  notification_service:
+    image: "dapoliit.azurecr.io/notification-service:latest"
+    networks:
+      - backend
+    environment:
+        MailConfig__From: "${Mail_From}"
+        MailConfig__Password: "${Mail_Password}"
+        MailConfig__Host: "${Mail_Host}"
+        MailConfig__EnableSsl: ${Mail_EnableSsl}
+        MailConfig__Port: ${Mail_Port}
+        RabbitmqConfig__Host: rabbitmq://rabbit
+        RabbitmqConfig__VirtualHost: "${Rabbit_VirtualHost}"
+        RabbitmqConfig__Username: "${Rabbit_Username}"
+        RabbitmqConfig__Password: "${Rabbit_Password}"
+        RabbitmqConfig__SSLActive: "${Rabbit_SSLActive}"
+        RabbitmqConfig__Endpoint: "notification-service-endpoint"
+    depends_on:
+      - entities_observer
+      - rabbit
+  identity_server:
+    image: "dapoliit.azurecr.io/identity-server:latest"
+    ports:
+      - "8038:80"
+    networks:
+      - backend
+      - frontend
+    environment:
+        ConnectionStrings__DefaultConnection: "Server=${Database_Server};Database=${Database_Name};User=${Database_User};Password=${Database_Password};"
+        Authentication__Google__SecretKey: "${Google_SecretKey}"
+        Authentication__Google__ClientId: "${Google_ClientId}"
+        Authentication__Google__ClientSecret: "${Google_ClientSecret}"
+        Authentication__AzureAd__ClientId: "${Azure_ClientId}"
+        Authentication__AzureAd__ClientSecret: "${Azure_ClientSecret}"
+        Authentication__Okta__ClientId: "${Okta_ClientId}"
+        Authentication__Okta__ClientSecret: "${Okta_ClientSecret}"
+        Authentication__Okta__Authority: "${Okta_Authority}"
+        Authentication__Okta__PostLogoutRedirectUri: "${Okta_PostLogoutRedirectUri}"
+    depends_on:
+      - db
+  front:
+    image: "dapoliit.azurecr.io/front:latest"
+    ports:
+      - "4200:80"
+    networks:
+      - frontend
+    depends_on:
+      - api
+networks:
+  frontend:
+  backend:
+volumes: 
+  mssqldata:

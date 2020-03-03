@@ -1,69 +1,89 @@
 ﻿using AutoMapper;
 using Data.Models;
 using Models.DTOs;
-using Models.DTOs.Comment;
-using Models.DTOs.Project;
-using Models.DTOs.WorkItem;
+using Newtonsoft.Json;
 
 namespace Services.Mapper
 {
-    class AutoMapperConfiguration
+    public class AutoMapperConfiguration
     {
         public static MapperConfiguration Configure()
         {
-            /// TODO : consider changing to ConfigureProject, ConfigureUser etc
-            var config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<CreateUserDto, User>()
-                    .ForMember(dst => dst.UserId, opt => opt.Ignore())
-                    .ForMember(dst => dst.Comments, opt => opt.Ignore())
-                    .ForMember(dst => dst.AssignedTo, opt => opt.Ignore())
-                    .ForMember(dst => dst.CreatedWorkItems, opt => opt.Ignore())
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<UserDictionaryDto, User>()
+                    .ForMember(dst => dst.UserId, src => src.MapFrom(e => e.Id))
                     .ReverseMap();
                 cfg.CreateMap<UserDto, User>()
-                    .ForMember(dst => dst.UserId, src => src.MapFrom<int>(e => e.Id))
+                    .ForMember(dst => dst.UserId, src => src.MapFrom(e => e.Id))
                     .ForMember(dst => dst.Comments, opt => opt.Ignore())
                     .ForMember(dst => dst.AssignedTo, opt => opt.Ignore())
                     .ForMember(dst => dst.CreatedWorkItems, opt => opt.Ignore())
                     .ReverseMap();
-                cfg.CreateMap<CreateProjectDto, Project>()
-                    .ForMember(dst => dst.ProjectId, opt => opt.Ignore())
-                    .ForMember(dst => dst.WorkItems, opt => opt.Ignore())
-                    .ForMember(dst => dst.ProjectName, src => src.MapFrom<string>(e => e.Name))
+                cfg.CreateMap<ModerateUserDto, UserDto>()
+                    .ForMember(dst => dst.Email, opt => opt.Ignore())
+                    .ForMember(dst => dst.ExternalId, opt => opt.Ignore())
+                    .ForMember(dst => dst.FullName, opt => opt.Ignore())
+                    .ReverseMap();
+                cfg.CreateMap<ModerateUserDto, User>()
+                    .ForMember(dst => dst.UserId, src => src.MapFrom(e => e.Id))
+                    .ForMember(dst => dst.Comments, opt => opt.Ignore())
+                    .ForMember(dst => dst.AssignedTo, opt => opt.Ignore())
+                    .ForMember(dst => dst.CreatedWorkItems, opt => opt.Ignore())
                     .ReverseMap();
                 cfg.CreateMap<ProjectDto, Project>()
                     .ForMember(dst => dst.WorkItems, opt => opt.Ignore())
                     .ForMember(dst => dst.ProjectId, src => src.MapFrom(e => e.Id))
                     .ForMember(dst => dst.ProjectName, src => src.MapFrom(e => e.Name))
                     .ReverseMap();
-                cfg.CreateMap<CreateWorkItemDto, WorkItem>()
-                    .ForMember(dst => dst.WorkItemId, opt => opt.Ignore())
-                    /*.ForMember(dst => dst.Assignee, opt => opt.Ignore())
-                    .ForMember(dst => dst.Author, opt => opt.Ignore())
-                    .ForMember(dst => dst.Comments, opt => opt.Ignore())
-                    .ForMember(dst => dst.Project, opt => opt.Ignore())
-                    .ForMember(dst => dst.Status, opt => opt.Ignore())
-                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())*/
-                    .ReverseMap();
                 cfg.CreateMap<WorkItemDto, WorkItem>()
                     .ForMember(dst => dst.WorkItemId, src => src.MapFrom(e => e.Id))
-                    /*.ForMember(dst => dst.Assignee, opt => opt.Ignore())
+                    .ForMember(dst => dst.Assignee, opt => opt.Ignore())
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
                     .ForMember(dst => dst.Comments, opt => opt.Ignore())
                     .ForMember(dst => dst.Project, opt => opt.Ignore())
                     .ForMember(dst => dst.Status, opt => opt.Ignore())
-                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())*/
+                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())
                     .ReverseMap();
-                cfg.CreateMap<CreateCommentDto, Comment>()
-                    .ForMember(dst => dst.CommentId, opt => opt.Ignore())
+                cfg.CreateMap<WorkItemHistoryDto, WorkItem>()
+                    .ReverseMap();
+                cfg.CreateMap<WorkItemHistoryDto, WorkItemDto>()
+                    .ForMember(dst => dst.Id, opt => opt.Ignore())
+                    .ForMember(dst => dst.Assignee, opt => opt.Ignore())
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
-                    .ForMember(dst => dst.WorkItem, opt => opt.Ignore())
+                    .ForMember(dst => dst.Comments, opt => opt.Ignore())
+                    .ForMember(dst => dst.Project, opt => opt.Ignore())
+                    .ForMember(dst => dst.WorkItemType, opt => opt.Ignore())
                     .ReverseMap();
                 cfg.CreateMap<CommentDto, Comment>()
                     .ForMember(dst => dst.CommentId, src => src.MapFrom(e => e.Id))
+                    .ForMember(dst => dst.CommentBody, src => src.MapFrom(e => e.Body))
                     .ForMember(dst => dst.Author, opt => opt.Ignore())
                     .ForMember(dst => dst.WorkItem, opt => opt.Ignore())
                     .ReverseMap();
+                cfg.CreateMap<WorkItemAuditDto, WorkItemAudit>()
+                    .ForMember(dst => dst.WorkItemAuditId, src => src.MapFrom(e => e.Id))
+                    .ForMember(dest => dest.OldWorkItem, opt =>
+                    {
+                        opt.MapFrom(src => (WorkItemHistoryDto)JsonConvert.DeserializeObject(src.OldWorkItem));
+                    })
+                    .ForMember(dest => dest.NewWorkItem, opt =>
+                    {
+                        opt.MapFrom(src => (WorkItemHistoryDto)JsonConvert.DeserializeObject(src.NewWorkItem));
+                    })
+                    .ReverseMap();
+                cfg.CreateMap<FileDto, File>()
+                    .ForMember(dst => dst.FileId, src => src.MapFrom(e => e.Id))
+                    .ForMember(dst => dst.FileName, src => src.MapFrom(e => e.Name))
+                    .ForMember(dst => dst.FilePath, src => src.MapFrom(e => e.Path))
+                    .ReverseMap();
+                cfg.CreateMap<FileDto, WorkItemFile>()
+                    .ForMember(dst => dst.FileId, src => src.MapFrom(e => e.Id))
+                    .ForPath(dst => dst.File.FileName, src => src.MapFrom(e => e.Name))
+                    .ForPath(dst => dst.File.FilePath, src => src.MapFrom(e => e.Path))
+                    .ReverseMap();
             });
+
             return config;
         }
     }

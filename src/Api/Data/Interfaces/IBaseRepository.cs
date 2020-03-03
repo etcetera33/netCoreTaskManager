@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Data.Interfaces
 {
-    public interface IBaseRepository <TEntity>
+    public interface IBaseRepository<TEntity>
     {
-        IEnumerable<TEntity> GetAll();
+        Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity> GetById(int id);
-        Task Create(TEntity model);
+        Task<TEntity> Create(TEntity model);
+        Task<IEnumerable<TEntity>> Create(IEnumerable<TEntity> entityList);
         Task Update(int id, TEntity model);
         Task Delete(int id);
     }

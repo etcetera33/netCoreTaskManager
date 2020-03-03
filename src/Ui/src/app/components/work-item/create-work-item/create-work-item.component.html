@@ -1,0 +1,63 @@
+<!-- Main Content -->
+<div id="content">
+  
+    <app-profile-header></app-profile-header>
+    
+          <!-- Begin Page Content -->
+    <div class="container-fluid">
+  
+    <form #form="ngForm" autocomplete="off" class="user ng-untouched ng-pristine ng-valid" (submit)="onSubmit(form)" ngNativeValidate>
+        <input type="hidden" name="ProjectId" #ProjectId="ngModel" [ngModel]="projectId"/>
+        <input type="hidden" name="Files" #Files="ngModel" [(ngModel)]="workItem.Files"/>
+        
+        <div class="form-group col-md-5">
+            <label for="Title">Title</label>
+            <input placeholder="Title" name="Title" #Title="ngModel" [ngModel]="workItem?.Title" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="Description">Description</label>
+            <input placeholder="Description" name="Description" #Description="ngModel" [ngModel]="workItem?.Description" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="Progress">Progress (1-100 %)</label>
+            <input type="number" placeholder="Progress" name="Progress" #Progress="ngModel" [ngModel]="workItem?.Progress" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="Priority">Priority (1-100 %)</label>
+            <input type="number" placeholder="Priority" name="Priority" #Priority="ngModel" [ngModel]="workItem?.Priority" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control form-control-user" required>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="StatusId">Status</label>
+            <select matNativeControl [ngModel]="workItem?.StatusId" name="StatusId" #StatusId="ngModel" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
+                <option *ngFor="let status of workItemStatuses" [value]="status.Id">
+                {{status.Name}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="WorkItemTypeId">ItemType</label>
+            <select matNativeControl [ngModel]="workItem?.WorkItemTypeId" name="WorkItemTypeId" #WorkItemTypeId="ngModel" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
+                <option *ngFor="let workItemType of workItemTypes" [value]="workItemType.Id">
+                {{workItemType.Name}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="AssigneeId">Assignee</label>
+            <select matNativeControl [ngModel]="workItem?.AssigneeId" name="AssigneeId" #AssigneeId="ngModel" [disabled]="role != 'Spectator' ? 'false': 'true'" class="form-control col-md-5 mb-4">
+                <option *ngFor="let assignee of assigneeList" [value]="assignee.Id">
+                {{assignee.FullName}}
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <img *ngFor='let url of urls'  [src]="url" height="200"> <br/>
+            <input type='file' #file name="Files" (change)="onSelectFile(file.files)" multiple>
+        </div>
+        <hr>
+        <input type="submit" class="btn btn-success btn-user btn-block col-md-5" [ngClass]="{disabled : role === 'Spectator'}" value="Create">
+    </form>
+  </div>
+  <!-- /.container-fluid -->
+  
+  
